@@ -1,5 +1,5 @@
 /***
-    Copyright (C) 2012-2013 Granite Developers
+    Copyright (C) 2013-2014 Draw Developers
 
     This program or library is free software; you can redistribute it
     and/or modify it under the terms of the GNU Lesser General Public
@@ -16,7 +16,8 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301 USA.
 
-    Authored by: Victor Eduardo <victoreduardm@gmal.com>
+    Authored by: KJ Lawrence <kjtehprogrammer@gmail.com>
+    Original Author: Victor Eduardo <victoreduardm@gmail.com>
 ***/
 
 /**
