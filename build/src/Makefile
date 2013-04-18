@@ -109,6 +109,30 @@ Draw/fast:
 	cd /home/kj/Documents/draw/build && $(MAKE) -f src/CMakeFiles/Draw.dir/build.make src/CMakeFiles/Draw.dir/build
 .PHONY : Draw/fast
 
+AppToolbar.o: AppToolbar.c.o
+.PHONY : AppToolbar.o
+
+# target to build an object file
+AppToolbar.c.o:
+	cd /home/kj/Documents/draw/build && $(MAKE) -f src/CMakeFiles/Draw.dir/build.make src/CMakeFiles/Draw.dir/AppToolbar.c.o
+.PHONY : AppToolbar.c.o
+
+AppToolbar.i: AppToolbar.c.i
+.PHONY : AppToolbar.i
+
+# target to preprocess a source file
+AppToolbar.c.i:
+	cd /home/kj/Documents/draw/build && $(MAKE) -f src/CMakeFiles/Draw.dir/build.make src/CMakeFiles/Draw.dir/AppToolbar.c.i
+.PHONY : AppToolbar.c.i
+
+AppToolbar.s: AppToolbar.c.s
+.PHONY : AppToolbar.s
+
+# target to generate assembly for a file
+AppToolbar.c.s:
+	cd /home/kj/Documents/draw/build && $(MAKE) -f src/CMakeFiles/Draw.dir/build.make src/CMakeFiles/Draw.dir/AppToolbar.c.s
+.PHONY : AppToolbar.c.s
+
 AppWindow.o: AppWindow.c.o
 .PHONY : AppWindow.o
 
@@ -166,6 +190,9 @@ help:
 	@echo "... Draw"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... AppToolbar.o"
+	@echo "... AppToolbar.i"
+	@echo "... AppToolbar.s"
 	@echo "... AppWindow.o"
 	@echo "... AppWindow.i"
 	@echo "... AppWindow.s"

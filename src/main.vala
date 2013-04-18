@@ -110,9 +110,6 @@ namespace Draw {
 			css.load_from_file(File.new_for_path("./draw.css"));
 			Gtk.StyleContext.add_provider_for_screen(w.screen, css, Gtk.STYLE_PROVIDER_PRIORITY_THEME);
 			
-			var lbl = new Gtk.Label ("Hello");
-			lbl.margin = 100;
-			
 			// App Menu (this gives access to the About dialog)
         	Gtk.Menu settings = new Gtk.Menu ();
         	Gtk.MenuItem about_item = new Gtk.MenuItem.with_label("About");
@@ -138,20 +135,22 @@ namespace Draw {
 		    });
 		    
 		    // Application Statusbar (used for image zooming, canvas size details, mouse position and general stats)
-		    var statusbar = new Granite.Widgets.StatusBar();
-		    statusbar.hexpand = true;
-		    statusbar.vexpand = false;
-		    statusbar.insert_widget(zoom_widget);
+		    var statusbar = new AppToolbar("status-toolbar", null);
+		    statusbar.insert_widget(zoom_widget, ToolbarPosition.RIGHT);
 		    
 		    var content = new Gtk.ScrolledWindow(null, null);
 		    content.get_style_context().add_class("container");
 		    content.expand = true;
-		    //content.add(lbl);
+		    
+		    // Main toolbar
+		    var main_toolbar = new AppToolbar("primary-toolbar", null);
+		    main_toolbar.height_request = 55;
         	
         	 // Main widget structure
 			Gtk.Grid layout = new Gtk.Grid ();
 			layout.expand = true;
 			layout.orientation = Gtk.Orientation.VERTICAL;
+			layout.add(main_toolbar);
 			layout.add(content);
 			layout.add(statusbar);
 	 

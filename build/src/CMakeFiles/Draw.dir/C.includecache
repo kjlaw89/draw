@@ -6,6 +6,18 @@
 
 #IncludeRegexTransform: 
 
+/home/kj/Documents/draw/build/src/AppToolbar.c
+glib.h
+-
+glib-object.h
+-
+gtk/gtk.h
+-
+stdlib.h
+-
+string.h
+-
+
 /home/kj/Documents/draw/build/src/AppWindow.c
 glib.h
 -

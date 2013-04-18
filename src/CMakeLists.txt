@@ -36,6 +36,7 @@ add_definitions(${CFLAGS})
 vala_precompile(VALA_C
     main.vala
     AppWindow.vala
+    AppToolbar.vala
 PACKAGES
     gtk+-3.0
     granite

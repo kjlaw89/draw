@@ -92,24 +92,52 @@ src/CMakeFiles/Draw.dir/AppWindow.c.o.provides: src/CMakeFiles/Draw.dir/AppWindo
 
 src/CMakeFiles/Draw.dir/AppWindow.c.o.provides.build: src/CMakeFiles/Draw.dir/AppWindow.c.o
 
+src/CMakeFiles/Draw.dir/AppToolbar.c.o: src/CMakeFiles/Draw.dir/flags.make
+src/CMakeFiles/Draw.dir/AppToolbar.c.o: src/AppToolbar.c
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/kj/Documents/draw/build/CMakeFiles $(CMAKE_PROGRESS_3)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object src/CMakeFiles/Draw.dir/AppToolbar.c.o"
+	cd /home/kj/Documents/draw/build/src && /usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/Draw.dir/AppToolbar.c.o   -c /home/kj/Documents/draw/build/src/AppToolbar.c
+
+src/CMakeFiles/Draw.dir/AppToolbar.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/Draw.dir/AppToolbar.c.i"
+	cd /home/kj/Documents/draw/build/src && /usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -E /home/kj/Documents/draw/build/src/AppToolbar.c > CMakeFiles/Draw.dir/AppToolbar.c.i
+
+src/CMakeFiles/Draw.dir/AppToolbar.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/Draw.dir/AppToolbar.c.s"
+	cd /home/kj/Documents/draw/build/src && /usr/bin/gcc  $(C_DEFINES) $(C_FLAGS) -S /home/kj/Documents/draw/build/src/AppToolbar.c -o CMakeFiles/Draw.dir/AppToolbar.c.s
+
+src/CMakeFiles/Draw.dir/AppToolbar.c.o.requires:
+.PHONY : src/CMakeFiles/Draw.dir/AppToolbar.c.o.requires
+
+src/CMakeFiles/Draw.dir/AppToolbar.c.o.provides: src/CMakeFiles/Draw.dir/AppToolbar.c.o.requires
+	$(MAKE) -f src/CMakeFiles/Draw.dir/build.make src/CMakeFiles/Draw.dir/AppToolbar.c.o.provides.build
+.PHONY : src/CMakeFiles/Draw.dir/AppToolbar.c.o.provides
+
+src/CMakeFiles/Draw.dir/AppToolbar.c.o.provides.build: src/CMakeFiles/Draw.dir/AppToolbar.c.o
+
 src/main.c: ../src/main.vala
 src/main.c: ../src/AppWindow.vala
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/kj/Documents/draw/build/CMakeFiles $(CMAKE_PROGRESS_3)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating main.c, AppWindow.c"
-	cd /home/kj/Documents/draw/build/src && /usr/bin/valac -C -b /home/kj/Documents/draw/src -d /home/kj/Documents/draw/build/src --pkg=gtk+-3.0 --pkg=granite --thread /home/kj/Documents/draw/src/main.vala /home/kj/Documents/draw/src/AppWindow.vala
+src/main.c: ../src/AppToolbar.vala
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/kj/Documents/draw/build/CMakeFiles $(CMAKE_PROGRESS_4)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating main.c, AppWindow.c, AppToolbar.c"
+	cd /home/kj/Documents/draw/build/src && /usr/bin/valac -C -b /home/kj/Documents/draw/src -d /home/kj/Documents/draw/build/src --pkg=gtk+-3.0 --pkg=granite --thread /home/kj/Documents/draw/src/main.vala /home/kj/Documents/draw/src/AppWindow.vala /home/kj/Documents/draw/src/AppToolbar.vala
 
 src/AppWindow.c: src/main.c
+
+src/AppToolbar.c: src/main.c
 
 # Object files for target Draw
 Draw_OBJECTS = \
 "CMakeFiles/Draw.dir/main.c.o" \
-"CMakeFiles/Draw.dir/AppWindow.c.o"
+"CMakeFiles/Draw.dir/AppWindow.c.o" \
+"CMakeFiles/Draw.dir/AppToolbar.c.o"
 
 # External object files for target Draw
 Draw_EXTERNAL_OBJECTS =
 
 src/Draw: src/CMakeFiles/Draw.dir/main.c.o
 src/Draw: src/CMakeFiles/Draw.dir/AppWindow.c.o
+src/Draw: src/CMakeFiles/Draw.dir/AppToolbar.c.o
 src/Draw: src/CMakeFiles/Draw.dir/build.make
 src/Draw: src/CMakeFiles/Draw.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --red --bold "Linking C executable Draw"
@@ -121,6 +149,7 @@ src/CMakeFiles/Draw.dir/build: src/Draw
 
 src/CMakeFiles/Draw.dir/requires: src/CMakeFiles/Draw.dir/main.c.o.requires
 src/CMakeFiles/Draw.dir/requires: src/CMakeFiles/Draw.dir/AppWindow.c.o.requires
+src/CMakeFiles/Draw.dir/requires: src/CMakeFiles/Draw.dir/AppToolbar.c.o.requires
 .PHONY : src/CMakeFiles/Draw.dir/requires
 
 src/CMakeFiles/Draw.dir/clean:
@@ -129,6 +158,7 @@ src/CMakeFiles/Draw.dir/clean:
 
 src/CMakeFiles/Draw.dir/depend: src/main.c
 src/CMakeFiles/Draw.dir/depend: src/AppWindow.c
+src/CMakeFiles/Draw.dir/depend: src/AppToolbar.c
 	cd /home/kj/Documents/draw/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/kj/Documents/draw /home/kj/Documents/draw/src /home/kj/Documents/draw/build /home/kj/Documents/draw/build/src /home/kj/Documents/draw/build/src/CMakeFiles/Draw.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : src/CMakeFiles/Draw.dir/depend
 

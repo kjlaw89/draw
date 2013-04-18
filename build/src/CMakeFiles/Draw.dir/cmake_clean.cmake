@@ -1,8 +1,10 @@
 FILE(REMOVE_RECURSE
   "CMakeFiles/Draw.dir/main.c.o"
   "CMakeFiles/Draw.dir/AppWindow.c.o"
+  "CMakeFiles/Draw.dir/AppToolbar.c.o"
   "main.c"
   "AppWindow.c"
+  "AppToolbar.c"
   "Draw.pdb"
   "Draw"
 )

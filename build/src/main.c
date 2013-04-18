@@ -37,6 +37,18 @@ typedef struct _DrawAppWindow DrawAppWindow;
 typedef struct _DrawAppWindowClass DrawAppWindowClass;
 #define _g_object_unref0(var) ((var == NULL) ? NULL : (var = (g_object_unref (var), NULL)))
 typedef struct _Block1Data Block1Data;
+
+#define DRAW_TYPE_APP_TOOLBAR (draw_app_toolbar_get_type ())
+#define DRAW_APP_TOOLBAR(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), DRAW_TYPE_APP_TOOLBAR, DrawAppToolbar))
+#define DRAW_APP_TOOLBAR_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), DRAW_TYPE_APP_TOOLBAR, DrawAppToolbarClass))
+#define DRAW_IS_APP_TOOLBAR(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), DRAW_TYPE_APP_TOOLBAR))
+#define DRAW_IS_APP_TOOLBAR_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), DRAW_TYPE_APP_TOOLBAR))
+#define DRAW_APP_TOOLBAR_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), DRAW_TYPE_APP_TOOLBAR, DrawAppToolbarClass))
+
+typedef struct _DrawAppToolbar DrawAppToolbar;
+typedef struct _DrawAppToolbarClass DrawAppToolbarClass;
+
+#define DRAW_TYPE_TOOLBAR_POSITION (draw_toolbar_position_get_type ())
 #define _g_free0(var) (var = (g_free (var), NULL))
 
 struct _DrawDraw {
@@ -55,6 +67,12 @@ struct _Block1Data {
 	DrawAppWindow* w;
 	GtkScale* zoom_widget;
 };
+
+typedef enum  {
+	DRAW_TOOLBAR_POSITION_LEFT,
+	DRAW_TOOLBAR_POSITION_CENTER,
+	DRAW_TOOLBAR_POSITION_RIGHT
+} DrawToolbarPosition;
 
 
 static gpointer draw_draw_parent_class = NULL;
@@ -78,6 +96,11 @@ static void __lambda6_ (Block1Data* _data1_);
 static void ___lambda6__gtk_menu_item_activate (GtkMenuItem* _sender, gpointer self);
 static void __lambda7_ (Block1Data* _data1_);
 static void ___lambda7__gtk_range_value_changed (GtkRange* _sender, gpointer self);
+DrawAppToolbar* draw_app_toolbar_new (const gchar* css_class, gint* spacing);
+DrawAppToolbar* draw_app_toolbar_construct (GType object_type, const gchar* css_class, gint* spacing);
+GType draw_app_toolbar_get_type (void) G_GNUC_CONST;
+GType draw_toolbar_position_get_type (void) G_GNUC_CONST;
+void draw_app_toolbar_insert_widget (DrawAppToolbar* self, GtkWidget* widget, DrawToolbarPosition position);
 void draw_app_window_append_toolitem (DrawAppWindow* self, GtkToolItem* item, gboolean after_title);
 GtkToolItem* draw_app_window_create_separator (DrawAppWindow* self);
 static GObject * draw_draw_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);
@@ -171,43 +194,43 @@ static void draw_draw_real_activate (GApplication* base) {
 	GFile* _tmp3_;
 	GdkScreen* _tmp4_;
 	GdkScreen* _tmp5_;
-	GtkLabel* _tmp6_;
-	GtkLabel* lbl;
-	GtkLabel* _tmp7_;
-	GtkMenu* _tmp8_;
+	GtkMenu* _tmp6_;
 	GtkMenu* settings;
-	GtkMenuItem* _tmp9_;
+	GtkMenuItem* _tmp7_;
 	GtkMenuItem* about_item;
+	GtkMenuItem* _tmp8_;
+	GtkMenu* _tmp9_;
 	GtkMenuItem* _tmp10_;
-	GtkMenu* _tmp11_;
-	GtkMenuItem* _tmp12_;
-	GtkScale* _tmp13_;
+	GtkScale* _tmp11_;
+	GtkScale* _tmp12_;
+	GtkStyleContext* _tmp13_ = NULL;
 	GtkScale* _tmp14_;
-	GtkStyleContext* _tmp15_ = NULL;
+	GtkScale* _tmp15_;
 	GtkScale* _tmp16_;
 	GtkScale* _tmp17_;
 	GtkScale* _tmp18_;
-	GtkScale* _tmp19_;
-	GtkScale* _tmp20_;
-	GraniteWidgetsStatusBar* _tmp21_;
-	GraniteWidgetsStatusBar* statusbar;
-	GraniteWidgetsStatusBar* _tmp22_;
-	GraniteWidgetsStatusBar* _tmp23_;
-	GraniteWidgetsStatusBar* _tmp24_;
-	GtkScale* _tmp25_;
-	GtkScrolledWindow* _tmp26_;
+	DrawAppToolbar* _tmp19_;
+	DrawAppToolbar* statusbar;
+	DrawAppToolbar* _tmp20_;
+	GtkScale* _tmp21_;
+	GtkScrolledWindow* _tmp22_;
 	GtkScrolledWindow* content;
-	GtkScrolledWindow* _tmp27_;
-	GtkStyleContext* _tmp28_ = NULL;
-	GtkScrolledWindow* _tmp29_;
-	GtkGrid* _tmp30_;
+	GtkScrolledWindow* _tmp23_;
+	GtkStyleContext* _tmp24_ = NULL;
+	GtkScrolledWindow* _tmp25_;
+	DrawAppToolbar* _tmp26_;
+	DrawAppToolbar* main_toolbar;
+	DrawAppToolbar* _tmp27_;
+	GtkGrid* _tmp28_;
 	GtkGrid* layout;
+	GtkGrid* _tmp29_;
+	GtkGrid* _tmp30_;
 	GtkGrid* _tmp31_;
-	GtkGrid* _tmp32_;
+	DrawAppToolbar* _tmp32_;
 	GtkGrid* _tmp33_;
 	GtkScrolledWindow* _tmp34_;
 	GtkGrid* _tmp35_;
-	GraniteWidgetsStatusBar* _tmp36_;
+	DrawAppToolbar* _tmp36_;
 	GtkGrid* _tmp37_;
 	GtkToolButton* _tmp38_;
 	GtkToolButton* _tmp39_;
@@ -261,63 +284,62 @@ static void draw_draw_real_activate (GApplication* base) {
 	_tmp4_ = gtk_window_get_screen ((GtkWindow*) _data1_->w);
 	_tmp5_ = _tmp4_;
 	gtk_style_context_add_provider_for_screen (_tmp5_, (GtkStyleProvider*) css, (guint) GTK_STYLE_PROVIDER_PRIORITY_THEME);
-	_tmp6_ = (GtkLabel*) gtk_label_new ("Hello");
+	_tmp6_ = (GtkMenu*) gtk_menu_new ();
 	g_object_ref_sink (_tmp6_);
-	lbl = _tmp6_;
-	_tmp7_ = lbl;
-	g_object_set ((GtkWidget*) _tmp7_, "margin", 100, NULL);
-	_tmp8_ = (GtkMenu*) gtk_menu_new ();
-	g_object_ref_sink (_tmp8_);
-	settings = _tmp8_;
-	_tmp9_ = (GtkMenuItem*) gtk_menu_item_new_with_label ("About");
-	g_object_ref_sink (_tmp9_);
-	about_item = _tmp9_;
+	settings = _tmp6_;
+	_tmp7_ = (GtkMenuItem*) gtk_menu_item_new_with_label ("About");
+	g_object_ref_sink (_tmp7_);
+	about_item = _tmp7_;
+	_tmp8_ = about_item;
+	g_signal_connect_data (_tmp8_, "activate", (GCallback) ___lambda6__gtk_menu_item_activate, block1_data_ref (_data1_), (GClosureNotify) block1_data_unref, 0);
+	_tmp9_ = settings;
 	_tmp10_ = about_item;
-	g_signal_connect_data (_tmp10_, "activate", (GCallback) ___lambda6__gtk_menu_item_activate, block1_data_ref (_data1_), (GClosureNotify) block1_data_unref, 0);
-	_tmp11_ = settings;
-	_tmp12_ = about_item;
-	gtk_container_add ((GtkContainer*) _tmp11_, (GtkWidget*) _tmp12_);
-	_tmp13_ = (GtkScale*) gtk_scale_new_with_range (GTK_ORIENTATION_HORIZONTAL, (gdouble) 25, (gdouble) 800, (gdouble) 25);
-	g_object_ref_sink (_tmp13_);
-	_data1_->zoom_widget = _tmp13_;
+	gtk_container_add ((GtkContainer*) _tmp9_, (GtkWidget*) _tmp10_);
+	_tmp11_ = (GtkScale*) gtk_scale_new_with_range (GTK_ORIENTATION_HORIZONTAL, (gdouble) 25, (gdouble) 800, (gdouble) 25);
+	g_object_ref_sink (_tmp11_);
+	_data1_->zoom_widget = _tmp11_;
+	_tmp12_ = _data1_->zoom_widget;
+	_tmp13_ = gtk_widget_get_style_context ((GtkWidget*) _tmp12_);
+	gtk_style_context_add_class (_tmp13_, "zoom-widget");
 	_tmp14_ = _data1_->zoom_widget;
-	_tmp15_ = gtk_widget_get_style_context ((GtkWidget*) _tmp14_);
-	gtk_style_context_add_class (_tmp15_, "zoom-widget");
+	gtk_widget_set_tooltip_text ((GtkWidget*) _tmp14_, "Zoom");
+	_tmp15_ = _data1_->zoom_widget;
+	g_object_set ((GtkWidget*) _tmp15_, "width-request", 150, NULL);
 	_tmp16_ = _data1_->zoom_widget;
-	gtk_widget_set_tooltip_text ((GtkWidget*) _tmp16_, "Zoom");
+	gtk_scale_set_value_pos (_tmp16_, GTK_POS_LEFT);
 	_tmp17_ = _data1_->zoom_widget;
-	g_object_set ((GtkWidget*) _tmp17_, "width-request", 150, NULL);
+	gtk_range_set_value ((GtkRange*) _tmp17_, (gdouble) 100);
 	_tmp18_ = _data1_->zoom_widget;
-	gtk_scale_set_value_pos (_tmp18_, GTK_POS_LEFT);
-	_tmp19_ = _data1_->zoom_widget;
-	gtk_range_set_value ((GtkRange*) _tmp19_, (gdouble) 100);
-	_tmp20_ = _data1_->zoom_widget;
-	g_signal_connect_data ((GtkRange*) _tmp20_, "value-changed", (GCallback) ___lambda7__gtk_range_value_changed, block1_data_ref (_data1_), (GClosureNotify) block1_data_unref, 0);
-	_tmp21_ = granite_widgets_status_bar_new ();
-	g_object_ref_sink (_tmp21_);
-	statusbar = _tmp21_;
-	_tmp22_ = statusbar;
-	gtk_widget_set_hexpand ((GtkWidget*) _tmp22_, TRUE);
-	_tmp23_ = statusbar;
-	gtk_widget_set_vexpand ((GtkWidget*) _tmp23_, FALSE);
-	_tmp24_ = statusbar;
-	_tmp25_ = _data1_->zoom_widget;
-	granite_widgets_status_bar_insert_widget (_tmp24_, (GtkWidget*) _tmp25_, FALSE);
-	_tmp26_ = (GtkScrolledWindow*) gtk_scrolled_window_new (NULL, NULL);
+	g_signal_connect_data ((GtkRange*) _tmp18_, "value-changed", (GCallback) ___lambda7__gtk_range_value_changed, block1_data_ref (_data1_), (GClosureNotify) block1_data_unref, 0);
+	_tmp19_ = draw_app_toolbar_new ("status-toolbar", NULL);
+	g_object_ref_sink (_tmp19_);
+	statusbar = _tmp19_;
+	_tmp20_ = statusbar;
+	_tmp21_ = _data1_->zoom_widget;
+	draw_app_toolbar_insert_widget (_tmp20_, (GtkWidget*) _tmp21_, DRAW_TOOLBAR_POSITION_RIGHT);
+	_tmp22_ = (GtkScrolledWindow*) gtk_scrolled_window_new (NULL, NULL);
+	g_object_ref_sink (_tmp22_);
+	content = _tmp22_;
+	_tmp23_ = content;
+	_tmp24_ = gtk_widget_get_style_context ((GtkWidget*) _tmp23_);
+	gtk_style_context_add_class (_tmp24_, "container");
+	_tmp25_ = content;
+	g_object_set ((GtkWidget*) _tmp25_, "expand", TRUE, NULL);
+	_tmp26_ = draw_app_toolbar_new ("primary-toolbar", NULL);
 	g_object_ref_sink (_tmp26_);
-	content = _tmp26_;
-	_tmp27_ = content;
-	_tmp28_ = gtk_widget_get_style_context ((GtkWidget*) _tmp27_);
-	gtk_style_context_add_class (_tmp28_, "container");
-	_tmp29_ = content;
+	main_toolbar = _tmp26_;
+	_tmp27_ = main_toolbar;
+	g_object_set ((GtkWidget*) _tmp27_, "height-request", 55, NULL);
+	_tmp28_ = (GtkGrid*) gtk_grid_new ();
+	g_object_ref_sink (_tmp28_);
+	layout = _tmp28_;
+	_tmp29_ = layout;
 	g_object_set ((GtkWidget*) _tmp29_, "expand", TRUE, NULL);
-	_tmp30_ = (GtkGrid*) gtk_grid_new ();
-	g_object_ref_sink (_tmp30_);
-	layout = _tmp30_;
+	_tmp30_ = layout;
+	gtk_orientable_set_orientation ((GtkOrientable*) _tmp30_, GTK_ORIENTATION_VERTICAL);
 	_tmp31_ = layout;
-	g_object_set ((GtkWidget*) _tmp31_, "expand", TRUE, NULL);
-	_tmp32_ = layout;
-	gtk_orientable_set_orientation ((GtkOrientable*) _tmp32_, GTK_ORIENTATION_VERTICAL);
+	_tmp32_ = main_toolbar;
+	gtk_container_add ((GtkContainer*) _tmp31_, (GtkWidget*) _tmp32_);
 	_tmp33_ = layout;
 	_tmp34_ = content;
 	gtk_container_add ((GtkContainer*) _tmp33_, (GtkWidget*) _tmp34_);
@@ -375,11 +397,11 @@ static void draw_draw_real_activate (GApplication* base) {
 	_g_object_unref0 (_tmp55_);
 	gtk_widget_show_all ((GtkWidget*) _data1_->w);
 	_g_object_unref0 (layout);
+	_g_object_unref0 (main_toolbar);
 	_g_object_unref0 (content);
 	_g_object_unref0 (statusbar);
 	_g_object_unref0 (about_item);
 	_g_object_unref0 (settings);
-	_g_object_unref0 (lbl);
 	_g_object_unref0 (css);
 	block1_data_unref (_data1_);
 	_data1_ = NULL;
