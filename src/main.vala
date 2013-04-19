@@ -16,7 +16,7 @@ namespace Draw {
         
         // Before we get into the constructor functions. We need to define any classwide variables.
         // Here we're going to define the MainWindow variable. We'll be assigning the GTK Window to this.
-        public AppWindow w;
+        public Window w;
         
         private const string CSS = """  """;
 
@@ -84,8 +84,7 @@ namespace Draw {
         // Splash Screen? Initial Plugin Loading? Initial Window building? All of that goes here.
         public override void activate ()
         {
-        	bool first_run = true;
-            AppWindow w = new AppWindow ();
+            Window w = new Window ();
             w.title = "Draw";
             w.set_application(this);
 			w.set_default_size(980, 720);
@@ -135,7 +134,7 @@ namespace Draw {
 		    });
 		    
 		    // Application Statusbar (used for image zooming, canvas size details, mouse position and general stats)
-		    var statusbar = new AppToolbar("status-toolbar", null);
+		    var statusbar = new Toolbar("status-toolbar", null);
 		    statusbar.insert_widget(zoom_widget, ToolbarPosition.RIGHT);
 		    
 		    // Canvas
@@ -165,14 +164,33 @@ namespace Draw {
 		    
 		    
 		    // Main toolbar
-		    var main_toolbar = new AppToolbar("main-toolbar", null);
+		    var main_toolbar = new Toolbar("main-toolbar", null);
 		    main_toolbar.height_request = 55;
+        	
+        	var welcome = new Granite.Widgets.Welcome ("Draw", "Load an image and make something!");
+        	welcome.expand = true;
+
+		    Gdk.Pixbuf? pixbuf = null;
+
+		    try {
+		        pixbuf = Gtk.IconTheme.get_default ().load_icon ("document-new", 48,
+		                                                         Gtk.IconLookupFlags.GENERIC_FALLBACK);
+		    } catch (Error e) {
+		        warning ("Could not load icon, %s", e.message);
+		    }
+
+		    Gtk.Image? image = new Gtk.Image.from_icon_name ("document-open", Gtk.IconSize.DIALOG);
+
+		    // Adding elements. Use the most convenient method to add an icon
+		    welcome.append_with_pixbuf (pixbuf, "New", "Create a new image.");
+		    welcome.append_with_image (image, "Open", "Select an image.");
         	
         	 // Main widget structure
 			Gtk.Grid layout = new Gtk.Grid ();
 			layout.expand = true;
 			layout.orientation = Gtk.Orientation.VERTICAL;
 			layout.add(main_toolbar);
+			//layout.add(welcome);
 			layout.add(scroll);
 			layout.add(statusbar);
 	 

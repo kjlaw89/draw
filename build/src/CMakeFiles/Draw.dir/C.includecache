@@ -59,4 +59,6 @@ float.h
 -
 math.h
 -
+gdk-pixbuf/gdk-pixbuf.h
+-
 

@@ -13,6 +13,7 @@
 #include <gio/gio.h>
 #include <float.h>
 #include <math.h>
+#include <gdk-pixbuf/gdk-pixbuf.h>
 
 
 #define DRAW_TYPE_DRAW (draw_draw_get_type ())
@@ -26,35 +27,36 @@ typedef struct _DrawDraw DrawDraw;
 typedef struct _DrawDrawClass DrawDrawClass;
 typedef struct _DrawDrawPrivate DrawDrawPrivate;
 
-#define DRAW_TYPE_APP_WINDOW (draw_app_window_get_type ())
-#define DRAW_APP_WINDOW(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), DRAW_TYPE_APP_WINDOW, DrawAppWindow))
-#define DRAW_APP_WINDOW_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), DRAW_TYPE_APP_WINDOW, DrawAppWindowClass))
-#define DRAW_IS_APP_WINDOW(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), DRAW_TYPE_APP_WINDOW))
-#define DRAW_IS_APP_WINDOW_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), DRAW_TYPE_APP_WINDOW))
-#define DRAW_APP_WINDOW_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), DRAW_TYPE_APP_WINDOW, DrawAppWindowClass))
+#define DRAW_TYPE_WINDOW (draw_window_get_type ())
+#define DRAW_WINDOW(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), DRAW_TYPE_WINDOW, DrawWindow))
+#define DRAW_WINDOW_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), DRAW_TYPE_WINDOW, DrawWindowClass))
+#define DRAW_IS_WINDOW(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), DRAW_TYPE_WINDOW))
+#define DRAW_IS_WINDOW_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), DRAW_TYPE_WINDOW))
+#define DRAW_WINDOW_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), DRAW_TYPE_WINDOW, DrawWindowClass))
 
-typedef struct _DrawAppWindow DrawAppWindow;
-typedef struct _DrawAppWindowClass DrawAppWindowClass;
+typedef struct _DrawWindow DrawWindow;
+typedef struct _DrawWindowClass DrawWindowClass;
 #define _g_object_unref0(var) ((var == NULL) ? NULL : (var = (g_object_unref (var), NULL)))
 typedef struct _Block1Data Block1Data;
 
-#define DRAW_TYPE_APP_TOOLBAR (draw_app_toolbar_get_type ())
-#define DRAW_APP_TOOLBAR(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), DRAW_TYPE_APP_TOOLBAR, DrawAppToolbar))
-#define DRAW_APP_TOOLBAR_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), DRAW_TYPE_APP_TOOLBAR, DrawAppToolbarClass))
-#define DRAW_IS_APP_TOOLBAR(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), DRAW_TYPE_APP_TOOLBAR))
-#define DRAW_IS_APP_TOOLBAR_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), DRAW_TYPE_APP_TOOLBAR))
-#define DRAW_APP_TOOLBAR_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), DRAW_TYPE_APP_TOOLBAR, DrawAppToolbarClass))
+#define DRAW_TYPE_TOOLBAR (draw_toolbar_get_type ())
+#define DRAW_TOOLBAR(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), DRAW_TYPE_TOOLBAR, DrawToolbar))
+#define DRAW_TOOLBAR_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), DRAW_TYPE_TOOLBAR, DrawToolbarClass))
+#define DRAW_IS_TOOLBAR(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), DRAW_TYPE_TOOLBAR))
+#define DRAW_IS_TOOLBAR_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), DRAW_TYPE_TOOLBAR))
+#define DRAW_TOOLBAR_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), DRAW_TYPE_TOOLBAR, DrawToolbarClass))
 
-typedef struct _DrawAppToolbar DrawAppToolbar;
-typedef struct _DrawAppToolbarClass DrawAppToolbarClass;
+typedef struct _DrawToolbar DrawToolbar;
+typedef struct _DrawToolbarClass DrawToolbarClass;
 
 #define DRAW_TYPE_TOOLBAR_POSITION (draw_toolbar_position_get_type ())
+#define _g_error_free0(var) ((var == NULL) ? NULL : (var = (g_error_free (var), NULL)))
 #define _g_free0(var) (var = (g_free (var), NULL))
 
 struct _DrawDraw {
 	GraniteApplication parent_instance;
 	DrawDrawPrivate * priv;
-	DrawAppWindow* w;
+	DrawWindow* w;
 };
 
 struct _DrawDrawClass {
@@ -64,7 +66,7 @@ struct _DrawDrawClass {
 struct _Block1Data {
 	int _ref_count_;
 	DrawDraw * self;
-	DrawAppWindow* w;
+	DrawWindow* w;
 	GtkScale* zoom_widget;
 };
 
@@ -78,7 +80,7 @@ typedef enum  {
 static gpointer draw_draw_parent_class = NULL;
 
 GType draw_draw_get_type (void) G_GNUC_CONST;
-GType draw_app_window_get_type (void) G_GNUC_CONST;
+GType draw_window_get_type (void) G_GNUC_CONST;
 enum  {
 	DRAW_DRAW_DUMMY_PROPERTY
 };
@@ -88,21 +90,21 @@ DrawDraw* draw_draw_construct (GType object_type);
 static void draw_draw_real_activate (GApplication* base);
 static Block1Data* block1_data_ref (Block1Data* _data1_);
 static void block1_data_unref (void * _userdata_);
-DrawAppWindow* draw_app_window_new (void);
-DrawAppWindow* draw_app_window_construct (GType object_type);
-void draw_app_window_set_title (DrawAppWindow* self, const gchar* value);
+DrawWindow* draw_window_new (void);
+DrawWindow* draw_window_construct (GType object_type);
+void draw_window_set_title (DrawWindow* self, const gchar* value);
 static void _gtk_main_quit_gtk_widget_destroy (GtkWidget* _sender, gpointer self);
 static void __lambda6_ (Block1Data* _data1_);
 static void ___lambda6__gtk_menu_item_activate (GtkMenuItem* _sender, gpointer self);
 static void __lambda7_ (Block1Data* _data1_);
 static void ___lambda7__gtk_range_value_changed (GtkRange* _sender, gpointer self);
-DrawAppToolbar* draw_app_toolbar_new (const gchar* css_class, gint* spacing);
-DrawAppToolbar* draw_app_toolbar_construct (GType object_type, const gchar* css_class, gint* spacing);
-GType draw_app_toolbar_get_type (void) G_GNUC_CONST;
+DrawToolbar* draw_toolbar_new (const gchar* css_class, gint* spacing);
+DrawToolbar* draw_toolbar_construct (GType object_type, const gchar* css_class, gint* spacing);
+GType draw_toolbar_get_type (void) G_GNUC_CONST;
 GType draw_toolbar_position_get_type (void) G_GNUC_CONST;
-void draw_app_toolbar_insert_widget (DrawAppToolbar* self, GtkWidget* widget, DrawToolbarPosition position);
-void draw_app_window_append_toolitem (DrawAppWindow* self, GtkToolItem* item, gboolean after_title);
-GtkToolItem* draw_app_window_create_separator (DrawAppWindow* self);
+void draw_toolbar_insert_widget (DrawToolbar* self, GtkWidget* widget, DrawToolbarPosition position);
+void draw_window_append_toolitem (DrawWindow* self, GtkToolItem* item, gboolean after_title);
+GtkToolItem* draw_window_create_separator (DrawWindow* self);
 static GObject * draw_draw_constructor (GType type, guint n_construct_properties, GObjectConstructParam * construct_properties);
 static void draw_draw_finalize (GObject* obj);
 gint _vala_main (gchar** args, int args_length1);
@@ -186,8 +188,7 @@ static void ___lambda7__gtk_range_value_changed (GtkRange* _sender, gpointer sel
 static void draw_draw_real_activate (GApplication* base) {
 	DrawDraw * self;
 	Block1Data* _data1_;
-	gboolean first_run;
-	DrawAppWindow* _tmp0_;
+	DrawWindow* _tmp0_;
 	GtkCssProvider* _tmp1_;
 	GtkCssProvider* css;
 	GFile* _tmp2_ = NULL;
@@ -209,9 +210,9 @@ static void draw_draw_real_activate (GApplication* base) {
 	GtkScale* _tmp16_;
 	GtkScale* _tmp17_;
 	GtkScale* _tmp18_;
-	DrawAppToolbar* _tmp19_;
-	DrawAppToolbar* statusbar;
-	DrawAppToolbar* _tmp20_;
+	DrawToolbar* _tmp19_;
+	DrawToolbar* statusbar;
+	DrawToolbar* _tmp20_;
 	GtkScale* _tmp21_;
 	GtkDrawingArea* _tmp22_;
 	GtkDrawingArea* canvas;
@@ -242,51 +243,60 @@ static void draw_draw_real_activate (GApplication* base) {
 	GtkScrolledWindow* _tmp44_;
 	GtkScrolledWindow* _tmp45_;
 	GtkViewport* _tmp46_;
-	DrawAppToolbar* _tmp47_;
-	DrawAppToolbar* main_toolbar;
-	DrawAppToolbar* _tmp48_;
-	GtkGrid* _tmp49_;
+	DrawToolbar* _tmp47_;
+	DrawToolbar* main_toolbar;
+	DrawToolbar* _tmp48_;
+	GraniteWidgetsWelcome* _tmp49_;
+	GraniteWidgetsWelcome* welcome;
+	GraniteWidgetsWelcome* _tmp50_;
+	GdkPixbuf* pixbuf;
+	GtkImage* _tmp56_;
+	GtkImage* image;
+	GraniteWidgetsWelcome* _tmp57_;
+	GdkPixbuf* _tmp58_;
+	GraniteWidgetsWelcome* _tmp59_;
+	GtkImage* _tmp60_;
+	GtkGrid* _tmp61_;
 	GtkGrid* layout;
-	GtkGrid* _tmp50_;
-	GtkGrid* _tmp51_;
-	GtkGrid* _tmp52_;
-	DrawAppToolbar* _tmp53_;
-	GtkGrid* _tmp54_;
-	GtkScrolledWindow* _tmp55_;
-	GtkGrid* _tmp56_;
-	DrawAppToolbar* _tmp57_;
-	GtkGrid* _tmp58_;
-	GtkToolButton* _tmp59_;
-	GtkToolButton* _tmp60_;
-	GtkToolButton* _tmp61_;
-	GtkToolButton* _tmp62_;
-	GtkToolButton* _tmp63_;
-	GtkToolButton* _tmp64_;
-	GtkToolItem* _tmp65_ = NULL;
-	GtkToolItem* _tmp66_;
-	GtkToolItem* _tmp67_ = NULL;
-	GtkToolItem* _tmp68_;
-	GtkToolButton* _tmp69_;
-	GtkToolButton* _tmp70_;
-	GtkImage* _tmp71_;
-	GtkImage* _tmp72_;
+	GtkGrid* _tmp62_;
+	GtkGrid* _tmp63_;
+	GtkGrid* _tmp64_;
+	DrawToolbar* _tmp65_;
+	GtkGrid* _tmp66_;
+	GtkScrolledWindow* _tmp67_;
+	GtkGrid* _tmp68_;
+	DrawToolbar* _tmp69_;
+	GtkGrid* _tmp70_;
+	GtkToolButton* _tmp71_;
+	GtkToolButton* _tmp72_;
 	GtkToolButton* _tmp73_;
 	GtkToolButton* _tmp74_;
-	GtkImage* _tmp75_;
-	GtkImage* _tmp76_;
-	GtkMenu* _tmp77_;
-	GraniteWidgetsToolButtonWithMenu* _tmp78_;
-	GraniteWidgetsToolButtonWithMenu* _tmp79_;
+	GtkToolButton* _tmp75_;
+	GtkToolButton* _tmp76_;
+	GtkToolItem* _tmp77_ = NULL;
+	GtkToolItem* _tmp78_;
+	GtkToolItem* _tmp79_ = NULL;
+	GtkToolItem* _tmp80_;
+	GtkToolButton* _tmp81_;
+	GtkToolButton* _tmp82_;
+	GtkImage* _tmp83_;
+	GtkImage* _tmp84_;
+	GtkToolButton* _tmp85_;
+	GtkToolButton* _tmp86_;
+	GtkImage* _tmp87_;
+	GtkImage* _tmp88_;
+	GtkMenu* _tmp89_;
+	GraniteWidgetsToolButtonWithMenu* _tmp90_;
+	GraniteWidgetsToolButtonWithMenu* _tmp91_;
 	GError * _inner_error_ = NULL;
 	self = (DrawDraw*) base;
 	_data1_ = g_slice_new0 (Block1Data);
 	_data1_->_ref_count_ = 1;
 	_data1_->self = g_object_ref (self);
-	first_run = TRUE;
-	_tmp0_ = draw_app_window_new ();
+	_tmp0_ = draw_window_new ();
 	g_object_ref_sink (_tmp0_);
 	_data1_->w = _tmp0_;
-	draw_app_window_set_title (_data1_->w, "Draw");
+	draw_window_set_title (_data1_->w, "Draw");
 	gtk_window_set_application ((GtkWindow*) _data1_->w, (GtkApplication*) self);
 	gtk_window_set_default_size ((GtkWindow*) _data1_->w, 980, 720);
 	g_object_set ((GtkWindow*) _data1_->w, "window-position", GTK_WIN_POS_CENTER, NULL);
@@ -335,12 +345,12 @@ static void draw_draw_real_activate (GApplication* base) {
 	gtk_range_set_value ((GtkRange*) _tmp17_, (gdouble) 100);
 	_tmp18_ = _data1_->zoom_widget;
 	g_signal_connect_data ((GtkRange*) _tmp18_, "value-changed", (GCallback) ___lambda7__gtk_range_value_changed, block1_data_ref (_data1_), (GClosureNotify) block1_data_unref, 0);
-	_tmp19_ = draw_app_toolbar_new ("status-toolbar", NULL);
+	_tmp19_ = draw_toolbar_new ("status-toolbar", NULL);
 	g_object_ref_sink (_tmp19_);
 	statusbar = _tmp19_;
 	_tmp20_ = statusbar;
 	_tmp21_ = _data1_->zoom_widget;
-	draw_app_toolbar_insert_widget (_tmp20_, (GtkWidget*) _tmp21_, DRAW_TOOLBAR_POSITION_RIGHT);
+	draw_toolbar_insert_widget (_tmp20_, (GtkWidget*) _tmp21_, DRAW_TOOLBAR_POSITION_RIGHT);
 	_tmp22_ = (GtkDrawingArea*) gtk_drawing_area_new ();
 	g_object_ref_sink (_tmp22_);
 	canvas = _tmp22_;
@@ -389,78 +399,141 @@ static void draw_draw_real_activate (GApplication* base) {
 	_tmp45_ = scroll;
 	_tmp46_ = viewport;
 	gtk_container_add ((GtkContainer*) _tmp45_, (GtkWidget*) _tmp46_);
-	_tmp47_ = draw_app_toolbar_new ("main-toolbar", NULL);
+	_tmp47_ = draw_toolbar_new ("main-toolbar", NULL);
 	g_object_ref_sink (_tmp47_);
 	main_toolbar = _tmp47_;
 	_tmp48_ = main_toolbar;
 	g_object_set ((GtkWidget*) _tmp48_, "height-request", 55, NULL);
-	_tmp49_ = (GtkGrid*) gtk_grid_new ();
+	_tmp49_ = granite_widgets_welcome_new ("Draw", "Load an image and make something!");
 	g_object_ref_sink (_tmp49_);
-	layout = _tmp49_;
-	_tmp50_ = layout;
+	welcome = _tmp49_;
+	_tmp50_ = welcome;
 	g_object_set ((GtkWidget*) _tmp50_, "expand", TRUE, NULL);
-	_tmp51_ = layout;
-	gtk_orientable_set_orientation ((GtkOrientable*) _tmp51_, GTK_ORIENTATION_VERTICAL);
-	_tmp52_ = layout;
-	_tmp53_ = main_toolbar;
-	gtk_container_add ((GtkContainer*) _tmp52_, (GtkWidget*) _tmp53_);
-	_tmp54_ = layout;
-	_tmp55_ = scroll;
-	gtk_container_add ((GtkContainer*) _tmp54_, (GtkWidget*) _tmp55_);
-	_tmp56_ = layout;
-	_tmp57_ = statusbar;
-	gtk_container_add ((GtkContainer*) _tmp56_, (GtkWidget*) _tmp57_);
-	_tmp58_ = layout;
-	gtk_container_add ((GtkContainer*) _data1_->w, (GtkWidget*) _tmp58_);
-	_tmp59_ = (GtkToolButton*) gtk_tool_button_new_from_stock (GTK_STOCK_NEW);
-	g_object_ref_sink (_tmp59_);
-	_tmp60_ = _tmp59_;
-	draw_app_window_append_toolitem (_data1_->w, (GtkToolItem*) _tmp60_, FALSE);
-	_g_object_unref0 (_tmp60_);
-	_tmp61_ = (GtkToolButton*) gtk_tool_button_new_from_stock (GTK_STOCK_OPEN);
+	pixbuf = NULL;
+	{
+		GtkIconTheme* _tmp51_ = NULL;
+		GdkPixbuf* _tmp52_ = NULL;
+		GdkPixbuf* _tmp53_;
+		_tmp51_ = gtk_icon_theme_get_default ();
+		_tmp52_ = gtk_icon_theme_load_icon (_tmp51_, "document-new", 48, GTK_ICON_LOOKUP_GENERIC_FALLBACK, &_inner_error_);
+		_tmp53_ = _tmp52_;
+		if (_inner_error_ != NULL) {
+			goto __catch0_g_error;
+		}
+		_g_object_unref0 (pixbuf);
+		pixbuf = _tmp53_;
+	}
+	goto __finally0;
+	__catch0_g_error:
+	{
+		GError* e = NULL;
+		GError* _tmp54_;
+		const gchar* _tmp55_;
+		e = _inner_error_;
+		_inner_error_ = NULL;
+		_tmp54_ = e;
+		_tmp55_ = _tmp54_->message;
+		g_warning ("main.vala:179: Could not load icon, %s", _tmp55_);
+		_g_error_free0 (e);
+	}
+	__finally0:
+	if (_inner_error_ != NULL) {
+		_g_object_unref0 (pixbuf);
+		_g_object_unref0 (welcome);
+		_g_object_unref0 (main_toolbar);
+		_g_object_unref0 (scroll);
+		_g_object_unref0 (viewport);
+		_g_object_unref0 (frame);
+		_g_object_unref0 (canvas);
+		_g_object_unref0 (statusbar);
+		_g_object_unref0 (about_item);
+		_g_object_unref0 (settings);
+		_g_object_unref0 (css);
+		block1_data_unref (_data1_);
+		_data1_ = NULL;
+		g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _inner_error_->message, g_quark_to_string (_inner_error_->domain), _inner_error_->code);
+		g_clear_error (&_inner_error_);
+		return;
+	}
+	_tmp56_ = (GtkImage*) gtk_image_new_from_icon_name ("document-open", GTK_ICON_SIZE_DIALOG);
+	g_object_ref_sink (_tmp56_);
+	image = _tmp56_;
+	_tmp57_ = welcome;
+	_tmp58_ = pixbuf;
+	granite_widgets_welcome_append_with_pixbuf (_tmp57_, _tmp58_, "New", "Create a new image.");
+	_tmp59_ = welcome;
+	_tmp60_ = image;
+	granite_widgets_welcome_append_with_image (_tmp59_, _tmp60_, "Open", "Select an image.");
+	_tmp61_ = (GtkGrid*) gtk_grid_new ();
 	g_object_ref_sink (_tmp61_);
-	_tmp62_ = _tmp61_;
-	draw_app_window_append_toolitem (_data1_->w, (GtkToolItem*) _tmp62_, FALSE);
-	_g_object_unref0 (_tmp62_);
-	_tmp63_ = (GtkToolButton*) gtk_tool_button_new_from_stock (GTK_STOCK_SAVE);
-	g_object_ref_sink (_tmp63_);
-	_tmp64_ = _tmp63_;
-	draw_app_window_append_toolitem (_data1_->w, (GtkToolItem*) _tmp64_, FALSE);
-	_g_object_unref0 (_tmp64_);
-	_tmp65_ = draw_app_window_create_separator (_data1_->w);
-	_tmp66_ = _tmp65_;
-	draw_app_window_append_toolitem (_data1_->w, _tmp66_, FALSE);
-	_g_object_unref0 (_tmp66_);
-	_tmp67_ = draw_app_window_create_separator (_data1_->w);
-	_tmp68_ = _tmp67_;
-	draw_app_window_append_toolitem (_data1_->w, _tmp68_, TRUE);
-	_g_object_unref0 (_tmp68_);
-	_tmp69_ = (GtkToolButton*) gtk_tool_button_new_from_stock (GTK_STOCK_PRINT);
-	g_object_ref_sink (_tmp69_);
-	_tmp70_ = _tmp69_;
-	draw_app_window_append_toolitem (_data1_->w, (GtkToolItem*) _tmp70_, TRUE);
-	_g_object_unref0 (_tmp70_);
-	_tmp71_ = (GtkImage*) gtk_image_new_from_icon_name ("document-export", GTK_ICON_SIZE_LARGE_TOOLBAR);
+	layout = _tmp61_;
+	_tmp62_ = layout;
+	g_object_set ((GtkWidget*) _tmp62_, "expand", TRUE, NULL);
+	_tmp63_ = layout;
+	gtk_orientable_set_orientation ((GtkOrientable*) _tmp63_, GTK_ORIENTATION_VERTICAL);
+	_tmp64_ = layout;
+	_tmp65_ = main_toolbar;
+	gtk_container_add ((GtkContainer*) _tmp64_, (GtkWidget*) _tmp65_);
+	_tmp66_ = layout;
+	_tmp67_ = scroll;
+	gtk_container_add ((GtkContainer*) _tmp66_, (GtkWidget*) _tmp67_);
+	_tmp68_ = layout;
+	_tmp69_ = statusbar;
+	gtk_container_add ((GtkContainer*) _tmp68_, (GtkWidget*) _tmp69_);
+	_tmp70_ = layout;
+	gtk_container_add ((GtkContainer*) _data1_->w, (GtkWidget*) _tmp70_);
+	_tmp71_ = (GtkToolButton*) gtk_tool_button_new_from_stock (GTK_STOCK_NEW);
 	g_object_ref_sink (_tmp71_);
 	_tmp72_ = _tmp71_;
-	_tmp73_ = (GtkToolButton*) gtk_tool_button_new ((GtkWidget*) _tmp72_, "");
+	draw_window_append_toolitem (_data1_->w, (GtkToolItem*) _tmp72_, FALSE);
+	_g_object_unref0 (_tmp72_);
+	_tmp73_ = (GtkToolButton*) gtk_tool_button_new_from_stock (GTK_STOCK_OPEN);
 	g_object_ref_sink (_tmp73_);
 	_tmp74_ = _tmp73_;
-	draw_app_window_append_toolitem (_data1_->w, (GtkToolItem*) _tmp74_, TRUE);
+	draw_window_append_toolitem (_data1_->w, (GtkToolItem*) _tmp74_, FALSE);
 	_g_object_unref0 (_tmp74_);
-	_g_object_unref0 (_tmp72_);
-	_tmp75_ = (GtkImage*) gtk_image_new_from_icon_name ("application-menu", GTK_ICON_SIZE_LARGE_TOOLBAR);
+	_tmp75_ = (GtkToolButton*) gtk_tool_button_new_from_stock (GTK_STOCK_SAVE);
 	g_object_ref_sink (_tmp75_);
 	_tmp76_ = _tmp75_;
-	_tmp77_ = settings;
-	_tmp78_ = granite_widgets_tool_button_with_menu_new (_tmp76_, "", _tmp77_);
-	g_object_ref_sink (_tmp78_);
-	_tmp79_ = _tmp78_;
-	draw_app_window_append_toolitem (_data1_->w, (GtkToolItem*) _tmp79_, TRUE);
-	_g_object_unref0 (_tmp79_);
+	draw_window_append_toolitem (_data1_->w, (GtkToolItem*) _tmp76_, FALSE);
 	_g_object_unref0 (_tmp76_);
+	_tmp77_ = draw_window_create_separator (_data1_->w);
+	_tmp78_ = _tmp77_;
+	draw_window_append_toolitem (_data1_->w, _tmp78_, FALSE);
+	_g_object_unref0 (_tmp78_);
+	_tmp79_ = draw_window_create_separator (_data1_->w);
+	_tmp80_ = _tmp79_;
+	draw_window_append_toolitem (_data1_->w, _tmp80_, TRUE);
+	_g_object_unref0 (_tmp80_);
+	_tmp81_ = (GtkToolButton*) gtk_tool_button_new_from_stock (GTK_STOCK_PRINT);
+	g_object_ref_sink (_tmp81_);
+	_tmp82_ = _tmp81_;
+	draw_window_append_toolitem (_data1_->w, (GtkToolItem*) _tmp82_, TRUE);
+	_g_object_unref0 (_tmp82_);
+	_tmp83_ = (GtkImage*) gtk_image_new_from_icon_name ("document-export", GTK_ICON_SIZE_LARGE_TOOLBAR);
+	g_object_ref_sink (_tmp83_);
+	_tmp84_ = _tmp83_;
+	_tmp85_ = (GtkToolButton*) gtk_tool_button_new ((GtkWidget*) _tmp84_, "");
+	g_object_ref_sink (_tmp85_);
+	_tmp86_ = _tmp85_;
+	draw_window_append_toolitem (_data1_->w, (GtkToolItem*) _tmp86_, TRUE);
+	_g_object_unref0 (_tmp86_);
+	_g_object_unref0 (_tmp84_);
+	_tmp87_ = (GtkImage*) gtk_image_new_from_icon_name ("application-menu", GTK_ICON_SIZE_LARGE_TOOLBAR);
+	g_object_ref_sink (_tmp87_);
+	_tmp88_ = _tmp87_;
+	_tmp89_ = settings;
+	_tmp90_ = granite_widgets_tool_button_with_menu_new (_tmp88_, "", _tmp89_);
+	g_object_ref_sink (_tmp90_);
+	_tmp91_ = _tmp90_;
+	draw_window_append_toolitem (_data1_->w, (GtkToolItem*) _tmp91_, TRUE);
+	_g_object_unref0 (_tmp91_);
+	_g_object_unref0 (_tmp88_);
 	gtk_widget_show_all ((GtkWidget*) _data1_->w);
 	_g_object_unref0 (layout);
+	_g_object_unref0 (image);
+	_g_object_unref0 (pixbuf);
+	_g_object_unref0 (welcome);
 	_g_object_unref0 (main_toolbar);
 	_g_object_unref0 (scroll);
 	_g_object_unref0 (viewport);

@@ -3,9 +3,13 @@ using Granite.Widgets;
 
 namespace Draw
 {
-	// Window creation class - handles creating the window
-	// with an integrated toolbar and square style
-	public class AppWindow : Gtk.Window
+	/**
+	 * Application Window for Draw
+	 * Initialized the window with integrated toolbar
+	 *
+	 *
+	 */
+	public class Window : Gtk.Window
 	{
 			Gtk.Box container;
 			Gtk.Toolbar toolbar;
@@ -27,7 +31,7 @@ namespace Draw
 				private set;
 			}
 	 
-			public AppWindow ()
+			public Window()
 			{
 				this.delete_event.connect (() => {
 				    Gtk.main_quit ();

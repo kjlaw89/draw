@@ -20,14 +20,26 @@
     Original Author: Victor Eduardo <victoreduardm@gmail.com>
 ***/
 
-/**
- * A status bar with a centered label.
- *
- * It supports adding widgets at its left and right sides.
- */
 namespace Draw
 {
-	public class AppToolbar : Gtk.Toolbar {
+	/**
+	 * Toolbar that has 3 individual sections
+	 * It supports adding widgets at the left, center and right.
+	 *
+	 * Toolbar structure:
+	 *	<apptoolbar>
+	 *		<toolitem>
+	 *			<box name="left_box"></box>
+	 *		</toolitem>
+	 *		<toolitem>
+	 *			<box name="center_box" expand="true"></box>
+	 *		</toolitem>
+	 *		<toolitem>
+	 *			<box name="right_box"></box>
+	 *		</toolitem>
+	 *	</apptoolbar>
+	 */
+	public class Toolbar : Gtk.Toolbar {
 	
 		private int item_spacing = 3;
 
@@ -49,7 +61,7 @@ namespace Draw
 		/**
 		 * Creates a new Toolbar.
 		 */ 
-		public AppToolbar (string css_class, int? spacing) {
+		public Toolbar(string css_class, int? spacing) {
 			if (spacing != null)
 				item_spacing = (!) spacing;
 		
