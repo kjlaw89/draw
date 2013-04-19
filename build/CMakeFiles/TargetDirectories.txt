@@ -1,1 +1,0 @@
-/home/kj/Documents/draw/build/src/CMakeFiles/Draw.dir
