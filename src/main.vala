@@ -138,12 +138,34 @@ namespace Draw {
 		    var statusbar = new AppToolbar("status-toolbar", null);
 		    statusbar.insert_widget(zoom_widget, ToolbarPosition.RIGHT);
 		    
-		    var content = new Gtk.ScrolledWindow(null, null);
-		    content.get_style_context().add_class("container");
-		    content.expand = true;
+		    // Canvas
+		    var canvas = new Gtk.DrawingArea();
+		    canvas.get_style_context().add_class("canvas");
+		    canvas.valign = Gtk.Align.CENTER;
+		    canvas.halign = Gtk.Align.CENTER;
+		    canvas.width_request = 640;
+		    canvas.height_request = 480;
+		    
+		    var frame = new Gtk.Frame(null);
+		    frame.get_style_context().add_class("canvas-frame");
+		    frame.valign = Gtk.Align.CENTER;
+		    frame.halign = Gtk.Align.CENTER;
+		    frame.add(canvas);
+		    
+		    var viewport = new Gtk.Viewport(null, null);
+		    viewport.get_style_context().add_class("container");
+		    viewport.hexpand = true;
+		    viewport.vexpand = true;
+		    viewport.add(frame);
+		    
+		    // Scroll window
+		    var scroll = new Gtk.ScrolledWindow(null, null);
+		    scroll.expand = true;
+		    scroll.add(viewport);
+		    
 		    
 		    // Main toolbar
-		    var main_toolbar = new AppToolbar("primary-toolbar", null);
+		    var main_toolbar = new AppToolbar("main-toolbar", null);
 		    main_toolbar.height_request = 55;
         	
         	 // Main widget structure
@@ -151,7 +173,7 @@ namespace Draw {
 			layout.expand = true;
 			layout.orientation = Gtk.Orientation.VERTICAL;
 			layout.add(main_toolbar);
-			layout.add(content);
+			layout.add(scroll);
 			layout.add(statusbar);
 	 
 			w.add(layout);

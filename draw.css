@@ -16,25 +16,33 @@
 } 
 .content_text { color: #FFF; }
 
-.primary-toolbar 
+.main-toolbar 
 {
 	background-color: rgb(248, 248, 248); 
 	background-image: -gtk-gradient(linear, 0 0.7, 0 1, from(rgb(248, 248, 248)), to(rgb(240, 240, 240)));
 	
-	border-top-color: #FFF;
-	border-bottom-color: #000;
-	border-top-width: 1px;
-	border-bottom-width: 2px;
-	border-right-width: 0;
-	border-left-width: 0;
+	
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
 	-GtkWidget-window-dragging: false;
 }
 
 .status-toolbar
 {
-	border-top-width: 1px;
-	border-bottom-width: 0;
-	border-right-width: 0;
-	border-left-width: 0;
+	background-color: rgb(240, 240, 240);
 	-GtkWidget-window-dragging: false;
+}
+
+/* ToDO: Convert to checkerboard background image */
+.canvas
+{
+	background-color: white;
+}
+
+.canvas-frame
+{
+	border-width: 1px;
+	border-color: #C6C6C6;
+	border-style: solid;
+	box-shadow: 0 0 5 0 #000;
 }
