@@ -39,36 +39,33 @@ namespace Draw
 	 *		</toolitem>
 	 *	</apptoolbar>
 	 */
-	public class Toolbar : Gtk.Toolbar {
-	
+	public class Toolbar : Gtk.Toolbar 
+	{
 		private int item_spacing = 3;
-
-		/**
-		 * Gtk box on the left
-		 */ 
 		private Gtk.Box left_box;
-		
-		/**
-		 * Gtk box in the center of status bar
-		 */ 
 		private Gtk.Box center_box;
-		
-		/**
-		 * Gtk box on the right
-		 */ 
 		private Gtk.Box right_box;
 
 		/**
 		 * Creates a new Toolbar.
+		 * @param css_class Style to apply to toolbar
+		 * @param size Size to apply to icons
+		 * @param spacing Spacing to put between each button
 		 */ 
-		public Toolbar(string css_class, int? spacing) {
+		public Toolbar(string css_class, bool remove_default_style = true, int? size = null, int? spacing = null)
+		{
+			icon_size = (size != null) ? (!) size : 16;
+		
 			if (spacing != null)
 				item_spacing = (!) spacing;
 		
+			get_style_context().add_class(css_class);
+		
 		    // Get rid of the "toolbar" class to avoid inheriting its style.
 		    // We want the widget to look more like a normal statusbar.
-		    get_style_context().remove_class (Gtk.STYLE_CLASS_TOOLBAR);
-		    get_style_context().add_class(css_class);
+		    if (remove_default_style)
+				get_style_context().remove_class (Gtk.STYLE_CLASS_TOOLBAR);
+		    
 
 			center_box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 0);
 		    left_box = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 0);
@@ -94,25 +91,69 @@ namespace Draw
 		}
 
 		/**
-		 * Inserts widget in status bar
+		 * Adds a widget to a given portion of the toolbar
 		 * 
-		 * @param widget widget to insert
-		 * @param use_left_side whether or not to use left_side
+		 * @param widget widget to add
+		 * @param position where to add the widget
 		 */ 
-		public void insert_widget (Gtk.Widget widget, ToolbarPosition position) 
+		public new void add(Gtk.Widget widget, ToolbarPosition position = ToolbarPosition.LEFT) 
 		{
 			switch (position)
 			{
 				case ToolbarPosition.LEFT:
-					left_box.pack_start (widget, false, false, item_spacing);
+					left_box.pack_start(widget, false, false, item_spacing);
 					break;
 				case ToolbarPosition.CENTER:
-					center_box.pack_start (widget, false, false, item_spacing);
+					center_box.pack_start(widget, false, false, item_spacing);
 					break;
 				case ToolbarPosition.RIGHT:
-					right_box.pack_start (widget, false, false, item_spacing);
+					right_box.pack_start(widget, false, false, item_spacing);
 					break;
 			}
+		}
+		
+		/**
+		 * Adds a widget to the left portion of the toolbar
+		 * @param widget Widget to add
+		 */
+		public void add_left(Gtk.Widget widget) { add(widget, ToolbarPosition.LEFT); }
+		
+		/**
+		 * Adds a widget to the center portion of the toolbar
+		 * @param widget Widget to add
+		 */
+		public void add_center(Gtk.Widget widget) { add(widget, ToolbarPosition.CENTER); }
+		
+		/**
+		 * Adds a widget to the right portion of the toolbar
+		 * @param widget Widget to add
+		 */
+		public void add_right(Gtk.Widget widget) { add(widget, ToolbarPosition.RIGHT); }
+		
+		/**
+		 * Creates a nice separator Toolbar item to separate various content
+		 * @return Toolitem
+		 */
+		public Gtk.ToolItem create_separator(int height)
+		{
+			var sep = new Gtk.ToolItem();
+	        sep.height_request = height;
+	        sep.width_request = 1;
+	        sep.draw.connect ((cr) => 
+	        {
+                cr.move_to (0, 0);
+                cr.line_to (0, 60);
+                cr.set_line_width (1);
+                var grad = new Cairo.Pattern.linear (0, 0, 0, height);
+                grad.add_color_stop_rgba (0, 0.3, 0.3, 0.3, 0.4);
+                grad.add_color_stop_rgba (0.8, 0, 0, 0, 0);
+                cr.set_source (grad);
+                cr.stroke ();
+                return true;
+	        });
+	        
+	        sep.get_style_context().add_class("sep");
+	        return sep;
 		}
 	}
 	

@@ -35,8 +35,12 @@ link_directories(${LIB_PATHS})
 add_definitions(${CFLAGS})
 vala_precompile(VALA_C
     main.vala
-    AppWindow.vala
-    AppToolbar.vala
+    Views/Window.vala
+    Views/WindowToolbar.vala
+    Views/ActionToolbar.vala
+    Views/StatusToolbar.vala
+    Views/Canvas.vala
+    Widgets/Toolbar.vala
 PACKAGES
     gtk+-3.0
     granite

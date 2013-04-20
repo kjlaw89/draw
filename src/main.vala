@@ -1,5 +1,25 @@
-// Vala uses a syntax similar to C#. Anything that's in a namespace can be included by doing "using _NAMESPACE_";
-// We include GTK here because we want to build a Hello World Window.
+/***
+    Copyright (C) 2013-2014 Draw Developers
+
+    This program or library is free software; you can redistribute it
+    and/or modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 3 of the License, or (at your option) any later version.
+
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+    Lesser General Public License for more details.
+ 
+    You should have received a copy of the GNU Lesser General
+    Public License along with this library; if not, write to the
+    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+    Boston, MA 02110-1301 USA.
+
+    Authored by: KJ Lawrence <kjtehprogrammer@gmail.com>
+    Original Author: Victor Eduardo <victoreduardm@gmail.com>
+***/
+
 using Gtk;
 using Granite;
 using Granite.Widgets;
@@ -11,7 +31,7 @@ namespace Draw {
     // Here we create our main application class. We derive from Granite.Application because it includes
     // many helper functions for us. It also includes a Granite window which is based off of the 
     // Elementary Human Interface Guildlines. You'll see in the future how much it helps us.
-    public class Draw : Granite.Application 
+    public class Application : Granite.Application 
     {
         
         // Before we get into the constructor functions. We need to define any classwide variables.
@@ -77,157 +97,24 @@ namespace Draw {
         }
         
         // This is another constructor. We can put GTK Overrides here...
-        public Draw() {}
+        public Application() {}
         
 
         // This is our function to "activate" the GTK App. Here is where we define our startup functions.
         // Splash Screen? Initial Plugin Loading? Initial Window building? All of that goes here.
         public override void activate ()
         {
-            Window w = new Window ();
-            w.title = "Draw";
+            Window w = new Window(this);
+            w.Title = "Draw";
             w.set_application(this);
 			w.set_default_size(980, 720);
-            w.window_position = Gtk.WindowPosition.CENTER;
-			w.destroy.connect (Gtk.main_quit);
-			
-			// Don't allow the window to be sized smaller than a certain amount
-			// Commented out until I can research why it resizes to a small size in the beginning
-			/*w.configure_event.connect(() => 
-			{
-				if (w.width_request < 630)
-					w.width_request = 630;
-				
-				if (w.height_request < 460)
-					w.height_request = 460;
-					
-				w.resize(w.width_request, w.height_request);
-				return false;
-			});*/
-			
-			var css = new Gtk.CssProvider();
-			css.load_from_file(File.new_for_path("./draw.css"));
-			Gtk.StyleContext.add_provider_for_screen(w.screen, css, Gtk.STYLE_PROVIDER_PRIORITY_THEME);
-			
-			// App Menu (this gives access to the About dialog)
-        	Gtk.Menu settings = new Gtk.Menu ();
-        	Gtk.MenuItem about_item = new Gtk.MenuItem.with_label("About");
-        	about_item.activate.connect(() => { show_about(w); });
-        	
-        	// Add our settings items to our menu
-        	settings.add(about_item);
-        	
-		    // Create the widgets for the status bar
-		    var zoom_widget = new Gtk.Scale.with_range(Gtk.Orientation.HORIZONTAL, 25, 800, 25);
-		    zoom_widget.get_style_context().add_class("zoom-widget");
-		    zoom_widget.tooltip_text = "Zoom";
-		    zoom_widget.width_request = 150;
-		    zoom_widget.value_pos = Gtk.PositionType.LEFT;
-		    zoom_widget.set_value(100);
-		    
-		    // Hack way of getting the slider to lock to 25-increments
-		    zoom_widget.value_changed.connect(() =>
-		    {
-		    	double zValue = zoom_widget.get_value();
-		    	double newValue = Math.round((zValue / 25.0)) * 25.0;
-		    	zoom_widget.set_value(newValue);
-		    });
-		    
-		    // Application Statusbar (used for image zooming, canvas size details, mouse position and general stats)
-		    var statusbar = new Toolbar("status-toolbar", null);
-		    statusbar.insert_widget(zoom_widget, ToolbarPosition.RIGHT);
-		    
-		    // Canvas
-		    var canvas = new Gtk.DrawingArea();
-		    canvas.get_style_context().add_class("canvas");
-		    canvas.valign = Gtk.Align.CENTER;
-		    canvas.halign = Gtk.Align.CENTER;
-		    canvas.width_request = 640;
-		    canvas.height_request = 480;
-		    
-		    var frame = new Gtk.Frame(null);
-		    frame.get_style_context().add_class("canvas-frame");
-		    frame.valign = Gtk.Align.CENTER;
-		    frame.halign = Gtk.Align.CENTER;
-		    frame.add(canvas);
-		    
-		    var viewport = new Gtk.Viewport(null, null);
-		    viewport.get_style_context().add_class("container");
-		    viewport.hexpand = true;
-		    viewport.vexpand = true;
-		    viewport.add(frame);
-		    
-		    // Scroll window
-		    var scroll = new Gtk.ScrolledWindow(null, null);
-		    scroll.expand = true;
-		    scroll.add(viewport);
-		    
-		    
-		    // Main toolbar
-		    var main_toolbar = new Toolbar("main-toolbar", null);
-		    main_toolbar.height_request = 55;
-        	
-        	var welcome = new Granite.Widgets.Welcome ("Draw", "Load an image and make something!");
-        	welcome.expand = true;
-
-		    Gdk.Pixbuf? pixbuf = null;
-
-		    try {
-		        pixbuf = Gtk.IconTheme.get_default ().load_icon ("document-new", 48,
-		                                                         Gtk.IconLookupFlags.GENERIC_FALLBACK);
-		    } catch (Error e) {
-		        warning ("Could not load icon, %s", e.message);
-		    }
-
-		    Gtk.Image? image = new Gtk.Image.from_icon_name ("document-open", Gtk.IconSize.DIALOG);
-
-		    // Adding elements. Use the most convenient method to add an icon
-		    welcome.append_with_pixbuf (pixbuf, "New", "Create a new image.");
-		    welcome.append_with_image (image, "Open", "Select an image.");
-        	
-        	 // Main widget structure
-			Gtk.Grid layout = new Gtk.Grid ();
-			layout.expand = true;
-			layout.orientation = Gtk.Orientation.VERTICAL;
-			layout.add(main_toolbar);
-			//layout.add(welcome);
-			layout.add(scroll);
-			layout.add(statusbar);
-	 
-			w.add(layout);
-			w.append_toolitem (new Gtk.ToolButton.from_stock (Gtk.Stock.NEW));
-			w.append_toolitem (new Gtk.ToolButton.from_stock (Gtk.Stock.OPEN));
-			w.append_toolitem (new Gtk.ToolButton.from_stock (Gtk.Stock.SAVE));
-			w.append_toolitem (w.create_separator ());
-			w.append_toolitem (w.create_separator (), true);
-			w.append_toolitem (new Gtk.ToolButton.from_stock (Gtk.Stock.PRINT), true);
-			w.append_toolitem (new Gtk.ToolButton (new Gtk.Image.from_icon_name ("document-export", Gtk.IconSize.LARGE_TOOLBAR), ""), true);
-			w.append_toolitem (new Granite.Widgets.ToolButtonWithMenu (new Gtk.Image.from_icon_name ("application-menu", Gtk.IconSize.LARGE_TOOLBAR), "", settings), true);
-			w.show_all();
+            w.show_all();
         }
     }
 }
 
-
-
-// Now that our application and window are defined, we have to call them through the main loop.
-// We do this by starting with a main function. You could theoretically include all the code above
-// in a main function. However it doesn't make for clean code and you wont be able to take part
-// in all of granite's cool features.
-
-// All main loop functions should start as an int. You can do self-checks within the app and 
-// return 0 to force the app to close in the event of an issue.
 public static int main(string[] args){
-
-    // We need to tell GTK To start. Even though we've written all the code above. None of it
-    // is started yet. So we need to start GTK then run our code.
     Gtk.init(ref args);
-
-    // Lets assign our Application Class and Namespace to a variable. You always call it by
-    // var VarName = new NameSpace.Class();
-    // The Classname and Namespace Name do not have to be identical. They can be different.
-    var draw_app = new Draw.Draw();
-
-    // Now remember how this is an Int? Instead of returning a number we're going to return our window.
+    var draw_app = new Draw.Application();
     return draw_app.run(args);
 }
