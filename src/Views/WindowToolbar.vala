@@ -54,15 +54,15 @@ namespace Draw
 	        maximize.width_request = HEIGHT;
 	        maximize.clicked.connect (() => 
 	        { 
-	        	if (!Window.maximized)
+	        	if (!Window.Maximized)
 	        	{
 	        		Window.get_window().maximize();
-	        		Window.maximized = true;
+	        		Window.Maximized = true;
 	        	}
 	        	else
 	    		{
 	    			Window.get_window().unmaximize();
-	    			Window.maximized = false;
+	    			Window.Maximized = false;
 	    		}
 	        });
 	        

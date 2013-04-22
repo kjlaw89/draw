@@ -38,9 +38,9 @@ namespace Draw
 		public Draw.ActionToolbar ActionToolbar { get; set; }
 		public Draw.StatusToolbar StatusToolbar { get; set; }
 		public Draw.CanvasContainer CanvasContainer { get; set; }
-		//public 
+		public Gtk.DrawingArea Canvas { get; set; }
 		
-		public bool maximized { get; set; }
+		public bool Maximized { get; set; }
 		public new string Title
 		{
 			get { return WindowToolbar.Title; }
@@ -57,10 +57,7 @@ namespace Draw
 		{
 			Application = application;
 			window_position = Gtk.WindowPosition.CENTER;
-			delete_event.connect (() => {
-			    Gtk.main_quit ();
-			    return false;
-			});
+			delete_event.connect (() => exit());
 		    
 		    // Try to load in and apply the CSS to the application
 		    try
@@ -80,6 +77,7 @@ namespace Draw
 			
 			// Create canvas
 			CanvasContainer = new Draw.CanvasContainer(this);
+			Canvas = CanvasContainer.Canvas;
 			
 			// Create Status toolbar
 			StatusToolbar = new Draw.StatusToolbar(this);
@@ -101,6 +99,15 @@ namespace Draw
 		    Container.pack_start(WindowToolbar, false);
 		    Container.pack_start(Content);
 			base.add(Container);
+		}
+		
+		/**
+		 * Terminates the program
+		 */
+		public bool exit()
+		{
+			Gtk.main_quit();
+			return false;
 		}
 
 		public override void show ()

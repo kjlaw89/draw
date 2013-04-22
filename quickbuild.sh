@@ -12,4 +12,4 @@ cmake ..
 make
 
 #Next we copy the executable to our root project file.
-cp ./src/Draw ../Draw
+cp ./src/Draw ../bin/Draw

@@ -40,6 +40,8 @@ vala_precompile(VALA_C
     Views/ActionToolbar.vala
     Views/StatusToolbar.vala
     Views/Canvas.vala
+    Views/ActionViews/DrawTools.vala
+    Widgets/Tools.vala
     Widgets/Toolbar.vala
 PACKAGES
     gtk+-3.0

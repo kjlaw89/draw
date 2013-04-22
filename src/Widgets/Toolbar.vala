@@ -155,6 +155,17 @@ namespace Draw
 	        sep.get_style_context().add_class("sep");
 	        return sep;
 		}
+		
+		/**
+		 * Removes a widget from the toolbar (in any place that it appears)
+		 * @param widget Widget to remove
+		 */
+		public new void remove(Gtk.Widget widget)
+		{
+			left_box.remove(widget);
+			center_box.remove(widget);
+			right_box.remove(widget);
+		}
 	}
 	
 	public enum ToolbarPosition { LEFT, CENTER, RIGHT }
