@@ -35,11 +35,12 @@ link_directories(${LIB_PATHS})
 add_definitions(${CFLAGS})
 vala_precompile(VALA_C
     main.vala
+    Core/Canvas.vala
     Views/Window.vala
     Views/WindowToolbar.vala
     Views/ActionToolbar.vala
     Views/StatusToolbar.vala
-    Views/Canvas.vala
+    Views/CanvasContainer.vala
     Views/ActionViews/DrawTools.vala
     Widgets/Tools.vala
     Widgets/Toolbar.vala

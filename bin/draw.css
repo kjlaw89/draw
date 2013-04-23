@@ -68,3 +68,18 @@
 	-unico-outer-stroke-width: 0;
 	-unico-outer-stroke-style: none;
 }
+
+DrawDrawTools GtkButton
+{
+	padding: 0;
+}
+
+.drawtools GtkToolButton.tool-selected GtkImage
+{
+	padding: 0px;
+	border-width: 1px;
+	border-style: solid;
+	border-radius: 2px;
+	border-color: #CCC;
+	background-image: -gtk-gradient(linear, 0 0, 0 1, from(#EBEBEB), to(#DDD));
+}

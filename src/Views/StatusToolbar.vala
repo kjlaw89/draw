@@ -55,8 +55,8 @@ namespace Draw
 		    	zoomWidget.set_value(newValue);
 		    	
 		    	// Get the canvas's current size and adjust it for the new zoom
-		    	int width = (int)(Canvas.DefaultWidth * (newValue / 100.0));
-		    	int height = (int)(Canvas.DefaultHeight * (newValue / 100.0));
+		    	int width = (int)(Canvas.Canvas.DefaultWidth * (newValue / 100.0));
+		    	int height = (int)(Canvas.Canvas.DefaultHeight * (newValue / 100.0));
 		    	Canvas.canvas_zoom(width, height);
 		    });
 		    

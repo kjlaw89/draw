@@ -10,7 +10,7 @@
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
     Lesser General Public License for more details.
- 
+
     You should have received a copy of the GNU Lesser General
     Public License along with this library; if not, write to the
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
@@ -49,105 +49,128 @@ namespace Draw
 	public class Tools : Gtk.Box
 	{
 		private int cellSpacing = 0;
-		private int widgetSize = 20;
+		private int buttonSize = 20;
 		private ArrayList<Gtk.Box> rows = new ArrayList<Gtk.Box>();
-		private ArrayList<Gtk.Widget> widgets = new ArrayList<Gtk.Widget>();
-		
+		private ArrayList<Gtk.ToolButton> buttons = new ArrayList<Gtk.ToolButton>();
+
 		/**
-		 * Widgets associated with Tools
+		 * Buttons associated with Tools
 		 */
-		public ArrayList<Gtk.Widget> Widgets { get { return widgets; } }
-	
+		public ArrayList<Gtk.ToolButton> Buttons { get { return buttons; } }
+
 		/**
-		 * Creates a new Tools 
-		 * @param rows Amount of Rows to make
-		 * @param spacing Space between each widget
+		 * Creates a new Tools
+		 * @param style CSS Style to apply to Tools
+		 * @param rowsAmount Amount of Rows to make
+		 * @param size Size of icons
+		 * @param spacing Space between each button
 		 * @param hideRowsAfter Amount of rows to show before the rest are in a hidden popup
 		 */
-		public Tools(int rowsAmount= 2, int size = 16, int spacing = 1, int hideRowsAfter = 0)
+		public Tools(string? style, int rowsAmount= 2, int size = 16, int spacing = 1, int hideRowsAfter = 0)
 		{
-			widgetSize = size;
+			buttonSize = size;
 			cellSpacing = spacing;
-		
-			// Create our widgets layout
+
+			// Add styles if given
+			if (style != null)
+				get_style_context().add_class((!) style);
+
+			// Create our buttons layout
 			var grid = new Gtk.Grid();
 			grid.row_spacing = spacing;
 			base.add(grid);
-			
+
 			// Attach the individual boxes to each row
 			for(int i = 0; i < rowsAmount; i++)
 			{
 				var row = new Gtk.Box(Gtk.Orientation.HORIZONTAL, spacing);
 				rows.add(row);
-				
+
 				if (hideRowsAfter != 0 && i > hideRowsAfter)
 					row.hide();
-				
+
 				grid.attach(row, 0, i, 1, 1);
 			}
 		}
-		
+
 		/**
-		 * Adds the given widget to a row
-		 * @param widget Widget to add
-		 * @param row Row to add widget to
-		 * @param focus Defaults focus to new widget
+		 * Adds the given button to a row
+		 * @param button button to add
+		 * @param row Row to add button to
+		 * @param focus Defaults focus to new button
 		 */
-		public void add_widget(Gtk.Widget widget, int row, bool focus = false)
+		public void add_button(Gtk.ToolButton button, int row, bool focus = false)
 		{
 			if (row > rows.size - 1)
 				return;
-			
-			widget.show();
-	        widget.height_request = widgetSize;
-	        widget.width_request = widgetSize;
-			
+
+			button.show();
+	        button.height_request = buttonSize;
+	        button.width_request = buttonSize;
+
 			Gtk.Box selectedRow = rows[row];
-			selectedRow.add(widget);
-			widgets.add(widget);
-			focus_widget(widget);
+			selectedRow.add(button);
+			buttons.add(button);
+
+			if (focus)
+				focus_button(button);
+
+			button.clicked.connect(button_clicked);
 		}
 		
-		/**
-		 * Removes widget from toolbar
-		 * @param widget Widget to remove
-		 */
-		public void remove_widget(Gtk.Widget widget)
+		public void button_clicked(Gtk.ToolButton button)
 		{
-			widgets.remove(widget);
-			
+			stdout.printf("button focused\n");
+			focus_button(button);
+		}
+
+		/**
+		 * Removes button from toolbar
+		 * @param button button to remove
+		 */
+		public void remove_button(Gtk.ToolButton button)
+		{
+			buttons.remove(button);
+
 			foreach(Gtk.Box b in rows)
-				b.remove(widget);
+				b.remove(button);
 		}
-		
+
 		/**
-		 * Gives focus to the selected widget
-		 * @param widget Widget to give focus to
-		 * @return True if widget exists
+		 * Gives focus to the selected button
+		 * @param button button to give focus to
+		 * @return True if button exists
 		 */
-		public bool focus_widget(Gtk.Widget widget)
+		public bool focus_button(Gtk.ToolButton button)
 		{
-			if (!widgets.contains(widget))
+			stdout.printf("Tools focusing a button\n");
+
+			if (!buttons.contains(button))
+			{
+				stdout.printf("Tools does not contain button.\n");
 				return false;
-				
-			foreach(Gtk.Widget w in widgets)
-				w.get_style_context().remove_class("tool-selected");
-				
-			widget.get_style_context().add_class("tool-selected");
+			}
+
+			foreach(Gtk.ToolButton b in buttons)
+				b.get_style_context().remove_class("tool-selected");
+
+			var context = button.get_style_context();
+			context.add_class("tool-selected");
+			context.reset_widgets(context.screen);		// ToDO: Find a better way to reset the styles so the classes (would prefer not to redraw the window)
 			return true;
 		}
-		
+
 		/**
-		 * Gives focus to the selected widget (by index)
-		 * @param int Widget's position to give focus to
-		 * @return True if widget exists
+		 * Gives focus to the selected button (by index)
+		 * @param int button's position to give focus to
+		 * @return True if button exists
 		 */
-		public bool focus_widget_by_index(int index)
+		public bool focus_button_by_index(int index)
 		{
-			if (index > widgets.size - 1)
+			if (index > buttons.size - 1)
 				return false;
-				
-			return (focus_widget(widgets.get(index)));
+
+			return (focus_button(buttons.get(index)));
 		}
 	}
 }

@@ -33,37 +33,12 @@ namespace Draw
 	public class CanvasContainer : Gtk.ScrolledWindow
 	{
 		public Draw.Window Window { get; set; }
-		public Gtk.DrawingArea Canvas { get; set; }
-		
-		public int Width
-		{
-			get { return Canvas.width_request; }
-			set { Canvas.width_request = value; }
-		}
-		
-		public int Height
-		{
-			get { return Canvas.height_request; }
-			set { Canvas.height_request = value; }
-		}
-		
-		public int DefaultWidth { get; private set; }
-		public int DefaultHeight { get; private set; }
+		public Draw.Canvas Canvas { get; set; }
 	
 		public CanvasContainer(Draw.Window window)
 		{
 			Window = window;
-			
-			DefaultWidth = 640;
-			DefaultHeight = 480;
-		
-			// Create canvas and content area
-			Canvas = new Gtk.DrawingArea();
-			Canvas.get_style_context().add_class("canvas");
-			Canvas.valign = Gtk.Align.CENTER;
-			Canvas.halign = Gtk.Align.CENTER;
-			Width = DefaultWidth;
-			Height = DefaultHeight;
+			Canvas = new Draw.Canvas(640, 480);
 		
 			var frame = new Gtk.Frame(null);
 			frame.get_style_context().add_class("canvas-frame");
@@ -84,35 +59,7 @@ namespace Draw
 		
 		public void canvas_zoom(int width, int height)
 		{
-			Width = width;
-		    Height = height;
-		    
-		    // ToDO: Perform some image resizing function since we'll be zooming in or out
-		    
-		    // Extra logging (should be able to be removed eventually
-		    stdout.printf("Canvas Resized to (%s, %s)\n", width.to_string(), height.to_string());
-		}
-		
-		/**
-		 * Stub method for future use, affects both
-		 * Width/Height properties and Default Width/Height
-		 * properties
-		 */
-		public void canvas_resize(int width, int height, ResizeDirection direction)
-		{
-		}
-		
-		public enum ResizeDirection
-		{
-			TOP_LEFT,
-			TOP_CENTER,
-			TOP_RIGHT,
-			MIDDLE_LEFT,
-			MIDDLE_CENTER,
-			MIDDLE_RIGHT,
-			BOTTOM_LEFT,
-			BOTTOM_CENTER,
-			BOTTOM_RIGHT
+			Canvas.canvas_zoom(width, height);
 		}
 	}
 }

@@ -71,3 +71,12 @@
 /build/src/Widgets/Tools.c
 /CMakeLists.txt~
 /bin/Draw
+/src/Views/ActionViews/DrawTools.vala~
+/src/Widgets/Tools.vala~
+/bin/draw.css~
+/build/src/CMakeFiles/Draw.dir/Core/Canvas.c.o
+/build/src/CMakeFiles/Draw.dir/Views/CanvasContainer.c.o
+/build/src/Core/Canvas.c
+/build/src/Views/CanvasContainer.c
+/src/Core/Canvas.vala~
+/src/Views/CanvasContainer.vala~

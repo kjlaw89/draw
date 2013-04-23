@@ -28,18 +28,20 @@ namespace Draw
 	{
 		public DrawTools()
 		{
-			add_widget(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/mouse.png"), "Pointer"), 0, true);
-			add_widget(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/select.png"), "Select"), 0);
-			add_widget(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/magic_select.png"), "Magic Select"), 0);
-			add_widget(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/dropper.png"), "Dropper"), 0);
-			add_widget(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/eraser.png"), "Eraser"), 0);
-			add_widget(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/clone_stamp.png"), "Clone Stamp"), 0);
-			add_widget(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/bucket.png"), "Bucket"), 1);
-			add_widget(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/pencil.png"), "Pencil"), 1);
-			add_widget(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/brush.png"), "Brush"), 1);
-			add_widget(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/shapes.png"), "Shapes"), 1);
-			add_widget(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/lines.png"), "Lines"), 1);
-			add_widget(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/text.png"), "Text"), 1);
+			base("drawtools", 2, 19);
+		
+			add_button(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/mouse.png"), "Pointer"), 0, true);
+			add_button(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/select.png"), "Select"), 0);
+			add_button(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/magic_select.png"), "Magic Select"), 0);
+			add_button(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/dropper.png"), "Dropper"), 0);
+			add_button(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/eraser.png"), "Eraser"), 0);
+			add_button(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/clone_stamp.png"), "Clone Stamp"), 0);
+			add_button(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/bucket.png"), "Bucket"), 1);
+			add_button(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/pencil.png"), "Pencil"), 1);
+			add_button(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/brush.png"), "Brush"), 1);
+			add_button(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/shapes.png"), "Shapes"), 1);
+			add_button(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/lines.png"), "Lines"), 1);
+			add_button(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/text.png"), "Text"), 1);
 		}
 	}
 }
