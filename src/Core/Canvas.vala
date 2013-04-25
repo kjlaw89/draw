@@ -46,8 +46,8 @@ namespace Draw
 
 		private Granite.Drawing.BufferSurface buffer;
 		private bool hasFocus;
-		private int? lastX;
-		private int? lastY;
+		private double? lastX;
+		private double? lastY;
 
 		/**
 		 * Creates a new Canvas to draw on
@@ -86,6 +86,9 @@ namespace Draw
 			{
 				lastX = (int)event.motion.x;
 				lastY = (int)event.motion.y;
+				context.rectangle(lastX, lastY, 1, 1);
+				context.set_source_rgb(0, 0, 0);
+				context.fill();
 				hasFocus = true;
 				return true;
 			}
@@ -102,14 +105,15 @@ namespace Draw
 			if (hasFocus && event.type == Gdk.EventType.MOTION_NOTIFY)
 			{
 				stdout.printf("X: %i, Y: %i\n", (int)event.motion.x, (int)event.motion.y);
-				context.set_line_width(0.5);
+				context.set_antialias(Cairo.Antialias.SUBPIXEL);
+				context.set_line_width(1);
 				context.set_source_rgb(0, 0, 0);
 				context.move_to((!) lastX, (!) lastY);
-				context.line_to((int)event.motion.x, (int)event.motion.y);
+				context.line_to(event.motion.x, event.motion.y);
 				context.stroke();
 				
-				lastX = (int)event.motion.x;
-				lastY = (int)event.motion.y;
+				lastX = event.motion.x;
+				lastY = event.motion.y;
 				queue_draw();
 			}
 

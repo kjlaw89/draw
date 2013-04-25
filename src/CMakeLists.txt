@@ -42,8 +42,10 @@ vala_precompile(VALA_C
     Views/StatusToolbar.vala
     Views/CanvasContainer.vala
     Views/ActionViews/DrawTools.vala
+    Views/ActionViews/ColorTools.vala
     Widgets/Tools.vala
     Widgets/Toolbar.vala
+    Widgets/ColorIcon.vala
 PACKAGES
     gtk+-3.0
     granite

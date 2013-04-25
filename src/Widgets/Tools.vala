@@ -143,13 +143,8 @@ namespace Draw
 		 */
 		public bool focus_button(Gtk.ToolButton button)
 		{
-			stdout.printf("Tools focusing a button\n");
-
 			if (!buttons.contains(button))
-			{
-				stdout.printf("Tools does not contain button.\n");
 				return false;
-			}
 
 			foreach(Gtk.ToolButton b in buttons)
 				b.get_style_context().remove_class("tool-selected");

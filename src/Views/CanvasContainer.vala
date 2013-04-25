@@ -21,6 +21,7 @@
 
 using Granite;
 using Granite.Widgets;
+using Gee;
 
 namespace Draw
 {
@@ -33,7 +34,14 @@ namespace Draw
 	public class CanvasContainer : Gtk.ScrolledWindow
 	{
 		public Draw.Window Window { get; set; }
-		public Draw.Canvas Canvas { get; set; }
+		
+		private ArrayList<Draw.Canvas> canvii = new ArrayList<Draw.Canvas>();
+		private Draw.Canvas activeCanvas;
+		public Draw.Canvas Canvas 
+		{ 
+			get { return activeCanvas; }
+			set { activeCanvas = value; }
+		}
 	
 		public CanvasContainer(Draw.Window window)
 		{

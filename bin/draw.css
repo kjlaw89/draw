@@ -83,3 +83,6 @@ DrawDrawTools GtkButton
 	border-color: #CCC;
 	background-image: -gtk-gradient(linear, 0 0, 0 1, from(#EBEBEB), to(#DDD));
 }
+
+.color-palette GtkToolButton { padding: 1px; margin: 0px; }
+.color-palette GtkButton { padding: 1px; }
