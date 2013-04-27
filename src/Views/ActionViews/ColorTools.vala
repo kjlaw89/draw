@@ -27,48 +27,28 @@ namespace Draw
 {
 	public class ColorTools : Gtk.Box
 	{
+		private ArrayList<Palette> palettes = new ArrayList<Palette>();
+		public Palette activePalette;
+	
 		public ColorTools()
 		{
+			palettes = Palette.load_palettes();
+			activePalette = palettes[0];
 			
-			Draw.Tools palette = new Draw.Tools("color-palette", 2, 12, 0, 2);
-			palette.add_button(new Gtk.ToolButton (new ColorIcon(new Color(0, 0, 0, 1), 12, 12), null), 0, true);
-			palette.add_button(new Gtk.ToolButton (new ColorIcon(new Color(0.25, 0.25, 0.25, 1), 12, 12), null), 0, true);
-			palette.add_button(new Gtk.ToolButton (new ColorIcon(new Color(1, 0, 0, 1), 12, 12), null), 0, true);
-			palette.add_button(new Gtk.ToolButton (new ColorIcon(new Color(1, 0.42, 0, 1), 12, 12), null), 0, true);
-			palette.add_button(new Gtk.ToolButton (new ColorIcon(new Color(1, 0.85, 0, 1), 12, 12), null), 0, true);
-			palette.add_button(new Gtk.ToolButton (new ColorIcon(new Color(0.71, 1, 0, 1), 12, 12), null), 0, true);
-			palette.add_button(new Gtk.ToolButton (new ColorIcon(new Color(0, 1, 0, 1), 12, 12), null), 0, true);
-			palette.add_button(new Gtk.ToolButton (new ColorIcon(new Color(0, 1, 0.56, 1), 12, 12), null), 0, true);
-			palette.add_button(new Gtk.ToolButton (new ColorIcon(new Color(0, 1, 1, 1), 12, 12), null), 0, true);
-			palette.add_button(new Gtk.ToolButton (new ColorIcon(new Color(0, 0, 1, 1), 12, 12), null), 0, true);
-			palette.add_button(new Gtk.ToolButton (new ColorIcon(new Color(0.7, 0, 1, 1), 12, 12), null), 0, true);
-			palette.add_button(new Gtk.ToolButton (new ColorIcon(new Color(1, 1, 1, 1), 12, 12), null), 1, true);
-			palette.add_button(new Gtk.ToolButton (new ColorIcon(new Color(0.5, 0.5, 0.5, 1), 12, 12), null), 1, true);
-			palette.add_button(new Gtk.ToolButton (new ColorIcon(new Color(0.5, 0, 0, 1), 12, 12), null), 1, true);
-			palette.add_button(new Gtk.ToolButton (new ColorIcon(new Color(0.5, 0.2, 0, 1), 12, 12), null), 1, true);
-			palette.add_button(new Gtk.ToolButton (new ColorIcon(new Color(0.5, 0.42, 0, 1), 12, 12), null), 1, true);
-			palette.add_button(new Gtk.ToolButton (new ColorIcon(new Color(0, 0.5, 0.05, 1), 12, 12), null), 1, true);
-			palette.add_button(new Gtk.ToolButton (new ColorIcon(new Color(0, 0.5, 0.27, 1), 12, 12), null), 1, true);
-			palette.add_button(new Gtk.ToolButton (new ColorIcon(new Color(0, 0.5, 0.5, 1), 12, 12), null), 1, true);
-			palette.add_button(new Gtk.ToolButton (new ColorIcon(new Color(0, 0.05, 0.5, 1), 12, 12), null), 1, true);
-			palette.add_button(new Gtk.ToolButton (new ColorIcon(new Color(0.34, 0, 0.5, 1), 12, 12), null), 1, true);
-			palette.add_button(new Gtk.ToolButton (new ColorIcon(new Color(0.5, 0, 0.43, 1), 12, 12), null), 1, true);
+			Draw.Tools palette = new Draw.Tools("color-palette", 3, 12, 0);
+			
+			// Load our colors from the palette in
+			for (var i = 0; i < 3; i++)
+			{
+				for (var ii = 0; ii < 16; ii++)
+				{
+					var color = activePalette.Colors[(i * 16) + ii];
+					palette.add_button(new Gtk.ToolButton (new ColorIcon(color, 12, 12), null), i, true);
+				}
+			}
 			
 			valign = Gtk.Align.CENTER;
 			add(palette);
-			
-			/*add_button(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/mouse.png"), "Pointer"), 0, true);
-			add_button(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/select.png"), "Select"), 0);
-			add_button(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/magic_select.png"), "Magic Select"), 0);
-			add_button(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/dropper.png"), "Dropper"), 0);
-			add_button(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/eraser.png"), "Eraser"), 0);
-			add_button(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/clone_stamp.png"), "Clone Stamp"), 0);
-			add_button(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/bucket.png"), "Bucket"), 1);
-			add_button(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/pencil.png"), "Pencil"), 1);
-			add_button(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/brush.png"), "Brush"), 1);
-			add_button(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/shapes.png"), "Shapes"), 1);
-			add_button(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/lines.png"), "Lines"), 1);
-			add_button(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/text.png"), "Text"), 1);*/
 		}
 	}
 }

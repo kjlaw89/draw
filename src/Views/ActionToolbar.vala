@@ -92,8 +92,8 @@ namespace Draw
 			adjustmentsContainer.add(adjustmentsButton);
 			
 			// Add all items to the toolbar
-			add_left(new Draw.DrawTools());
 			add_left(new Draw.ColorTools());
+			add_left(new Draw.DrawTools());
 			add_right(adjustmentsContainer);
 			add_right(effectsContainer);
 		}

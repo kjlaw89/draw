@@ -104,7 +104,6 @@ namespace Draw
 
 			if (hasFocus && event.type == Gdk.EventType.MOTION_NOTIFY)
 			{
-				stdout.printf("X: %i, Y: %i\n", (int)event.motion.x, (int)event.motion.y);
 				context.set_antialias(Cairo.Antialias.SUBPIXEL);
 				context.set_line_width(1);
 				context.set_source_rgb(0, 0, 0);
