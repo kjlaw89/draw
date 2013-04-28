@@ -38,7 +38,7 @@ namespace Draw
 		public Draw.ActionToolbar ActionToolbar { get; set; }
 		public Draw.StatusToolbar StatusToolbar { get; set; }
 		public Draw.CanvasContainer CanvasContainer { get; set; }
-		public Gtk.DrawingArea Canvas { get; set; }
+		public Draw.Canvas Canvas { get; set; }
 		
 		public bool Maximized { get; set; }
 		public new string Title

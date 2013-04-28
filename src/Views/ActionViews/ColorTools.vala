@@ -27,28 +27,120 @@ namespace Draw
 {
 	public class ColorTools : Gtk.Box
 	{
-		private ArrayList<Palette> palettes = new ArrayList<Palette>();
-		public Palette activePalette;
-	
-		public ColorTools()
+		private Gtk.Fixed chosenContainer;
+		private Draw.Tools paletteTools;
+		private ArrayList<Palette> palettes = new ArrayList<Palette>(); // ToDO: Pull this out eventually, ColorTools does not need to reference it itself
+		private Palette activePalette;
+		
+		/**
+		 * Returns the active palette
+		 * If modified it will recreate the colors 
+		 * palette with the given palette
+		 */
+		public Palette Palette
 		{
-			palettes = Palette.load_palettes();
-			activePalette = palettes[0];
-			
-			Draw.Tools palette = new Draw.Tools("color-palette", 3, 12, 0);
-			
-			// Load our colors from the palette in
-			for (var i = 0; i < 3; i++)
+			get { return activePalette; }
+			set
 			{
-				for (var ii = 0; ii < 16; ii++)
+				activePalette = value;
+				paletteTools.clear();
+				
+				// Load our colors from the palette in
+				for (var i = 0; i < 5; i++)
 				{
-					var color = activePalette.Colors[(i * 16) + ii];
-					palette.add_button(new Gtk.ToolButton (new ColorIcon(color, 12, 12), null), i, true);
+					for (var ii = 0; ii < 16; ii++)
+					{
+						var color = activePalette.Colors[(i * 16) + ii];
+						var button = new ColorIcon(color, 10, 10);
+						button.set_events(Gdk.EventMask.ALL_EVENTS_MASK);
+						button.event.connect(color_clicked);
+						
+						paletteTools.add_button(button, i, true);
+					}
 				}
 			}
+		}
+		
+		private ColorIcon primaryColor;
+		public Granite.Drawing.Color PrimaryColor
+		{
+			get { return primaryColor.Color; }
+			set
+			{
+				primaryColor.Color = value;
+			}
+		}
+		
+		private ColorIcon secondaryColor;
+		public Granite.Drawing.Color SecondaryColor
+		{
+			get { return secondaryColor.Color; }
+			set
+			{
+				secondaryColor.Color = value;
+			}
+		}
+		
+		public Draw.Window Window { get; private set; }
+	
+		public ColorTools(Draw.Window window)
+		{
+			Window = window;
+			paletteTools = new Draw.Tools("color-palette", 5, 10, 0);
+			paletteTools.valign = Gtk.Align.CENTER;
+			
+			palettes = Draw.Palette.load_palettes();
+			Palette = palettes[0];
+			
+			chosenContainer = new Fixed();
+			primaryColor = new ColorIcon(new Color(0, 0, 0, 1), 18, 18);
+			secondaryColor = new ColorIcon(new Color(1, 1, 1, 1), 18, 18);
+			
+			var primaryFrame = new Gtk.Frame(null);
+			primaryFrame.get_style_context().add_class("primary-color");
+			primaryFrame.add(primaryColor);
+			
+			var secondaryFrame = new Gtk.Frame(null);
+			secondaryFrame.get_style_context().add_class("secondary-color");
+			secondaryFrame.add(secondaryColor);
+			
+			chosenContainer.width_request = 50;
+			chosenContainer.put(secondaryFrame, 18, 12);  // Secondary color first so primary overlaps it
+			chosenContainer.put(primaryFrame, 6, 2);
+			
+			
+			
+			var label = new Gtk.Label("Colors...");
+			chosenContainer.put(label, 2, 36);
+			
+			var button = new Gtk.ToolButton(chosenContainer, null);
 			
 			valign = Gtk.Align.CENTER;
-			add(palette);
+			add(button);
+			add(paletteTools);
+		}
+		
+		public bool color_clicked(Gtk.Widget widget, Gdk.Event event)
+		{
+			if (event.type == Gdk.EventType.BUTTON_PRESS)
+			{
+				switch (event.button.button)
+				{
+					case 1:
+						PrimaryColor = ((Draw.ColorIcon)widget).Color;
+						break;
+					case 2:
+						break;
+					case 3:
+						SecondaryColor = ((Draw.ColorIcon)widget).Color;
+						break;
+				}
+				
+				Window.Canvas.PrimaryColor = PrimaryColor;
+				Window.Canvas.SecondaryColor = SecondaryColor;
+			}
+			
+			return true;
 		}
 	}
 }

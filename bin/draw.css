@@ -84,5 +84,21 @@ DrawDrawTools GtkButton
 	background-image: -gtk-gradient(linear, 0 0, 0 1, from(#EBEBEB), to(#DDD));
 }
 
-.color-palette GtkToolButton { padding: 1px; margin: 0px; }
-.color-palette GtkButton { padding: 1px; }
+DrawColorTools GtkToolButton { margin: 0px; margin-right: 2px; padding: 2px; }
+DrawColorTools GtkButton { padding: 0px; }
+
+DrawColorTools GtkFrame
+{
+	background-color: white;
+	padding: 1px;
+	border-width: 1px;
+	border-style: solid;
+	border-color: black;
+}
+
+DrawColorTools GtkLabel { background-color: white; }
+
+DrawColorTools GtkLabel:hover
+{
+	background-image: -gtk-gradient(radial, center center, 0, center center, 1, from(white), to(gray));
+}

@@ -29,6 +29,8 @@ namespace Draw
 	 */
 	public class Canvas : Gtk.DrawingArea
 	{
+		public Granite.Drawing.Color PrimaryColor { get; set; }
+		public Granite.Drawing.Color SecondaryColor { get; set; }
 		public int DefaultWidth { get; private set; }
 		public int DefaultHeight { get; private set; }
 
@@ -48,6 +50,7 @@ namespace Draw
 		private bool hasFocus;
 		private double? lastX;
 		private double? lastY;
+		private uint buttonPress;
 
 		/**
 		 * Creates a new Canvas to draw on
@@ -65,6 +68,10 @@ namespace Draw
 			valign = Gtk.Align.CENTER;
 			halign = Gtk.Align.CENTER;
 
+			// Set default colors
+			PrimaryColor = new Granite.Drawing.Color(0, 0, 0, 1);
+			SecondaryColor = new Granite.Drawing.Color(1, 1, 1, 1);
+			
 			// Handle canvas events
 			set_events(Gdk.EventMask.ALL_EVENTS_MASK);
 			event.connect(handle_events);
@@ -84,6 +91,7 @@ namespace Draw
 			//context.move_to(0, 0);
 			if (event.type == Gdk.EventType.BUTTON_PRESS)
 			{
+				buttonPress = event.button.button;
 				lastX = (int)event.motion.x;
 				lastY = (int)event.motion.y;
 				context.rectangle(lastX, lastY, 1, 1);
@@ -106,7 +114,18 @@ namespace Draw
 			{
 				context.set_antialias(Cairo.Antialias.SUBPIXEL);
 				context.set_line_width(1);
-				context.set_source_rgb(0, 0, 0);
+				
+				switch (buttonPress)
+				{
+					case 1:
+					case 2:
+						context.set_source_rgba(PrimaryColor.R, PrimaryColor.G, PrimaryColor.B, PrimaryColor.A);
+						break;
+					case 3:
+						context.set_source_rgba(SecondaryColor.R, SecondaryColor.G, SecondaryColor.B, SecondaryColor.A);
+						break;
+				}
+				
 				context.move_to((!) lastX, (!) lastY);
 				context.line_to(event.motion.x, event.motion.y);
 				context.stroke();

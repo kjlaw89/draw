@@ -91,9 +91,13 @@ namespace Draw
 			adjustmentsContainer.get_style_context().add_class("button-menu");
 			adjustmentsContainer.add(adjustmentsButton);
 			
+			var colorTools = new Draw.ColorTools(Window);
+			var drawTools = new Draw.DrawTools();
+			drawTools.valign = Gtk.Align.CENTER;
+			
 			// Add all items to the toolbar
-			add_left(new Draw.ColorTools());
-			add_left(new Draw.DrawTools());
+			add_left(colorTools);
+			add_left(drawTools);
 			add_right(adjustmentsContainer);
 			add_right(effectsContainer);
 		}

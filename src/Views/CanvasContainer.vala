@@ -40,7 +40,11 @@ namespace Draw
 		public Draw.Canvas Canvas 
 		{ 
 			get { return activeCanvas; }
-			set { activeCanvas = value; }
+			set 
+			{ 
+				activeCanvas = value;
+				Window.Canvas = value;
+			}
 		}
 	
 		public CanvasContainer(Draw.Window window)

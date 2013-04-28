@@ -51,12 +51,12 @@ namespace Draw
 		private int cellSpacing = 0;
 		private int buttonSize = 20;
 		private ArrayList<Gtk.Box> rows = new ArrayList<Gtk.Box>();
-		private ArrayList<Gtk.ToolButton> buttons = new ArrayList<Gtk.ToolButton>();
+		private ArrayList<Gtk.Widget> buttons = new ArrayList<Gtk.Widget>();
 
 		/**
 		 * Buttons associated with Tools
 		 */
-		public ArrayList<Gtk.ToolButton> Buttons { get { return buttons; } }
+		public ArrayList<Gtk.Widget> Buttons { get { return buttons; } }
 
 		/**
 		 * Creates a new Tools
@@ -99,7 +99,7 @@ namespace Draw
 		 * @param row Row to add button to
 		 * @param focus Defaults focus to new button
 		 */
-		public void add_button(Gtk.ToolButton button, int row, bool focus = false)
+		public void add_button(Gtk.Widget button, int row, bool focus = false)
 		{
 			if (row > rows.size - 1)
 				return;
@@ -115,25 +115,54 @@ namespace Draw
 			if (focus)
 				focus_button(button);
 
-			button.clicked.connect(button_clicked);
+			if (button is Gtk.ToolButton)
+				((Gtk.ToolButton)button).clicked.connect(button_clicked);
+			else
+				button.event.connect(widget_clicked);
 		}
 		
 		public void button_clicked(Gtk.ToolButton button)
 		{
-			stdout.printf("button focused\n");
 			focus_button(button);
+		}
+		
+		public bool widget_clicked(Gtk.Widget widget, Gdk.Event event)
+		{
+			if (event.type == Gdk.EventType.BUTTON_PRESS && event.button.button == 1)
+				focus_button(widget);
+			
+			return false;
 		}
 
 		/**
 		 * Removes button from toolbar
 		 * @param button button to remove
 		 */
-		public void remove_button(Gtk.ToolButton button)
+		public void remove_button(Gtk.Widget button)
 		{
 			buttons.remove(button);
 
 			foreach(Gtk.Box b in rows)
 				b.remove(button);
+		}
+		
+		/**
+		 * Removes all tools
+		 */
+		public void clear()
+		{				
+			foreach(Gtk.Widget button in buttons)
+			{
+				if (button is Gtk.ToolButton)
+					((Gtk.ToolButton)button).clicked.disconnect(button_clicked);
+				else
+					button.event.disconnect(widget_clicked);
+				
+				foreach(Gtk.Box row in rows)
+					row.remove(button);
+			}
+				
+			buttons.clear();
 		}
 
 		/**
@@ -141,12 +170,12 @@ namespace Draw
 		 * @param button button to give focus to
 		 * @return True if button exists
 		 */
-		public bool focus_button(Gtk.ToolButton button)
+		public bool focus_button(Gtk.Widget button)
 		{
 			if (!buttons.contains(button))
 				return false;
 
-			foreach(Gtk.ToolButton b in buttons)
+			foreach(Gtk.Widget b in buttons)
 				b.get_style_context().remove_class("tool-selected");
 
 			var context = button.get_style_context();
