@@ -41,32 +41,51 @@ namespace Draw
 		{ 
 			get { return activeCanvas; }
 			set 
-			{ 
+			{
+				// Remove the old canvas if we had one
+				if (activeCanvas != null)
+					CanvasFrame.remove(activeCanvas);
+					
 				activeCanvas = value;
 				Window.Canvas = value;
+				
+				// Add the new canvas
+				CanvasFrame.add(activeCanvas);
 			}
 		}
+		
+		private Gtk.Frame CanvasFrame { get; set; }
 	
 		public CanvasContainer(Draw.Window window)
 		{
 			Window = window;
-			Canvas = new Draw.Canvas(640, 480);
 		
-			var frame = new Gtk.Frame(null);
-			frame.get_style_context().add_class("canvas-frame");
-			frame.valign = Gtk.Align.CENTER;
-			frame.halign = Gtk.Align.CENTER;
-			frame.add(Canvas);
+			CanvasFrame = new Gtk.Frame(null);
+			CanvasFrame.get_style_context().add_class("canvas-frame");
+			CanvasFrame.valign = Gtk.Align.CENTER;
+			CanvasFrame.halign = Gtk.Align.CENTER;
+			
+			// Add a default canvas
+			add_canvas(new Draw.Canvas(640, 480), true);
 		
 			var viewport = new Gtk.Viewport(null, null);
 			viewport.get_style_context().add_class("canvas-container");
 			viewport.hexpand = true;
 			viewport.vexpand = true;
-			viewport.add(frame);
+			viewport.add(CanvasFrame);
 		
 			// Add all of the elements
 			add(viewport);
 			expand = true;
+		}
+		
+		public void add_canvas(Draw.Canvas canvas, bool show)
+		{
+			if (!canvii.contains(canvas))
+				canvii.add(canvas);
+		
+			if (show)
+				Canvas = canvas;
 		}
 		
 		public void canvas_zoom(int width, int height)

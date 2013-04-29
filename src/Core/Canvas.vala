@@ -59,6 +59,7 @@ namespace Draw
 		 */
 		public Canvas(int width, int height)
 		{
+			stdout.printf("%d, %d\n", width, height);
 			buffer = new Granite.Drawing.BufferSurface(width, height);
 			width_request = Width = DefaultWidth = width;
 			height_request = Height = DefaultHeight = height;
@@ -78,10 +79,25 @@ namespace Draw
 
 			// Draw what is in our buffer
 			draw.connect ((context) => {
+				stdout.printf("Drawing\n");
 				context.set_source_surface(buffer.surface, 0, 0);
 				context.paint();
 				return true;
 			});
+		}
+		
+		/**
+		 * Loads a new canvas from the given Pixel Buffer
+		 * @param image Pixbuf image to load
+		 */
+		public Canvas.load_from_pixbuf(Gdk.Pixbuf image)
+		{
+			this(image.width, image.height);
+			stdout.printf("Done initializing...\n");
+			
+			Gdk.cairo_set_source_pixbuf(buffer.context, image, 0, 0);
+			buffer.context.paint();
+			queue_draw();
 		}
 
 		private bool handle_events(Gdk.Event event)

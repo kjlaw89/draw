@@ -76,11 +76,17 @@ namespace Draw
 	        titleContainer.vexpand = true;
 	        titleContainer.halign = Gtk.Align.CENTER;
 	        titleContainer.add(titleLabel);
+	        
+	        var newButton = new Gtk.ToolButton.from_stock (Gtk.Stock.NEW);
+	        
+	        // Create the open button and assign it it's primary method
+	        var openButton = new Gtk.ToolButton.from_stock (Gtk.Stock.OPEN);
+	        openButton.clicked.connect(handle_open);
 
 			add_left(close);
 			add_left(create_separator(HEIGHT));
-			add_left(new Gtk.ToolButton.from_stock (Gtk.Stock.NEW));
-			add_left(new Gtk.ToolButton.from_stock (Gtk.Stock.OPEN));
+			add_left(newButton);
+			add_left(openButton);
 			add_left(new Gtk.ToolButton.from_stock (Gtk.Stock.SAVE));
 			add_left(create_separator(HEIGHT));
 			add_center(titleContainer);
@@ -102,6 +108,89 @@ namespace Draw
         	// Add our settings items to our menu
         	settings.add(about_item);
         	return new Granite.Widgets.ToolButtonWithMenu (new Gtk.Image.from_icon_name ("application-menu", Gtk.IconSize.LARGE_TOOLBAR), "", settings);
+		}
+		
+		/**
+		 * Handles the click event for the Open Button
+		 * This function kicks off loading a new image file
+		 * for the application and setting up canvii
+		 */
+		public void handle_open(Gtk.ToolButton button)
+		{
+			var imageChooser = new Gtk.FileChooserDialog("Select an image to load...", Window, 
+				Gtk.FileChooserAction.OPEN,
+				Gtk.Stock.CANCEL,
+				Gtk.ResponseType.CANCEL,
+				Gtk.Stock.OPEN,
+				Gtk.ResponseType.ACCEPT);
+				
+			imageChooser.select_multiple = true;
+			
+			// Set the images we are allowed to open here
+			var filter = new Gtk.FileFilter();
+			imageChooser.set_filter(filter);
+			
+			// Add filters
+			filter.add_mime_type("image/bmp");
+			filter.add_mime_type("image/jpeg");
+			filter.add_mime_type("image/gif");
+			filter.add_mime_type("image/png");
+			filter.add_mime_type("image/tiff");
+			filter.add_mime_type("image/tga");
+			
+			// Add preview area
+			var previewArea = new Gtk.Image();
+			previewArea.width_request = 150;
+			previewArea.height_request = 150;
+			imageChooser.set_preview_widget(previewArea);
+			imageChooser.update_preview.connect(() =>
+			{
+				string uri = imageChooser.get_preview_uri();
+			
+				// We only display local files:
+				if (uri.has_prefix ("file://") == true) 
+				{
+					try 
+					{
+						var pixbuf = new Gdk.Pixbuf.from_file(uri.substring (7));
+						
+						// If our width/height is greater than 150, scale down
+						if (pixbuf.width > 150 || pixbuf.height > 150)
+							pixbuf = pixbuf.scale_simple(150, 150, Gdk.InterpType.BILINEAR);
+						
+						// Add frame to preview area
+						previewArea.set_from_pixbuf(pixbuf);
+						previewArea.show();
+					}
+					catch (Error e) 
+					{
+						previewArea.hide ();
+					}
+				} 
+				
+				else 
+				{
+					previewArea.hide ();
+				}
+			});
+			
+			// Handle selections
+			if (imageChooser.run() == Gtk.ResponseType.ACCEPT)
+			{
+				SList<string> uris = imageChooser.get_uris();
+				foreach(unowned string uri in uris)
+				{
+					var pixbuf = new Gdk.Pixbuf.from_file(uri.substring (7));
+					var Canvas = new Canvas.load_from_pixbuf(pixbuf);
+					Canvas.show();
+					
+					// Add the canvas to the container
+					Window.CanvasContainer.add_canvas(Canvas, true);
+				}
+			}
+			
+			// Close the chooser
+			imageChooser.close();
 		}
 	}
 }

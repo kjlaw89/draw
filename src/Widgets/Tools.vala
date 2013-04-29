@@ -150,7 +150,7 @@ namespace Draw
 		 * Removes all tools
 		 */
 		public void clear()
-		{				
+		{
 			foreach(Gtk.Widget button in buttons)
 			{
 				if (button is Gtk.ToolButton)
