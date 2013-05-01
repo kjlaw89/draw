@@ -27,12 +27,35 @@ namespace Draw
 {
 	/**
 	 * Application Window for Draw
-	 * Initialized the window with integrated toolbar
+	 * Initializes a window with an integrated toolbar
 	 *
+	 * This class will facilitate communications between all
+	 * of the individual elements in the program through various
+	 * methods and exposure of elements when necessary.
 	 *
+	 * Structure:
+	 *	<Gtk.Window>
+	 *		<Draw.Toolbar name="WindowToolbar" />
+	 *		<Draw.Toolbar name="ActionToolbar">
+	 *			<Gtk.Button name="ColorChooser" />
+	 *			<Draw.Tools name="ColorPalette" />
+	 *			<Draw.Tools name="ActionTools" />
+	 *		</Draw.Toolbar>
+	 *		<Draw.CanvasContainer>
+	 *			<Gtk.Viewport>
+	 *				<Gtk.Frame name="activeCanvas">
+	 *					<Draw.Canvas />
+	 *				</Gtk.Frame>
+	 *			</Gtk.Viewport>
+	 *		</Draw.CanvasContainer>
+	 *		<Draw.Toolbar name="StatusToolbar" /> 	
+	 *	</Gtk.Window>
 	 */
 	public class Window : Gtk.Window
 	{
+		private Gtk.Grid Content;
+		private int openCount = 0;
+	
 		public Granite.Application Application { get; set; }
 		public Draw.WindowToolbar WindowToolbar { get; set; }
 		public Draw.ActionToolbar ActionToolbar { get; set; }
@@ -41,14 +64,31 @@ namespace Draw
 		public Draw.Canvas Canvas { get; set; }
 		
 		public bool Maximized { get; set; }
+
+        /**
+         * Gets/Sets the title for the Window
+         */
 		public new string Title
 		{
 			get { return WindowToolbar.Title; }
 			set { WindowToolbar.Title = value; }
 		}
 		
-		private Gtk.Grid Content;
-		private Gtk.Box Container;
+		/**
+		 * Gets/Sets the count for images open in the images button
+		 */
+		public int OpenCount
+		{
+			get { return openCount; }
+			set 
+			{
+				if (value < 0)
+					return;
+					
+				openCount = value;
+				WindowToolbar.update_open_count(value);
+			}
+		}
  
  		/**
  		 * Initializes the main window for the application

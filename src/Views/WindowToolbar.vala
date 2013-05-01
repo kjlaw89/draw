@@ -29,7 +29,16 @@ namespace Draw
 		public new string Title 
 		{
 			get { return titleLabel.label; }
-	        set { titleLabel.label = value; }
+	        set 
+	        {
+	        	// ToDO: Limit the value to a certain amount of characters
+	        	// Preferrably truncating from the beginning (so the loaded
+	        	// file is viewable in the title)
+	        	if (value != null && value != "Draw")
+	        		titleLabel.label = "Draw - " + value;
+	        	else
+	        		titleLabel.label = "Draw"; 
+	        }
 		}
 	
 		const int HEIGHT = 48;
@@ -91,6 +100,8 @@ namespace Draw
 			add_left(create_separator(HEIGHT));
 			add_center(titleContainer);
 			add_right(create_separator(HEIGHT));
+			add_right(new Gtk.ToolButton.from_stock(Gtk.Stock.ORIENTATION_LANDSCAPE));
+			add_right(create_separator(HEIGHT));
 			add_right(new Gtk.ToolButton (new Gtk.Image.from_icon_name ("document-export", Gtk.IconSize.LARGE_TOOLBAR), ""));
 			add_right(new Gtk.ToolButton.from_stock (Gtk.Stock.PRINT));
 			add_right(create_appmenu());
@@ -98,7 +109,16 @@ namespace Draw
 			add_right(maximize);
 		}
 		
-		public Gtk.ToolItem create_appmenu()
+		/**
+		 * Updates the opened images icon with a count badge
+		 * @param count Count of images opened
+		 */
+		public void update_open_count(int count)
+		{
+			
+		}
+		
+		private Gtk.ToolItem create_appmenu()
 		{
 			// App Menu (this gives access to the About dialog)
         	Gtk.Menu settings = new Gtk.Menu ();
@@ -115,7 +135,7 @@ namespace Draw
 		 * This function kicks off loading a new image file
 		 * for the application and setting up canvii
 		 */
-		public void handle_open(Gtk.ToolButton button)
+		private void handle_open(Gtk.ToolButton button)
 		{
 			var imageChooser = new Gtk.FileChooserDialog("Select an image to load...", Window, 
 				Gtk.FileChooserAction.OPEN,
@@ -186,6 +206,7 @@ namespace Draw
 					
 					// Add the canvas to the container
 					Window.CanvasContainer.add_canvas(Canvas, true);
+					Title = uri.substring(7);
 				}
 			}
 			
