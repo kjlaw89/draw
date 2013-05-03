@@ -33,9 +33,9 @@ namespace Draw
 	 */
 	public class CanvasContainer : Gtk.ScrolledWindow
 	{
-		public Draw.Window Window { get; set; }
+		protected Draw.Window Window { get; set; }
+		private Gtk.Frame CanvasFrame { get; set; }
 		
-		private ArrayList<Draw.Canvas> canvii = new ArrayList<Draw.Canvas>();
 		private Draw.Canvas activeCanvas;
 		public Draw.Canvas Canvas 
 		{ 
@@ -52,9 +52,7 @@ namespace Draw
 				// Add the new canvas
 				CanvasFrame.add(activeCanvas);
 			}
-		}
-		
-		private Gtk.Frame CanvasFrame { get; set; }
+		}	
 	
 		public CanvasContainer(Draw.Window window)
 		{
@@ -64,9 +62,6 @@ namespace Draw
 			CanvasFrame.get_style_context().add_class("canvas-frame");
 			CanvasFrame.valign = Gtk.Align.CENTER;
 			CanvasFrame.halign = Gtk.Align.CENTER;
-			
-			// Add a default canvas
-			add_canvas(new Draw.Canvas(640, 480), true);
 		
 			var viewport = new Gtk.Viewport(null, null);
 			viewport.get_style_context().add_class("canvas-container");
@@ -77,15 +72,6 @@ namespace Draw
 			// Add all of the elements
 			add(viewport);
 			expand = true;
-		}
-		
-		public void add_canvas(Draw.Canvas canvas, bool show)
-		{
-			if (!canvii.contains(canvas))
-				canvii.add(canvas);
-		
-			if (show)
-				Canvas = canvas;
 		}
 		
 		public void canvas_zoom(int width, int height)

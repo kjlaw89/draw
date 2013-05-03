@@ -91,6 +91,9 @@ namespace Draw
 	        // Create the open button and assign it it's primary method
 	        var openButton = new Gtk.ToolButton.from_stock (Gtk.Stock.OPEN);
 	        openButton.clicked.connect(handle_open);
+	        
+	        var imagesButton = new Gtk.ToolButton.from_stock(Gtk.Stock.ORIENTATION_LANDSCAPE);
+	        imagesButton.clicked.connect(handle_images);
 
 			add_left(close);
 			add_left(create_separator(HEIGHT));
@@ -100,7 +103,7 @@ namespace Draw
 			add_left(create_separator(HEIGHT));
 			add_center(titleContainer);
 			add_right(create_separator(HEIGHT));
-			add_right(new Gtk.ToolButton.from_stock(Gtk.Stock.ORIENTATION_LANDSCAPE));
+			add_right(imagesButton);
 			add_right(create_separator(HEIGHT));
 			add_right(new Gtk.ToolButton (new Gtk.Image.from_icon_name ("document-export", Gtk.IconSize.LARGE_TOOLBAR), ""));
 			add_right(new Gtk.ToolButton.from_stock (Gtk.Stock.PRINT));
@@ -205,13 +208,42 @@ namespace Draw
 					Canvas.show();
 					
 					// Add the canvas to the container
-					Window.CanvasContainer.add_canvas(Canvas, true);
+					Window.add_image(Canvas, true);
 					Title = uri.substring(7);
 				}
 			}
 			
 			// Close the chooser
 			imageChooser.close();
+		}
+		
+		/**
+		 * Shows a popover containing all images
+		 */
+		private void handle_images(Gtk.ToolButton button)
+		{
+			var popover = new Granite.Widgets.PopOver();
+			var popcontent = popover.get_content_area () as Gtk.Container;
+
+			int i = 0;
+			foreach (var image in Window.Images.entries)
+			{
+				var imageButton = new Gtk.ToolButton(image.value, "");
+				imageButton.width_request = 65;
+				imageButton.height_request = 65;
+				
+				imageButton.clicked.connect(() =>
+				{
+					Window.CanvasContainer.Canvas = image.key;
+				});
+				
+				popcontent.add(imageButton);
+				i++;
+			}
+			
+			popover.set_parent_pop(Window);
+			popover.move_to_widget(button);
+			popover.show();
 		}
 	}
 }

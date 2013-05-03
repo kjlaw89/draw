@@ -22,6 +22,7 @@
 
 using Granite;
 using Granite.Widgets;
+using Gee;
 
 namespace Draw
 {
@@ -54,7 +55,7 @@ namespace Draw
 	public class Window : Gtk.Window
 	{
 		private Gtk.Grid Content;
-		private int openCount = 0;
+		private HashMap<Draw.Canvas, Gtk.Image> images = new HashMap<Draw.Canvas, Gtk.Image>();
 	
 		public Granite.Application Application { get; set; }
 		public Draw.WindowToolbar WindowToolbar { get; set; }
@@ -75,20 +76,14 @@ namespace Draw
 		}
 		
 		/**
-		 * Gets/Sets the count for images open in the images button
+		 * Gets the count for images open in the images button
 		 */
-		public int OpenCount
-		{
-			get { return openCount; }
-			set 
-			{
-				if (value < 0)
-					return;
-					
-				openCount = value;
-				WindowToolbar.update_open_count(value);
-			}
-		}
+		public int OpenCount {	get { return images.size; } }
+		
+		/**
+		 * Returns a hashmap of loaded images and their thumbnails
+		 */
+		public HashMap<Draw.Canvas, Gtk.Image> Images { get { return images; } }
  
  		/**
  		 * Initializes the main window for the application
@@ -118,6 +113,7 @@ namespace Draw
 			// Create canvas
 			CanvasContainer = new Draw.CanvasContainer(this);
 			Canvas = CanvasContainer.Canvas;
+			add_image(new Draw.Canvas(640, 480), true);
 			
 			// Create Status toolbar
 			StatusToolbar = new Draw.StatusToolbar(this);
@@ -154,6 +150,44 @@ namespace Draw
 		{
 			base.show ();
 			get_window().set_decorations(Gdk.WMDecoration.BORDER);
+		}
+		
+		/**
+		 * Wrapper for the Window Toolbar to update badge count
+		 * @param imagesCount Amount of images opened
+		 */
+		public void update_images_count(int imagesCount)
+		{
+			WindowToolbar.update_open_count(imagesCount);
+		}
+		
+		/**
+		 * Loads an image into the application and
+		 * creates a starting thumbnail for it (for
+		 * use in the image chooser popover)
+		 * @param canvas 
+		 */
+		public void add_image(Draw.Canvas image, bool show)
+		{
+			if (!images.has_key(image))
+			{
+				var thumbnail = new Gtk.Image();
+				thumbnail.width_request = 65;
+				thumbnail.height_request = 65;
+				
+				var buffer = image.get_buffer();
+				if (buffer.width > 65 || buffer.height > 65)
+					buffer = buffer.scale_simple(65, 65, Gdk.InterpType.BILINEAR);
+					
+				// Load buffer into thumbnail
+				thumbnail.set_from_pixbuf(buffer);
+				
+				images.set(image, thumbnail);
+				update_images_count(images.size);
+			}
+		
+			if (show)
+				CanvasContainer.Canvas = image;
 		}
 	}
 }
