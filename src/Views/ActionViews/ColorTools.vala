@@ -46,12 +46,13 @@ namespace Draw
 				paletteTools.clear();
 				
 				// Load our colors from the palette in
-				for (var i = 0; i < 5; i++)
+				for (var i = 0; i < 3; i++)
 				{
 					for (var ii = 0; ii < 16; ii++)
 					{
 						var color = activePalette.Colors[(i * 16) + ii];
-						var button = new ColorIcon(color, 10, 10);
+						var button = new Gtk.Button();
+						button.set_image(new ColorIcon(color, 12, 12));
 						button.set_events(Gdk.EventMask.ALL_EVENTS_MASK);
 						button.event.connect(color_clicked);
 						
@@ -108,31 +109,30 @@ namespace Draw
 			chosenContainer.put(secondaryFrame, 18, 12);  // Secondary color first so primary overlaps it
 			chosenContainer.put(primaryFrame, 6, 2);
 			
-			
-			
 			var label = new Gtk.Label("Colors...");
 			chosenContainer.put(label, 2, 36);
 			
 			var button = new Gtk.ToolButton(chosenContainer, null);
 			
 			valign = Gtk.Align.CENTER;
-			add(button);
 			add(paletteTools);
+			add(button);
 		}
 		
-		public bool color_clicked(Gtk.Widget widget, Gdk.Event event)
+		private bool color_clicked(Gtk.Widget widget, Gdk.Event event)
 		{
+			var color = ((widget as Gtk.Button).get_image() as Draw.ColorIcon).Color;
 			if (event.type == Gdk.EventType.BUTTON_PRESS)
 			{
 				switch (event.button.button)
 				{
 					case 1:
-						PrimaryColor = ((Draw.ColorIcon)widget).Color;
+						PrimaryColor = color;
 						break;
 					case 2:
 						break;
 					case 3:
-						SecondaryColor = ((Draw.ColorIcon)widget).Color;
+						SecondaryColor = color;
 						break;
 				}
 				

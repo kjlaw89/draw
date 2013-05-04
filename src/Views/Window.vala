@@ -119,7 +119,7 @@ namespace Draw
 			StatusToolbar = new Draw.StatusToolbar(this);
 
 			// Create a layout and push everything into it
-			Content = new Gtk.Grid ();
+			Content = new Gtk.Grid();
 			Content.expand = true;
 			Content.orientation = Gtk.Orientation.VERTICAL;
 			Content.add(ActionToolbar);
@@ -128,8 +128,7 @@ namespace Draw
 
 			// Container for the Window contents
 			var Container = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
-		    Container.vexpand = true;
-		    Container.hexpand = true;
+		    Container.expand = true;
 
 		    // Add all elements to the container than the container to the window
 		    Container.pack_start(WindowToolbar, false);

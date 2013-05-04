@@ -95,11 +95,17 @@ namespace Draw
 			var drawTools = new Draw.DrawTools();
 			drawTools.valign = Gtk.Align.CENTER;
 			
+			adjustmentsContainer.width_request = 100;
+			effectsContainer.width_request = 100;
+			
+			var buttonsGrid = new Gtk.Grid();
+			buttonsGrid.attach(adjustmentsContainer, 0, 0, 1, 1);
+			buttonsGrid.attach(effectsContainer, 0, 1, 1, 1);
+			
 			// Add all items to the toolbar
-			add_left(colorTools);
+			add_left(buttonsGrid);
 			add_left(drawTools);
-			add_right(adjustmentsContainer);
-			add_right(effectsContainer);
+			add_right(colorTools);
 		}
 	}
 }

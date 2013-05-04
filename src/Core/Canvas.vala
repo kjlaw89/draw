@@ -85,6 +85,12 @@ namespace Draw
 				return true;
 			});
 		}
+		
+		private new void queue_draw()
+		{
+			base.queue_draw();
+			regenerate_thumbnail = true;
+		}
 
 		/**
 		 * Loads a new canvas from the given Pixel Buffer

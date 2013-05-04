@@ -52,6 +52,9 @@ namespace Draw
 		{
 			base("app-toolbar", false, Gtk.IconSize.LARGE_TOOLBAR, 3);
 			Window = window;
+			
+			set_events(Gdk.EventMask.ALL_EVENTS_MASK);
+			event.connect(toolbar_clicked);
 
 	        var close = new Gtk.ToolButton (new Gtk.Image.from_file ("/usr/share/themes/elementary/metacity-1/close.svg"), "Close");
 	        close.height_request = HEIGHT;
@@ -65,12 +68,12 @@ namespace Draw
 	        {
 	        	if (!Window.Maximized)
 	        	{
-	        		Window.get_window().maximize();
+	        		Window.maximize();
 	        		Window.Maximized = true;
 	        	}
 	        	else
 	    		{
-	    			Window.get_window().unmaximize();
+	    			Window.unmaximize();
 	    			Window.Maximized = false;
 	    		}
 	        });
@@ -118,7 +121,6 @@ namespace Draw
 		 */
 		public void update_open_count(int count)
 		{
-
 		}
 
 		private Gtk.ToolItem create_appmenu()
@@ -131,6 +133,25 @@ namespace Draw
         	// Add our settings items to our menu
         	settings.add(about_item);
         	return new Granite.Widgets.ToolButtonWithMenu (new Gtk.Image.from_icon_name ("application-menu", Gtk.IconSize.LARGE_TOOLBAR), "", settings);
+		}
+		
+		private bool toolbar_clicked(Gtk.Widget widget, Gdk.Event event)
+		{
+			if (event.type == Gdk.EventType.2BUTTON_PRESS && event.button.button == 1)
+			{
+				if (!Window.Maximized)
+	        	{
+	        		Window.maximize();
+	        		Window.Maximized = true;
+	        	}
+	        	else
+	    		{
+	    			Window.unmaximize();
+	    			Window.Maximized = false;
+	    		}
+			}
+			
+			return false;
 		}
 
 		/**
@@ -224,26 +245,39 @@ namespace Draw
 		{
 			var popover = new Granite.Widgets.PopOver();
 			var popcontent = popover.get_content_area() as Gtk.Container;
+			var grid = new Gtk.Grid();
+			popcontent.add(grid);
 
-			int i = 0;
-			foreach (var image in Window.Images)
+			int row = 0;
+			int col = 0;
+			for (int i = 0; i < Window.Images.size; i++)
 			{
-				var imageButton = new Gtk.ToolButton(image.get_thumbnail(), "");
+				var image = Window.Images[i];
+				var imageButton = new Gtk.Button();
 				imageButton.width_request = 65;
 				imageButton.height_request = 65;
+				imageButton.set_image(image.get_thumbnail());
 
 				imageButton.clicked.connect(() =>
 				{
 					Window.CanvasContainer.Canvas = image;
 				});
 
-				popcontent.add(imageButton);
-				i++;
+				if (i > 0 && i % 3 == 0) 
+				{
+					row++;
+					col = 0;
+				}
+				
+				grid.attach(imageButton, col, row, 1, 1);
+				col++;
 			}
-
-			popover.set_parent_pop(Window);
+			
 			popover.move_to_widget(button);
-			popover.show();
+			popover.show_all();
+			popover.present();
+			popover.run();
+			popover.destroy();
 		}
 	}
 }
