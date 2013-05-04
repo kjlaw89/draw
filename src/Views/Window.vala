@@ -10,7 +10,7 @@
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
     Lesser General Public License for more details.
- 
+
     You should have received a copy of the GNU Lesser General
     Public License along with this library; if not, write to the
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
@@ -49,21 +49,21 @@ namespace Draw
 	 *				</Gtk.Frame>
 	 *			</Gtk.Viewport>
 	 *		</Draw.CanvasContainer>
-	 *		<Draw.Toolbar name="StatusToolbar" /> 	
+	 *		<Draw.Toolbar name="StatusToolbar" />
 	 *	</Gtk.Window>
 	 */
 	public class Window : Gtk.Window
 	{
 		private Gtk.Grid Content;
-		private HashMap<Draw.Canvas, Gtk.Image> images = new HashMap<Draw.Canvas, Gtk.Image>();
-	
+		private ArrayList<Draw.Canvas> images = new ArrayList<Draw.Canvas>();
+
 		public Granite.Application Application { get; set; }
 		public Draw.WindowToolbar WindowToolbar { get; set; }
 		public Draw.ActionToolbar ActionToolbar { get; set; }
 		public Draw.StatusToolbar StatusToolbar { get; set; }
 		public Draw.CanvasContainer CanvasContainer { get; set; }
 		public Draw.Canvas Canvas { get; set; }
-		
+
 		public bool Maximized { get; set; }
 
         /**
@@ -74,17 +74,17 @@ namespace Draw
 			get { return WindowToolbar.Title; }
 			set { WindowToolbar.Title = value; }
 		}
-		
+
 		/**
 		 * Gets the count for images open in the images button
 		 */
 		public int OpenCount {	get { return images.size; } }
-		
+
 		/**
 		 * Returns a hashmap of loaded images and their thumbnails
 		 */
-		public HashMap<Draw.Canvas, Gtk.Image> Images { get { return images; } }
- 
+		public ArrayList<Draw.Canvas> Images { get { return images; } }
+
  		/**
  		 * Initializes the main window for the application
  		 */
@@ -93,7 +93,7 @@ namespace Draw
 			Application = application;
 			window_position = Gtk.WindowPosition.CENTER;
 			delete_event.connect (() => exit());
-		    
+
 		    // Try to load in and apply the CSS to the application
 		    try
 			{
@@ -102,22 +102,22 @@ namespace Draw
 				Gtk.StyleContext.add_provider_for_screen(screen, css, Gtk.STYLE_PROVIDER_PRIORITY_THEME);
 			}
 			catch (Error ex) { /* throw alert eventually */ }
-			
+
 			// Create Window toolbar
 			WindowToolbar = new Draw.WindowToolbar(this);
-			
+
 			// Create Action toolbar
 			ActionToolbar = new Draw.ActionToolbar(this);
 			ActionToolbar.height_request = 55;
-			
+
 			// Create canvas
 			CanvasContainer = new Draw.CanvasContainer(this);
 			Canvas = CanvasContainer.Canvas;
 			add_image(new Draw.Canvas(640, 480), true);
-			
+
 			// Create Status toolbar
 			StatusToolbar = new Draw.StatusToolbar(this);
-			
+
 			// Create a layout and push everything into it
 			Content = new Gtk.Grid ();
 			Content.expand = true;
@@ -125,18 +125,18 @@ namespace Draw
 			Content.add(ActionToolbar);
 			Content.add(CanvasContainer);
 			Content.add(StatusToolbar);
-			
+
 			// Container for the Window contents
 			var Container = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
 		    Container.vexpand = true;
 		    Container.hexpand = true;
-		    
+
 		    // Add all elements to the container than the container to the window
 		    Container.pack_start(WindowToolbar, false);
 		    Container.pack_start(Content);
 			base.add(Container);
 		}
-		
+
 		/**
 		 * Terminates the program
 		 */
@@ -151,7 +151,7 @@ namespace Draw
 			base.show ();
 			get_window().set_decorations(Gdk.WMDecoration.BORDER);
 		}
-		
+
 		/**
 		 * Wrapper for the Window Toolbar to update badge count
 		 * @param imagesCount Amount of images opened
@@ -160,32 +160,18 @@ namespace Draw
 		{
 			WindowToolbar.update_open_count(imagesCount);
 		}
-		
+
 		/**
 		 * Loads an image into the application and
 		 * creates a starting thumbnail for it (for
 		 * use in the image chooser popover)
-		 * @param canvas 
+		 * @param canvas
 		 */
 		public void add_image(Draw.Canvas image, bool show)
 		{
-			if (!images.has_key(image))
-			{
-				var thumbnail = new Gtk.Image();
-				thumbnail.width_request = 65;
-				thumbnail.height_request = 65;
-				
-				var buffer = image.get_buffer();
-				if (buffer.width > 65 || buffer.height > 65)
-					buffer = buffer.scale_simple(65, 65, Gdk.InterpType.BILINEAR);
-					
-				// Load buffer into thumbnail
-				thumbnail.set_from_pixbuf(buffer);
-				
-				images.set(image, thumbnail);
-				update_images_count(images.size);
-			}
-		
+			if (!images.contains(image))
+				images.add(image);
+
 			if (show)
 				CanvasContainer.Canvas = image;
 		}

@@ -46,6 +46,8 @@ namespace Draw
 			set { height_request = value; }
 		}
 
+		private bool regenerate_thumbnail = true;
+		private Gtk.Image thumbnail;
 		private Granite.Drawing.BufferSurface buffer;
 		private bool hasFocus;
 		private double? lastX;
@@ -71,7 +73,7 @@ namespace Draw
 			// Set default colors
 			PrimaryColor = new Granite.Drawing.Color(0, 0, 0, 1);
 			SecondaryColor = new Granite.Drawing.Color(1, 1, 1, 1);
-			
+
 			// Handle canvas events
 			set_events(Gdk.EventMask.ALL_EVENTS_MASK);
 			event.connect(handle_events);
@@ -83,12 +85,7 @@ namespace Draw
 				return true;
 			});
 		}
-		
-		public Gdk.Pixbuf get_buffer()
-		{
-			return buffer.load_to_pixbuf();
-		}
-		
+
 		/**
 		 * Loads a new canvas from the given Pixel Buffer
 		 * @param image Pixbuf image to load
@@ -96,16 +93,42 @@ namespace Draw
 		public Canvas.load_from_pixbuf(Gdk.Pixbuf image)
 		{
 			this(image.width, image.height);
-			
+
 			Gdk.cairo_set_source_pixbuf(buffer.context, image, 0, 0);
 			buffer.context.paint();
 			queue_draw();
 		}
 
+		public Gdk.Pixbuf get_buffer()
+		{
+			return buffer.load_to_pixbuf();
+		}
+
+		public Gtk.Image get_thumbnail(int? width = null, int? height = null)
+		{
+			if (thumbnail == null || regenerate_thumbnail || (width != null && height != null))
+			{
+				var thumb = new Gtk.Image();
+				thumb.width_request = (width != null) ? (!) width : 65;
+				thumb.height_request = (height != null) ? (!) height : 65;
+
+				var thumb_buffer = get_buffer();
+				if (thumb_buffer.width > thumb.width_request || thumb_buffer.height > thumb.height_request)
+					thumb_buffer = thumb_buffer.scale_simple(thumb.width_request, thumb.height_request, Gdk.InterpType.BILINEAR);
+
+				// Load buffer into thumbnail
+				thumb.set_from_pixbuf(thumb_buffer);
+				thumbnail = thumb;
+				regenerate_thumbnail = false;
+			}
+
+			return thumbnail;
+		}
+
 		private bool handle_events(Gdk.Event event)
 		{
 			Cairo.Context context = buffer.context;
-		
+
 			//context.move_to(0, 0);
 			if (event.type == Gdk.EventType.BUTTON_PRESS)
 			{
@@ -132,7 +155,7 @@ namespace Draw
 			{
 				context.set_antialias(Cairo.Antialias.SUBPIXEL);
 				context.set_line_width(1);
-				
+
 				switch (buttonPress)
 				{
 					case 1:
@@ -143,11 +166,11 @@ namespace Draw
 						context.set_source_rgba(SecondaryColor.R, SecondaryColor.G, SecondaryColor.B, SecondaryColor.A);
 						break;
 				}
-				
+
 				context.move_to((!) lastX, (!) lastY);
 				context.line_to(event.motion.x, event.motion.y);
 				context.stroke();
-				
+
 				lastX = event.motion.x;
 				lastY = event.motion.y;
 				queue_draw();
