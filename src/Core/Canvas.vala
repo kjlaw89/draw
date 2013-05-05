@@ -49,10 +49,12 @@ namespace Draw
 		private bool regenerate_thumbnail = true;
 		private Gtk.Image thumbnail;
 		private Granite.Drawing.BufferSurface buffer;
+		private Granite.Drawing.BufferSurface resizeBuffer;
 		private bool hasFocus;
 		private double? lastX;
 		private double? lastY;
 		private uint buttonPress;
+		private double zoomAmount = 1;
 
 		/**
 		 * Creates a new Canvas to draw on
@@ -80,7 +82,13 @@ namespace Draw
 
 			// Draw what is in our buffer
 			draw.connect ((context) => {
-				context.set_source_surface(buffer.surface, 0, 0);
+				context.scale(zoomAmount, zoomAmount);
+				
+				//if (zoomAmount == 1)
+					context.set_source_surface(buffer.surface, 0, 0);
+				//else
+					//context.set_source_surface(resizeBuffer.surface, 0, 0);
+				
 				context.paint();
 				return true;
 			});
@@ -187,18 +195,22 @@ namespace Draw
 
 		/**
 		 * Zooms the camera in (using the appropriate image resizing function to do so)
-		 * @param width Width to zoom in to
-		 * @param height Height to zoom in to
+		 * @param zoomAmount Amount to zoom in by (% based)
 		 */
-		public void canvas_zoom(int width, int height)
+		public void canvas_zoom(double zoomAmount)
 		{
-			Width = width;
-		    Height = height;
-
-		    // ToDO: Perform some image resizing function since we'll be zooming in or out
-
-		    // Extra logging (should be able to be removed eventually
-		    stdout.printf("Canvas Resized to (%s, %s)\n", width.to_string(), height.to_string());
+			this.zoomAmount = zoomAmount;
+			Width = (int)(DefaultWidth * zoomAmount);
+		    Height = (int)(DefaultHeight * zoomAmount);
+		    
+		    /*resizeBuffer = new Granite.Drawing.BufferSurface(Width, Height);
+		    
+		    var pixbuffer = get_buffer();
+		    pixbuffer = pixbuffer.scale_simple(Width, Height, Gdk.InterpType.NEAREST);
+		    
+		    Gdk.cairo_set_source_pixbuf(resizeBuffer.context, pixbuffer, 0, 0);
+		    resizeBuffer.context.paint();*/
+			base.queue_draw();
 		}
 
 		/**

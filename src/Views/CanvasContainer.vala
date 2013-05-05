@@ -74,9 +74,9 @@ namespace Draw
 			expand = true;
 		}
 		
-		public void canvas_zoom(int width, int height)
+		public void canvas_zoom(double zoomAmount)
 		{
-			Canvas.canvas_zoom(width, height);
+			Canvas.canvas_zoom(zoomAmount);
 		}
 	}
 }
