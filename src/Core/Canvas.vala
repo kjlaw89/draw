@@ -82,14 +82,17 @@ namespace Draw
 			event.connect(handle_events);
 
 			// Draw what is in our buffer
-			draw.connect ((context) => {
+			draw.connect ((context) => {			
 				context.scale(zoomAmount, zoomAmount);
+				context.set_source_surface(buffer.surface, 0, 0);
 				
-				//if (zoomAmount == 1)
-					context.set_source_surface(buffer.surface, 0, 0);
-				//else
-					//context.set_source_surface(resizeBuffer.surface, 0, 0);
-				
+				// If zooming in, do nearest neighbor zoom (so the canvas is pixelated correctly)
+				if (zoomAmount > 1)
+				{
+					var resizePattern = context.get_source();
+					resizePattern.set_filter(Cairo.Filter.NEAREST);
+				}
+								
 				context.paint();
 				return true;
 			});
@@ -204,13 +207,8 @@ namespace Draw
 			Width = (int)(DefaultWidth * zoomAmount);
 		    Height = (int)(DefaultHeight * zoomAmount);
 		    
-		    /*resizeBuffer = new Granite.Drawing.BufferSurface(Width, Height);
-		    
-		    var pixbuffer = get_buffer();
-		    pixbuffer = pixbuffer.scale_simple(Width, Height, Gdk.InterpType.NEAREST);
-		    
-		    Gdk.cairo_set_source_pixbuf(resizeBuffer.context, pixbuffer, 0, 0);
-		    resizeBuffer.context.paint();*/
+		    // Queue a base redraw (if we use the class redraw method we'll queue up a new
+		    // a new thumbnail when we don't need it)
 			base.queue_draw();
 		}
 
