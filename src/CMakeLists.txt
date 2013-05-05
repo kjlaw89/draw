@@ -36,6 +36,7 @@ add_definitions(${CFLAGS})
 vala_precompile(VALA_C
     main.vala
     Core/Canvas.vala
+    Core/Image.vala
     Core/Palette.vala
     Views/Window.vala
     Views/WindowToolbar.vala

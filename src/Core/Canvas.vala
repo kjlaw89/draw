@@ -33,6 +33,7 @@ namespace Draw
 		public Granite.Drawing.Color SecondaryColor { get; set; }
 		public int DefaultWidth { get; private set; }
 		public int DefaultHeight { get; private set; }
+		public bool Modified { get; protected set; }
 
 		public int Width
 		{
@@ -49,7 +50,7 @@ namespace Draw
 		private bool regenerate_thumbnail = true;
 		private Gtk.Image thumbnail;
 		private Granite.Drawing.BufferSurface buffer;
-		private Granite.Drawing.BufferSurface resizeBuffer;
+		//private Granite.Drawing.BufferSurface resizeBuffer;
 		private bool hasFocus;
 		private double? lastX;
 		private double? lastY;
@@ -147,8 +148,8 @@ namespace Draw
 			if (event.type == Gdk.EventType.BUTTON_PRESS)
 			{
 				buttonPress = event.button.button;
-				lastX = (int)event.motion.x;
-				lastY = (int)event.motion.y;
+				lastX = (int)event.motion.x / zoomAmount;
+				lastY = (int)event.motion.y / zoomAmount;
 				context.rectangle(lastX, lastY, 1, 1);
 				context.set_source_rgb(0, 0, 0);
 				context.fill();
@@ -182,11 +183,11 @@ namespace Draw
 				}
 
 				context.move_to((!) lastX, (!) lastY);
-				context.line_to(event.motion.x, event.motion.y);
+				context.line_to(event.motion.x / zoomAmount, event.motion.y / zoomAmount);
 				context.stroke();
 
-				lastX = event.motion.x;
-				lastY = event.motion.y;
+				lastX = event.motion.x / zoomAmount;
+				lastY = event.motion.y / zoomAmount;
 				queue_draw();
 			}
 

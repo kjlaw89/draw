@@ -180,7 +180,7 @@ namespace Draw
 
 			var context = button.get_style_context();
 			context.add_class("tool-selected");
-			context.reset_widgets(context.screen);		// ToDO: Find a better way to reset the styles so the classes (would prefer not to redraw the window)
+			Gtk.StyleContext.reset_widgets(context.screen);		// ToDO: Find a better way to reset the styles so the classes (would prefer not to redraw the window)
 			return true;
 		}
 

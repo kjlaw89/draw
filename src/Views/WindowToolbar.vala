@@ -224,13 +224,18 @@ namespace Draw
 				SList<string> uris = imageChooser.get_uris();
 				foreach(unowned string uri in uris)
 				{
-					var pixbuf = new Gdk.Pixbuf.from_file(uri.substring (7));
-					var Canvas = new Canvas.load_from_pixbuf(pixbuf);
-					Canvas.show();
+					try
+					{
+						var file = new Draw.Image.from_path(uri);
 
-					// Add the canvas to the container
-					Window.add_image(Canvas, true);
-					Title = uri.substring(7);
+						// Add the canvas to the container
+						Window.add_image(file.Canvas, true);
+						Title = uri.substring(7);
+					}
+					catch (Draw.ImageError error)
+					{
+						stdout.printf("Failed to load image, error: " + error.message);
+					}
 				}
 			}
 
@@ -263,7 +268,7 @@ namespace Draw
 					Window.CanvasContainer.Canvas = image;
 				});
 
-				if (i > 0 && i % 3 == 0) 
+				if (i > 0 && i % 5 == 0) 
 				{
 					row++;
 					col = 0;

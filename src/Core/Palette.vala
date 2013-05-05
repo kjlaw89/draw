@@ -48,16 +48,8 @@ namespace Draw
 		 */
 		public Palette.from_file(string filename)
 		{
-			try
-			{
-				stdout.printf("Loading palette: " + filename + "\n");
-				Colors = Palette.load_colors_from_file("./palettes/" + filename);
-				Name = filename.substring(0, filename.length - 4);
-			}
-			catch (PaletteError e)
-			{
-				stdout.printf("Error loading palette: " + e.message);
-			}
+			Colors = Palette.load_colors_from_file("./palettes/" + filename);
+			Name = filename.substring(0, filename.length - 4);
 		}
 		
 		/**
@@ -76,11 +68,19 @@ namespace Draw
 		{
 			var palettes = new ArrayList<Palette>();
 			var directory = File.new_for_path("./palettes");
-			var enumerator = directory.enumerate_children(FileAttribute.STANDARD_NAME, 0);
 			
-			FileInfo info;
-			while ((info = enumerator.next_file()) != null)
-				palettes.add(new Palette.from_file(info.get_name()));
+			try
+			{
+				var enumerator = directory.enumerate_children(FileAttribute.STANDARD_NAME, 0);
+			
+				FileInfo info;
+				while ((info = enumerator.next_file()) != null)
+					palettes.add(new Palette.from_file(info.get_name()));
+			}
+			catch (Error error)
+			{
+				stdout.printf("Unable to load palettes from directory, error: " + error.message);
+			}
 				
 			return palettes;
 		}
@@ -95,34 +95,44 @@ namespace Draw
 		 * - Each palette constists of 96 colors. If there are more
 		 *   they are ignored, less are white.
 		 */
-		public static ArrayList<Color> load_colors_from_file(string filename) throws PaletteError
+		public static ArrayList<Color> load_colors_from_file(string filename)
 		{
 			var Colors = new ArrayList<Color>();
-			var file = File.new_for_path(filename);
+			
+			try
+			{
+				var file = File.new_for_path(filename);
+				if (!file.query_exists())
+					throw new PaletteError.NotFound("File not found.");
 
-			if (!file.query_exists())
-				throw new PaletteError.NotFound("File not found.");
+				var inputStream = new DataInputStream(file.read());
+				string line;
 
-			var inputStream = new DataInputStream(file.read());
-			string line;
+				// Read each line until the end of file (null) is reached
+				while ((line = inputStream.read_line(null)) != null)
+				{			
+					// If the first character is a semi-colon, skip this line
+					if (line[0] == ';')
+						continue;
 
-			// Read each line until the end of file (null) is reached
-			while ((line = inputStream.read_line(null)) != null)
-			{			
-				// If the first character is a semi-colon, skip this line
-				if (line[0] == ';')
-					continue;
-
-				// Not a comment, so either a blank line or a color - if variable length, throw parse exception
-				if (line.length == 8)
-					Colors.add(convert_hex_to_color(line));
-				else if (line.length == 0)
-					continue;
-				else
-					throw new PaletteError.InvalidFormat("Color contains too many or too few characters");
+					// Not a comment, so either a blank line or a color - if variable length, throw parse exception
+					if (line.length == 8)
+						Colors.add(convert_hex_to_color(line));
+					else if (line.length == 0)
+						continue;
+					else
+						stdout.printf("Warning: Unable to read line from palette.");
+				}
+			}
+			catch (IOError error)
+			{
+				stdout.printf("Unable to load palette, error: " + error.message);
+			}
+			catch (Error error)
+			{
+				stdout.printf("Unable to load palette, error: " + error.message);
 			}
 
-			stdout.printf("Done loading\n");
 			return Colors;
 		}
 
