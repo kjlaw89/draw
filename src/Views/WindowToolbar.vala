@@ -94,6 +94,9 @@ namespace Draw
 	        // Create the open button and assign it it's primary method
 	        var openButton = new Gtk.ToolButton.from_stock (Gtk.Stock.OPEN);
 	        openButton.clicked.connect(handle_open);
+	        
+	        var saveButton = new Gtk.ToolButton.from_stock (Gtk.Stock.SAVE);
+	        saveButton.clicked.connect(handle_save);
 
 	        var imagesButton = new Gtk.ToolButton.from_stock(Gtk.Stock.ORIENTATION_LANDSCAPE);
 	        imagesButton.clicked.connect(handle_images);
@@ -102,7 +105,9 @@ namespace Draw
 			add_left(create_separator(HEIGHT));
 			add_left(newButton);
 			add_left(openButton);
-			add_left(new Gtk.ToolButton.from_stock (Gtk.Stock.SAVE));
+			add_left(saveButton);
+			add_left(create_separator(HEIGHT));
+			add_left(new Gtk.ToolButton.from_stock (Gtk.Stock.SAVE_AS));
 			add_left(create_separator(HEIGHT));
 			add_center(titleContainer);
 			add_right(create_separator(HEIGHT));
@@ -226,11 +231,11 @@ namespace Draw
 				{
 					try
 					{
-						var file = new Draw.Image.from_path(uri);
+						var image = new Draw.Image.from_path(uri);
 
 						// Add the canvas to the container
-						Window.add_image(file.Canvas, true);
-						Title = uri.substring(7);
+						Window.add_image(image, true);
+						Title = image.Name;
 					}
 					catch (Draw.ImageError error)
 					{
@@ -241,6 +246,11 @@ namespace Draw
 
 			// Close the chooser
 			imageChooser.close();
+		}
+		
+		private void handle_save(Gtk.ToolButton button)
+		{
+			Window.save_image();
 		}
 
 		/**
@@ -261,19 +271,17 @@ namespace Draw
 				var imageButton = new Gtk.Button();
 				imageButton.width_request = 65;
 				imageButton.height_request = 65;
-				imageButton.set_image(image.get_thumbnail());
+				imageButton.set_image(image.Thumbnail);
+				imageButton.clicked.connect(() => { Window.ActiveImage = image; });
 
-				imageButton.clicked.connect(() =>
-				{
-					Window.CanvasContainer.Canvas = image;
-				});
-
+				// Handle creating new rows
 				if (i > 0 && i % 5 == 0) 
 				{
 					row++;
 					col = 0;
 				}
 				
+				// Attach the image to the grid and bump up our current 
 				grid.attach(imageButton, col, row, 1, 1);
 				col++;
 			}

@@ -55,7 +55,9 @@ namespace Draw
 	public class Window : Gtk.Window
 	{
 		private Gtk.Grid Content;
-		private ArrayList<Draw.Canvas> images = new ArrayList<Draw.Canvas>();
+		private ArrayList<Draw.Image> images = new ArrayList<Draw.Image>();
+		private Draw.Image activeImage;
+		
 
 		public Granite.Application Application { get; set; }
 		public Draw.WindowToolbar WindowToolbar { get; set; }
@@ -73,17 +75,28 @@ namespace Draw
 		{
 			get { return WindowToolbar.Title; }
 			set { WindowToolbar.Title = value; }
+		}		
+		
+		/**
+		 * Gets/Sets the working image
+		 */
+		public Draw.Image ActiveImage 
+		{ 
+			get { return activeImage; } 
+			set
+			{
+				activeImage = value;
+				CanvasContainer.Canvas = value.Canvas;
+				
+				if (value.Name != null)
+					Title = value.Name + ((value.Modified) ? "*" : "");
+				else
+					Title = "Untitled*";
+			}
 		}
-
-		/**
-		 * Gets the count for images open in the images button
-		 */
+		
 		public int OpenCount {	get { return images.size; } }
-
-		/**
-		 * Returns a hashmap of loaded images and their thumbnails
-		 */
-		public ArrayList<Draw.Canvas> Images { get { return images; } }
+		public ArrayList<Draw.Image> Images { get { return images; } }
 
  		/**
  		 * Initializes the main window for the application
@@ -113,7 +126,7 @@ namespace Draw
 			// Create canvas
 			CanvasContainer = new Draw.CanvasContainer(this);
 			Canvas = CanvasContainer.Canvas;
-			add_image(new Draw.Canvas(640, 480), true);
+			add_image(new Draw.Image(640, 480), true);
 
 			// Create Status toolbar
 			StatusToolbar = new Draw.StatusToolbar(this);
@@ -166,13 +179,17 @@ namespace Draw
 		 * use in the image chooser popover)
 		 * @param canvas
 		 */
-		public void add_image(Draw.Canvas image, bool show)
+		public void add_image(Draw.Image image, bool show)
 		{
-			if (!images.contains(image))
-				images.add(image);
+			images.add(image);
 
 			if (show)
-				CanvasContainer.Canvas = image;
+				ActiveImage = image;
+		}
+		
+		public bool save_image()
+		{
+			return ActiveImage.save();
 		}
 	}
 }

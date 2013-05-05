@@ -40,16 +40,33 @@ namespace Draw
 		private int width;
 		private int height;
 		
-		public string ImageName { get; private set; }
-		public string ImageType { get; private set; }
+		public string Name { get; private set; }
+		public string Type { get; private set; }
 		public string FilePath { get; private set; }
 		public string FullPath { get; private set; }
-		public bool Modified { get { return Canvas.Modified; } } 
 		public Draw.Canvas Canvas { get; private set; }
 		public int Width { get { return width; } }
 		public int Height { get { return height; } }
+		public Gtk.Image Thumbnail { get { return Canvas.get_thumbnail(); } }
 		
-		public Image() { }
+		public bool Modified 
+		{ 
+			get { return Canvas.Modified; }
+			private set { Canvas.Modified = value; } 
+		} 
+		
+		/**
+		 * Generates a new image and canvas
+		 * @param int Default Width
+		 * @param int Default Height
+		 */
+		public Image(int width, int height, bool transparent = false) 
+		{
+			Canvas = new Draw.Canvas(width, height, transparent);
+			this.width = width;
+			this.height = height;
+		}
+		
 		public Image.from_path(string path) throws ImageError
 		{
 			load_image(path);
@@ -66,9 +83,9 @@ namespace Draw
 				file = File.new_for_path(path);	
 			
 				// Parse out and load our file
-				FullPath = path.substring(7);								// drops File:///
+				FullPath = path.substring(7);								// drops 'File:///'
 				FilePath = file.get_path();
-				ImageName = file.get_basename();
+				Name = file.get_basename();
 			
 				// Load our pixel buffer and get some general stats
 				var buffer = new Gdk.Pixbuf.from_file(FullPath);
@@ -87,6 +104,27 @@ namespace Draw
 			{
 				throw new ImageError.InvalidFormat(error.message);
 			}
+		}
+		
+		public bool save()
+		{
+			try
+			{
+				var imageBuffer = Canvas.get_buffer();
+				imageBuffer.save(FullPath, "jpeg");
+			}
+			catch (Error error)
+			{
+				stdout.printf("Unable to save image, error: " + error.message);
+				return false;
+			}
+			
+			return true;
+		}
+		
+		public bool save_as()
+		{
+			return true;
 		}
 	}
 }

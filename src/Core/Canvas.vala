@@ -33,7 +33,7 @@ namespace Draw
 		public Granite.Drawing.Color SecondaryColor { get; set; }
 		public int DefaultWidth { get; private set; }
 		public int DefaultHeight { get; private set; }
-		public bool Modified { get; protected set; }
+		public bool Modified { get; set; }
 
 		public int Width
 		{
@@ -50,7 +50,6 @@ namespace Draw
 		private bool regenerate_thumbnail = true;
 		private Gtk.Image thumbnail;
 		private Granite.Drawing.BufferSurface buffer;
-		//private Granite.Drawing.BufferSurface resizeBuffer;
 		private bool hasFocus;
 		private double? lastX;
 		private double? lastY;
@@ -62,7 +61,7 @@ namespace Draw
 		 * @param width Initial Width of Canvas
 		 * @param height Initial Height of Canvas
 		 */
-		public Canvas(int width, int height)
+		public Canvas(int width, int height, bool transparent = false)
 		{
 			buffer = new Granite.Drawing.BufferSurface(width, height);
 			width_request = Width = DefaultWidth = width;
@@ -122,7 +121,7 @@ namespace Draw
 			return buffer.load_to_pixbuf();
 		}
 
-		public Gtk.Image get_thumbnail(int? width = null, int? height = null)
+		public unowned Gtk.Image get_thumbnail(int? width = null, int? height = null)
 		{
 			if (thumbnail == null || regenerate_thumbnail || (width != null && height != null))
 			{
@@ -154,7 +153,17 @@ namespace Draw
 				lastX = (int)event.motion.x / zoomAmount;
 				lastY = (int)event.motion.y / zoomAmount;
 				context.rectangle(lastX, lastY, 1, 1);
-				context.set_source_rgb(0, 0, 0);
+				
+				switch (buttonPress)
+				{
+					case 1:
+					case 2:
+						context.set_source_rgba(PrimaryColor.R, PrimaryColor.G, PrimaryColor.B, PrimaryColor.A);
+						break;
+					case 3:
+						context.set_source_rgba(SecondaryColor.R, SecondaryColor.G, SecondaryColor.B, SecondaryColor.A);
+						break;
+				}
 				context.fill();
 				hasFocus = true;
 				return true;
