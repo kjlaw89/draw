@@ -62,9 +62,11 @@ namespace Draw
 		 */
 		public Image(int width, int height, bool transparent = false) 
 		{
-			Canvas = new Draw.Canvas(width, height, transparent);
 			this.width = width;
 			this.height = height;
+			
+			Canvas = new Draw.Canvas(width, height, transparent);
+			Canvas.show();
 		}
 		
 		public Image.from_path(string path) throws ImageError
@@ -125,6 +127,100 @@ namespace Draw
 		public bool save_as()
 		{
 			return true;
+		}
+		
+		/**
+		 * Handles the click event for the Open Button
+		 * This function kicks off loading a new image file
+		 * for the application and setting up canvii
+		 */
+		public static bool load_images_dialog(Draw.Window Window)
+		{
+			var imageChooser = new Gtk.FileChooserDialog("Select an image to load...", Window,
+				Gtk.FileChooserAction.OPEN,
+				Gtk.Stock.CANCEL,
+				Gtk.ResponseType.CANCEL,
+				Gtk.Stock.OPEN,
+				Gtk.ResponseType.ACCEPT);
+
+			imageChooser.select_multiple = true;
+
+			// Set the images we are allowed to open here
+			var filter = new Gtk.FileFilter();
+			imageChooser.set_filter(filter);
+
+			// Add filters
+			filter.add_mime_type("image/bmp");
+			filter.add_mime_type("image/jpeg");
+			filter.add_mime_type("image/gif");
+			filter.add_mime_type("image/png");
+			filter.add_mime_type("image/tiff");
+			filter.add_mime_type("image/tga");
+
+			// Add preview area
+			var previewArea = new Gtk.Image();
+			previewArea.width_request = 150;
+			previewArea.height_request = 150;
+			imageChooser.set_preview_widget(previewArea);
+			imageChooser.update_preview.connect(() =>
+			{
+				string uri = imageChooser.get_preview_uri();
+
+				// We only display local files:
+				if (uri.has_prefix ("file://") == true)
+				{
+					try
+					{
+						var pixbuf = new Gdk.Pixbuf.from_file(uri.substring (7));
+
+						// If our width/height is greater than 150, scale down
+						if (pixbuf.width > 150 || pixbuf.height > 150)
+							pixbuf = pixbuf.scale_simple(150, 150, Gdk.InterpType.BILINEAR);
+
+						// Add frame to preview area
+						previewArea.set_from_pixbuf(pixbuf);
+						previewArea.show();
+					}
+					catch (Error e)
+					{
+						previewArea.hide ();
+					}
+				}
+
+				else
+				{
+					previewArea.hide ();
+				}
+			});
+
+			// Handle selections
+			if (imageChooser.run() == Gtk.ResponseType.ACCEPT)
+			{
+				SList<string> uris = imageChooser.get_uris();
+				foreach(unowned string uri in uris)
+				{
+					try
+					{
+						var image = new Draw.Image.from_path(uri);
+
+						// Add the canvas to the container
+						Window.add_image(image, true);
+						Window.Title = image.Name;
+					}
+					catch (Draw.ImageError error)
+					{
+						stdout.printf("Failed to load image, error: " + error.message);
+					}
+				}
+				
+				// Close the chooser and return true
+				imageChooser.close();
+				return true;
+			}
+
+			// Close the chooser and return false (no image selected)
+			imageChooser.close();
+			return false;
 		}
 	}
 }

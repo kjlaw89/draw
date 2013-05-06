@@ -73,16 +73,16 @@ namespace Draw {
 
             // These are very straight forward.
             // main_url = The URL linking to your website.
-            main_url            = "http://elementaryos.org";
+            main_url            = "https://www.github.com/kjlaw89/draw/";
 
             // bug_url = The URL Linking to your bug tracker.
-            bug_url             = "http://elementaryos.org";
+            bug_url             = "https://github.com/kjlaw89/draw/issues";
 
             // help_url = The URL to your helpfiles.
-            help_url            = "http://elementaryos.org";
+            help_url            = "https://github.com/kjlaw89/draw/wiki";
 
             // translate_url = the URL to your translation documents.
-            translate_url       = "http://elementaryos.org";
+            translate_url       = "https://www.github.com/kjlaw89/draw/";
 
             // These are straight forward. Just like above.
           	about_authors       = {"KJ Lawrence <kj@nsfugames.com>"};
@@ -93,7 +93,7 @@ namespace Draw {
 
             // What license type is this app under? I prefer MIT but theres 
             // also License.GPL_2_0 and License.GPL_3_0
-            about_license_type  = License.GPL_3_0;
+            about_license_type  = License.LGPL_3_0;
         }
         
         // This is another constructor. We can put GTK Overrides here...

@@ -57,16 +57,18 @@ namespace Draw
 		private Gtk.Grid Content;
 		private ArrayList<Draw.Image> images = new ArrayList<Draw.Image>();
 		private Draw.Image activeImage;
+		private Gtk.Grid content;
+		private Gtk.Box container;
 		
 
-		public Granite.Application Application { get; set; }
-		public Draw.WindowToolbar WindowToolbar { get; set; }
-		public Draw.ActionToolbar ActionToolbar { get; set; }
-		public Draw.StatusToolbar StatusToolbar { get; set; }
-		public Draw.CanvasContainer CanvasContainer { get; set; }
-		public Draw.Canvas Canvas { get; set; }
-
+		public Granite.Application Application { get; private set; }
+		public Draw.Welcome WelcomeView { get; private set; }
+		public Draw.WindowToolbar WindowToolbar { get; private set; }
+		public Draw.ActionToolbar ActionToolbar { get; private set; }
+		public Draw.StatusToolbar StatusToolbar { get; private set; }
+		public Draw.CanvasContainer CanvasContainer { get; private set; }
 		public bool Maximized { get; set; }
+		public Draw.Canvas Canvas { get; set; }
 
         /**
          * Gets/Sets the title for the Window
@@ -116,6 +118,9 @@ namespace Draw
 			}
 			catch (Error ex) { /* throw alert eventually */ }
 
+			// Create Welcome and File views
+			WelcomeView = new Draw.Welcome(this);
+
 			// Create Window toolbar
 			WindowToolbar = new Draw.WindowToolbar(this);
 
@@ -123,30 +128,32 @@ namespace Draw
 			ActionToolbar = new Draw.ActionToolbar(this);
 			ActionToolbar.height_request = 55;
 
-			// Create canvas
+			// Create our Canvas Container
 			CanvasContainer = new Draw.CanvasContainer(this);
-			Canvas = CanvasContainer.Canvas;
-			add_image(new Draw.Image(640, 480), true);
 
 			// Create Status toolbar
 			StatusToolbar = new Draw.StatusToolbar(this);
 
 			// Create a layout and push everything into it
-			Content = new Gtk.Grid();
-			Content.expand = true;
-			Content.orientation = Gtk.Orientation.VERTICAL;
-			Content.add(ActionToolbar);
-			Content.add(CanvasContainer);
-			Content.add(StatusToolbar);
+			content = new Gtk.Grid();
+			content.expand = true;
+			content.orientation = Gtk.Orientation.VERTICAL;
+			content.add(ActionToolbar);
+			content.add(CanvasContainer);
+			content.add(StatusToolbar);
+			content.show_all();
 
 			// Container for the Window contents
-			var Container = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
-		    Container.expand = true;
-
+			container = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
+		    container.expand = true;
+		    		    
 		    // Add all elements to the container than the container to the window
-		    Container.pack_start(WindowToolbar, false);
-		    Container.pack_start(Content);
-			base.add(Container);
+		    container.pack_start(WindowToolbar, false);
+		    container.pack_start(WelcomeView);
+		    container.pack_start(content);				// add setting to show from the start
+		    
+		    show_welcome();
+			base.add(container);
 		}
 
 		/**
@@ -179,7 +186,7 @@ namespace Draw
 		 * use in the image chooser popover)
 		 * @param canvas
 		 */
-		public void add_image(Draw.Image image, bool show)
+		public void add_image(Draw.Image image, bool show = false)
 		{
 			images.add(image);
 
@@ -190,6 +197,19 @@ namespace Draw
 		public bool save_image()
 		{
 			return ActiveImage.save();
+		}
+		
+		public void show_welcome()
+		{
+			container.remove(content);
+			container.remove(WelcomeView);
+			container.pack_end(WelcomeView);
+		}
+		
+		public void show_content()
+		{
+			container.remove(WelcomeView);
+			container.pack_end(content);
 		}
 	}
 }

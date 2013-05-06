@@ -38,6 +38,7 @@ vala_precompile(VALA_C
     Core/Canvas.vala
     Core/Image.vala
     Core/Palette.vala
+    Views/Welcome.vala
     Views/Window.vala
     Views/WindowToolbar.vala
     Views/ActionToolbar.vala
