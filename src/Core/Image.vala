@@ -37,6 +37,7 @@ namespace Draw
 	public class Image
 	{
 		private File file;
+		private Gdk.PixbufFormat info;
 		private int width;
 		private int height;
 		
@@ -91,8 +92,10 @@ namespace Draw
 			
 				// Load our pixel buffer and get some general stats
 				var buffer = new Gdk.Pixbuf.from_file(FullPath);
-				width = buffer.width;
-				height = buffer.height;
+				
+				// Image info
+				info = Gdk.Pixbuf.get_file_info(FullPath, out width, out height);
+				Type = info.get_name();
 			
 				// Generate and show our canvas
 				Canvas = new Canvas.load_from_pixbuf(buffer);
@@ -113,7 +116,7 @@ namespace Draw
 			try
 			{
 				var imageBuffer = Canvas.get_buffer();
-				imageBuffer.save(FullPath, "jpeg");
+				imageBuffer.save(FullPath, Type);
 			}
 			catch (Error error)
 			{
@@ -206,6 +209,7 @@ namespace Draw
 						// Add the canvas to the container
 						Window.add_image(image, true);
 						Window.Title = image.Name;
+						Window.show_content();
 					}
 					catch (Draw.ImageError error)
 					{

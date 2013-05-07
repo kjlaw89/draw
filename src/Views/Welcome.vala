@@ -52,6 +52,7 @@ namespace Draw
 		    			Window.show_content();
 		    			break;
 		    		case 1:
+		    			Window.show_new();
 		    			break;
 		    		case 2:
 		    			if (Image.load_images_dialog(Window))

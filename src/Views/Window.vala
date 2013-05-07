@@ -54,7 +54,6 @@ namespace Draw
 	 */
 	public class Window : Gtk.Window
 	{
-		private Gtk.Grid Content;
 		private ArrayList<Draw.Image> images = new ArrayList<Draw.Image>();
 		private Draw.Image activeImage;
 		private Gtk.Grid content;
@@ -63,6 +62,7 @@ namespace Draw
 
 		public Granite.Application Application { get; private set; }
 		public Draw.Welcome WelcomeView { get; private set; }
+		public Draw.NewFile NewFileView { get; private set; }
 		public Draw.WindowToolbar WindowToolbar { get; private set; }
 		public Draw.ActionToolbar ActionToolbar { get; private set; }
 		public Draw.StatusToolbar StatusToolbar { get; private set; }
@@ -120,6 +120,7 @@ namespace Draw
 
 			// Create Welcome and File views
 			WelcomeView = new Draw.Welcome(this);
+			NewFileView = new Draw.NewFile(this);
 
 			// Create Window toolbar
 			WindowToolbar = new Draw.WindowToolbar(this);
@@ -146,11 +147,7 @@ namespace Draw
 			// Container for the Window contents
 			container = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
 		    container.expand = true;
-		    		    
-		    // Add all elements to the container than the container to the window
 		    container.pack_start(WindowToolbar, false);
-		    container.pack_start(WelcomeView);
-		    container.pack_start(content);				// add setting to show from the start
 		    
 		    show_welcome();
 			base.add(container);
@@ -194,22 +191,69 @@ namespace Draw
 				ActiveImage = image;
 		}
 		
+		/**
+		 * Saves the currently active image
+		 */
 		public bool save_image()
 		{
 			return ActiveImage.save();
 		}
 		
-		public void show_welcome()
+		/**
+		 * Saves the currently active image as something else
+		 */
+		public bool save_image_as()
 		{
-			container.remove(content);
-			container.remove(WelcomeView);
-			container.pack_end(WelcomeView);
+			return false;
 		}
 		
-		public void show_content()
+		/**
+		 * Shows the welcome screen (on load or if all images are closed)
+		 * This may never be used if the preferences setting to show welcome screen is turned off
+		 */
+		public void show_welcome()
 		{
-			container.remove(WelcomeView);
-			container.pack_end(content);
+			foreach(var child in container.get_children())
+			{
+				if (child == WindowToolbar)
+					continue;
+					
+				container.remove(child);
+			}
+				
+			container.pack_start(WelcomeView);
+		}
+		
+		/**
+		 * Shows the new image screen
+		 */
+		public void show_new()
+		{
+			foreach(var child in container.get_children())
+			{
+				if (child == WindowToolbar)
+					continue;
+					
+				container.remove(child);
+			}
+
+			container.pack_start(NewFileView);
+		}
+		
+		/**
+		 * Shows all of the toolbars and the canvas
+		 */
+		public void show_content()
+		{			
+			foreach(var child in container.get_children())
+			{
+				if (child == WindowToolbar)
+					continue;
+					
+				container.remove(child);
+			}
+			
+			container.pack_start(content);
 		}
 	}
 }
