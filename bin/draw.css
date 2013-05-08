@@ -9,6 +9,12 @@
 
 .content_text { color: #FFF; }
 
+.form-field
+{
+	margin-left: 4px;
+	margin-right: 4px;
+}
+
 .action-toolbar 
 {
 	background-color: rgb(248, 248, 248); 
@@ -37,7 +43,7 @@
 	border-width: 1px;
 	border-color: #C6C6C6;
 	border-style: solid;
-	box-shadow: 0 0 5 0 #000;
+	-box-shadow: 0 0 5px 2px #000;
 }
 
 .canvas-container 
