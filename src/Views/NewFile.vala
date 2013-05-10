@@ -31,8 +31,15 @@ namespace Draw
 		private Gtk.DrawingArea imageCanvas;
 		private int width;
 		private int height;
+		private int resolution;
+		private string printType;
 		
-		const string spacing = " GtkSpinButton { margin-left: 4px; margin-right: 50px; } ";
+		// Spinner buttons
+		private Gtk.SpinButton widthSpinner;
+		private Gtk.SpinButton heightSpinner;
+		private Gtk.SpinButton printWidthSpinner;
+		private Gtk.SpinButton printHeightSpinner;
+		private Gtk.SpinButton printResolutionSpinner;
 	
 		public NewFile(Draw.Window window)
 		{
@@ -45,6 +52,7 @@ namespace Draw
 		    var container = new Gtk.Grid();
 		    container.row_homogeneous = false;
 		    container.row_spacing = 2;
+		    container.column_spacing = 2;
 		    
 		    // Create a simple nice little image size representation picture
 		    imageCanvas = new Gtk.DrawingArea();
@@ -60,85 +68,137 @@ namespace Draw
 		    });
 		    
 		    // Create pixels form here
-		    var widthText = new Gtk.SpinButton.with_range(1, 60000, 1);
-		    //widthText.get_style_context().add_class("form-field");
-		    Granite.Widgets.Utils.set_theming(widthText, spacing, null, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
-		    widthText.width_request = 120;
-		    widthText.value = 640;
+		    widthSpinner = new Gtk.SpinButton.with_range(1, 60000, 1);
+		    widthSpinner.width_request = 120;
+		    widthSpinner.value = 640;
+		    widthSpinner.value_changed.connect(size_changed);
 		    
-		    var heightText = new Gtk.SpinButton.with_range(1, 60000, 1);
-		    heightText.get_style_context().add_class("form-field");
-		    heightText.width_request = 120;
-		    heightText.value = 480;
+		    heightSpinner = new Gtk.SpinButton.with_range(1, 60000, 1);
+		    heightSpinner.width_request = 120;
+		    heightSpinner.value = 480;
+		    heightSpinner.value_changed.connect(size_changed);
 		    
 		    var widthLabel = new Gtk.Label("Width:");
-		    widthLabel.justify = Gtk.Justification.RIGHT;
+		    widthLabel.halign = Gtk.Align.END;
+		    
+		    var widthTypeLabel = new Gtk.Label("pixels");
+		    widthTypeLabel.halign = Gtk.Align.START;
 		    
 		    var heightLabel = new Gtk.Label("Height:");
-		    heightLabel.justify = Gtk.Justification.RIGHT;
+		    heightLabel.halign = Gtk.Align.END;
 		    
-		    // ToDO: Figure out CSS to add margins rather than adding whitespace to the text
+		    var heightTypeLabel = new Gtk.Label("pixels");
+		    heightTypeLabel.halign = Gtk.Align.START;
+		    
+		    
+		    // Create print form here
+		    printWidthSpinner = new Gtk.SpinButton.with_range(0.1, 625.0, 0.1);			
+		    printWidthSpinner.width_request = 120;
+		    printWidthSpinner.value = 6.67;		    
+		    printWidthSpinner.value_changed.connect(size_changed);
+		    
+		    printHeightSpinner = new Gtk.SpinButton.with_range(0.1, 625.0, 0.1);
+		    printHeightSpinner.width_request = 120;
+		    printHeightSpinner.value = 5.00;
+		    printHeightSpinner.value_changed.connect(size_changed);
+		    
+		    printResolutionSpinner = new Gtk.SpinButton.with_range(1, 1000, 1);
+		    printResolutionSpinner.width_request = 120;
+		    printResolutionSpinner.value = 96;
+		    printResolutionSpinner.value_changed.connect(() =>
+		    {
+		    	resolution = (int)printResolutionSpinner.value;
+		    	change_sizes(true);
+		    });
+		    
+		    var printWidthLabel = new Gtk.Label("Width:");
+		    printWidthLabel.halign = Gtk.Align.END;
+		    
+		    var printHeightLabel = new Gtk.Label("Height:");
+		    printHeightLabel.halign = Gtk.Align.END;
+		    
+		    var printResolutionLabel = new Gtk.Label("Resolution:");
+		    printResolutionLabel.halign = Gtk.Align.END;
+		    
+		    var printWidthTypeLabel = new Gtk.Label("inches");
+		    printWidthTypeLabel.halign = Gtk.Align.START;
+		    
+		    var printHeightTypeLabel = new Gtk.Label("inches");
+		    printHeightTypeLabel.halign = Gtk.Align.START;
+		    
+		    var printResolutionTypeLabel = new Gtk.Label("inches");
+		    printResolutionTypeLabel.halign = Gtk.Align.START;
+		    
+            var printDpiTypeCombo = new Gtk.ComboBoxText();
+            printDpiTypeCombo.append("inches", "pixels/inches");
+            printDpiTypeCombo.append("cm", "pixels/cm");
+            printDpiTypeCombo.append("mm", "pixels/mm");
+            printDpiTypeCombo.active_id = "inches";
+            printDpiTypeCombo.halign = Gtk.Align.START;
+
+		    
+		    // Attach everything to the Gtk.Grid container
 		    container.attach(imageCanvas, 0, 0, 1, 10);
 		    container.attach(new Gtk.Label("Pixel Size"), 1, 0, 1, 1);
 		    
 		    container.attach(widthLabel, 1, 1, 1, 1);
-		    container.attach(widthText, 2, 1, 1, 1);
-		    container.attach(new Gtk.Label(" pixels"), 3, 1, 1, 1);
+		    container.attach(widthSpinner, 2, 1, 1, 1);
+		    container.attach(widthTypeLabel, 3, 1, 1, 1);
 		    
 		    container.attach(heightLabel, 1, 2, 1, 1);
-		    container.attach(heightText, 2, 2, 1, 1);
-		    container.attach(new Gtk.Label(" pixels"), 3, 2, 1, 1);
+		    container.attach(heightSpinner, 2, 2, 1, 1);
+		    container.attach(heightTypeLabel, 3, 2, 1, 1);
 		    
-		    
-		    // Create print form here
-		    var printWidthText = new Gtk.SpinButton.with_range(0.1, 625.0, 0.5);
-		    printWidthText.get_style_context().add_class("form-field");				
-		    printWidthText.width_request = 120;
-		    printWidthText.value = 6.67;		    
-		    
-		    var printHeightText = new Gtk.SpinButton.with_range(0.1, 625.0, 0.5);
-		    printHeightText.get_style_context().add_class("form-field");
-		    printHeightText.width_request = 120;
-		    printHeightText.value = 5.00;
-		    
-		    var printResolutionText = new Gtk.SpinButton.with_range(1, 1000, 1);
-		    printResolutionText.get_style_context().add_class("form-field");
-		    printResolutionText.width_request = 120;
-		    printResolutionText.value = 96;
-		    
-		    var printWidthLabel = new Gtk.Label("Width:");
-		    printWidthLabel.justify = Gtk.Justification.RIGHT;
-		    
-		    var printHeightLabel = new Gtk.Label("Height:");
-		    printHeightLabel.justify = Gtk.Justification.RIGHT;
-		    
-		    var printResolutionLabel = new Gtk.Label("Resolution: \t");
-		    printResolutionLabel.justify = Gtk.Justification.RIGHT;
-		    
-		    var printWidthTypeLabel = new Gtk.Label(" inches");
-		    var printHeightTypeLabel = new Gtk.Label(" inches");
-		    var printResolutionTypeLabel = new Gtk.Label(" inches");
-		    
-		    // ToDO: Figure out CSS to add margins rather than adding whitespace to the text
 		    container.attach(new Gtk.Label(" "), 1, 3, 1, 1);
 		    container.attach(new Gtk.Label("Print Size"), 1, 4, 1, 1);
 		    
-		    container.attach(printWidthLabel, 1, 5, 1, 1);
-		    container.attach(printWidthText, 2, 5, 1, 1);
-		    container.attach(printWidthTypeLabel, 3, 5, 1, 1);
+		    container.attach(printResolutionLabel, 1, 5, 1, 1);
+		    container.attach(printResolutionSpinner, 2, 5, 1, 1);
+		    container.attach(printDpiTypeCombo, 3, 5, 1, 1);
 		    
-		    container.attach(printHeightLabel, 1, 6, 1, 1);
-		    container.attach(printHeightText, 2, 6, 1, 1);
-		    container.attach(printHeightTypeLabel, 3, 6, 1, 1);
+		    container.attach(printWidthLabel, 1, 6, 1, 1);
+		    container.attach(printWidthSpinner, 2, 6, 1, 1);
+		    container.attach(printWidthTypeLabel, 3, 6, 1, 1);
 		    
-		    container.attach(printResolutionLabel, 1, 7, 1, 1);
-		    container.attach(printResolutionText, 2, 7, 1, 1);
-		    container.attach(printResolutionTypeLabel, 3, 7, 1, 1);
-		    
+		    container.attach(printHeightLabel, 1, 7, 1, 1);
+		    container.attach(printHeightSpinner, 2, 7, 1, 1);
+		    container.attach(printHeightTypeLabel, 3, 7, 1, 1);
 		    
 		    // Make sure to show everything
 		    options.add(container);
 		    show_all();
+		}
+		
+		private void size_changed(Gtk.SpinButton spinner)
+		{
+			if (spinner == printWidthSpinner || spinner == printHeightSpinner)
+				change_sizes(true);
+			else
+				change_sizes();
+		}
+	
+		private void change_sizes(bool printField = false)
+		{
+			if (printField)
+			{
+				var newWidth = printWidthSpinner.value;
+				var newHeight = printHeightSpinner.value;
+				
+				widthSpinner.set_value(newWidth * resolution);
+				heightSpinner.set_value(newHeight * resolution);
+			}
+			else
+			{
+				var newWidth = widthSpinner.value;
+				var newHeight = heightSpinner.value;
+				
+				printWidthSpinner.set_value(newWidth / resolution);
+				printHeightSpinner.set_value(newHeight / resolution);
+			}
+			
+			// if not print, convert the print fields to the appropriate values
+			// if print, convert the pixel fields to the appropriate values
+			// after everything is done kick off a redraw for the canvas
 		}
 	}
 }
