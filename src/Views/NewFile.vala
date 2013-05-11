@@ -29,10 +29,10 @@ namespace Draw
 	{
 		private Draw.Window Window;
 		private Gtk.DrawingArea imageCanvas;
-		private int width;
-		private int height;
-		private int resolution;
-		private string printType;
+		private double width;
+		private double height;
+		private double resolution;
+		private string type;
 		
 		// Spinner buttons
 		private Gtk.SpinButton widthSpinner;
@@ -40,6 +40,8 @@ namespace Draw
 		private Gtk.SpinButton printWidthSpinner;
 		private Gtk.SpinButton printHeightSpinner;
 		private Gtk.SpinButton printResolutionSpinner;
+		private Gtk.Label printWidthTypeLabel;
+		private Gtk.Label printHeightTypeLabel;
 	
 		public NewFile(Draw.Window window)
 		{
@@ -47,6 +49,8 @@ namespace Draw
 		    Window = window;
 		    width = 640;
 		    height = 480;
+		    resolution = 96;
+		    type = "inches";
 		    
 		    // Create a nice new image form
 		    var container = new Gtk.Grid();
@@ -58,14 +62,7 @@ namespace Draw
 		    imageCanvas = new Gtk.DrawingArea();
 		    imageCanvas.width_request = 100;
 		    imageCanvas.height_request = 100;
-		    imageCanvas.draw.connect((context) =>
-		    {
-		    	context.set_line_width(1);
-		    	context.set_source_rgb(0, 0, 0);
-		    	context.rectangle(0, 8, 64, 48);
-		    	context.stroke();
-		    	return false;
-		    });
+		    imageCanvas.draw.connect(image_preview);
 		    
 		    // Create pixels form here
 		    widthSpinner = new Gtk.SpinButton.with_range(1, 60000, 1);
@@ -92,23 +89,23 @@ namespace Draw
 		    
 		    
 		    // Create print form here
-		    printWidthSpinner = new Gtk.SpinButton.with_range(0.1, 625.0, 0.1);			
+		    printWidthSpinner = new Gtk.SpinButton.with_range(0.05, 625.0, 0.05);			
 		    printWidthSpinner.width_request = 120;
 		    printWidthSpinner.value = 6.67;		    
 		    printWidthSpinner.value_changed.connect(size_changed);
 		    
-		    printHeightSpinner = new Gtk.SpinButton.with_range(0.1, 625.0, 0.1);
+		    printHeightSpinner = new Gtk.SpinButton.with_range(0.05, 625.0, 0.05);
 		    printHeightSpinner.width_request = 120;
 		    printHeightSpinner.value = 5.00;
 		    printHeightSpinner.value_changed.connect(size_changed);
 		    
-		    printResolutionSpinner = new Gtk.SpinButton.with_range(1, 1000, 1);
+		    printResolutionSpinner = new Gtk.SpinButton.with_range(0.01, 10000, 0.01);
 		    printResolutionSpinner.width_request = 120;
 		    printResolutionSpinner.value = 96;
 		    printResolutionSpinner.value_changed.connect(() =>
 		    {
-		    	resolution = (int)printResolutionSpinner.value;
-		    	change_sizes(true);
+		    	resolution = printResolutionSpinner.get_value();
+		    	change_sizes();
 		    });
 		    
 		    var printWidthLabel = new Gtk.Label("Width:");
@@ -120,21 +117,22 @@ namespace Draw
 		    var printResolutionLabel = new Gtk.Label("Resolution:");
 		    printResolutionLabel.halign = Gtk.Align.END;
 		    
-		    var printWidthTypeLabel = new Gtk.Label("inches");
+		    printWidthTypeLabel = new Gtk.Label("inches");
 		    printWidthTypeLabel.halign = Gtk.Align.START;
 		    
-		    var printHeightTypeLabel = new Gtk.Label("inches");
+		    printHeightTypeLabel = new Gtk.Label("inches");
 		    printHeightTypeLabel.halign = Gtk.Align.START;
 		    
 		    var printResolutionTypeLabel = new Gtk.Label("inches");
 		    printResolutionTypeLabel.halign = Gtk.Align.START;
 		    
-            var printDpiTypeCombo = new Gtk.ComboBoxText();
-            printDpiTypeCombo.append("inches", "pixels/inches");
-            printDpiTypeCombo.append("cm", "pixels/cm");
-            printDpiTypeCombo.append("mm", "pixels/mm");
-            printDpiTypeCombo.active_id = "inches";
-            printDpiTypeCombo.halign = Gtk.Align.START;
+            var printResolutionTypeCombo = new Gtk.ComboBoxText();
+            printResolutionTypeCombo.append("inches", "pixels/inch");
+            printResolutionTypeCombo.append("cm", "pixels/cm");
+            //printResolutionTypeCombo.append("mm", "pixels/mm");
+            printResolutionTypeCombo.active_id = "inches";
+            printResolutionTypeCombo.halign = Gtk.Align.START;
+            printResolutionTypeCombo.changed.connect(resolution_changed);
 
 		    
 		    // Attach everything to the Gtk.Grid container
@@ -154,7 +152,7 @@ namespace Draw
 		    
 		    container.attach(printResolutionLabel, 1, 5, 1, 1);
 		    container.attach(printResolutionSpinner, 2, 5, 1, 1);
-		    container.attach(printDpiTypeCombo, 3, 5, 1, 1);
+		    container.attach(printResolutionTypeCombo, 3, 5, 1, 1);
 		    
 		    container.attach(printWidthLabel, 1, 6, 1, 1);
 		    container.attach(printWidthSpinner, 2, 6, 1, 1);
@@ -167,6 +165,37 @@ namespace Draw
 		    // Make sure to show everything
 		    options.add(container);
 		    show_all();
+		}
+		
+		private void resolution_changed(Gtk.ComboBox combo)
+		{
+			if (combo.active_id == type)
+				return;
+		
+			// Change resolution values
+			resolution = Image.convert_resolution(type, combo.active_id, resolution);
+			printResolutionSpinner.value = resolution;
+			change_sizes();
+		
+			// Change resolution labels
+			switch(combo.active_id)
+			{
+				case "inches":
+					type = "inches";
+					printWidthTypeLabel.label = "inches";
+					printHeightTypeLabel.label = "inches";
+					break;
+				case "cm":
+					type = "cm";
+					printWidthTypeLabel.label = "centimeters";
+					printHeightTypeLabel.label = "centimeters";
+					break;
+				case "mm":
+					type = "mm";
+					printWidthTypeLabel.label = "millimeters";
+					printHeightTypeLabel.label = "millimeters";
+					break;
+			}
 		}
 		
 		private void size_changed(Gtk.SpinButton spinner)
@@ -184,21 +213,46 @@ namespace Draw
 				var newWidth = printWidthSpinner.value;
 				var newHeight = printHeightSpinner.value;
 				
-				widthSpinner.set_value(newWidth * resolution);
-				heightSpinner.set_value(newHeight * resolution);
+				width = newWidth * resolution;
+				height = newHeight * resolution;
+				
+				// Have to remove the signal from the spinners before you change their value
+				widthSpinner.value_changed.disconnect(size_changed);
+				heightSpinner.value_changed.disconnect(size_changed);
+				widthSpinner.value = width;
+				heightSpinner.value = height;
+				widthSpinner.value_changed.connect(size_changed);
+				heightSpinner.value_changed.connect(size_changed);
 			}
 			else
 			{
-				var newWidth = widthSpinner.value;
-				var newHeight = heightSpinner.value;
+				width = widthSpinner.value;
+				height = heightSpinner.value;
 				
-				printWidthSpinner.set_value(newWidth / resolution);
-				printHeightSpinner.set_value(newHeight / resolution);
+				// Have to remove the signal from the spinners before you change their value
+				printWidthSpinner.value_changed.disconnect(size_changed);
+				printHeightSpinner.value_changed.disconnect(size_changed);
+				printWidthSpinner.value = width / resolution;
+				printHeightSpinner.value = height / resolution;
+				printWidthSpinner.value_changed.connect(size_changed);
+				printHeightSpinner.value_changed.connect(size_changed);
 			}
 			
-			// if not print, convert the print fields to the appropriate values
-			// if print, convert the pixel fields to the appropriate values
-			// after everything is done kick off a redraw for the canvas
+			imageCanvas.queue_draw();
+		}
+		
+		private bool image_preview(Gtk.Widget canvas, Cairo.Context context)
+		{
+			maxWidth = 200;
+			maxHeight = 200;
+			drawWidth = (maxWidth / width) * width;
+			drawHeight = (maxHeight / height ) * height;
+		
+	    	context.set_line_width(1);
+	    	context.set_source_rgb(0, 0, 0);
+	    	context.rectangle(0, 8, 64, 48);
+	    	context.stroke();
+	    	return false;
 		}
 	}
 }

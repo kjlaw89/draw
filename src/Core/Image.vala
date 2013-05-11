@@ -226,5 +226,38 @@ namespace Draw
 			imageChooser.close();
 			return false;
 		}
+		
+		/**
+		 * Converts from one resolution to another
+		 * @param from Current resolution (inches, cm, mm)
+		 * @param to New resolution (inches, cm, mm)
+		 * @return double New resolution
+		 */
+		public static double convert_resolution(string from, string to, double value)
+		{
+			if (from == to)
+				return value;
+				
+			switch (from)
+			{
+				case "inches":
+					if (to == "cm")
+						return value / 2.54;
+					else
+						return value / 25.4;
+				case "cm":
+					if (to == "inches")
+						return value * 2.54;
+					else
+						return value / 10;
+				case "mm":
+					if (to == "inches")
+						return value * 25.4;
+					else
+						return value * 10;
+			}
+			
+			return value;
+		}
 	}
 }
