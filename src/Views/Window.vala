@@ -62,7 +62,7 @@ namespace Draw
 
 		public Granite.Application Application { get; private set; }
 		public Draw.Welcome WelcomeView { get; private set; }
-		public Draw.NewFile NewFileView { get; private set; }
+		public Draw.NewImage NewImageView { get; private set; }
 		public Draw.WindowToolbar WindowToolbar { get; private set; }
 		public Draw.ActionToolbar ActionToolbar { get; private set; }
 		public Draw.StatusToolbar StatusToolbar { get; private set; }
@@ -120,7 +120,7 @@ namespace Draw
 
 			// Create Welcome and File views
 			WelcomeView = new Draw.Welcome(this);
-			NewFileView = new Draw.NewFile(this);
+			NewImageView = new Draw.NewImage(this);
 
 			// Create Window toolbar
 			WindowToolbar = new Draw.WindowToolbar(this);
@@ -237,7 +237,7 @@ namespace Draw
 				container.remove(child);
 			}
 
-			container.pack_start(NewFileView);
+			container.pack_start(NewImageView);
 		}
 		
 		/**

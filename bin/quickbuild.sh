@@ -1,9 +1,9 @@
 # We need to make our build directory for all of our temp files.
-rm -r build
-mkdir build
+rm -r ../build
+mkdir ../build
 
 #Enter the build Directory
-cd build
+cd ../build
 
 #Now we initiate cmake in this dir
 cmake ..
@@ -13,3 +13,5 @@ make
 
 #Next we copy the executable to our root project file.
 cp ./src/Draw ../bin/Draw
+cd ../bin
+./Draw

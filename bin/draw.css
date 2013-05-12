@@ -7,6 +7,15 @@
 {
 }
 
+.blue-highlight
+{
+	color: white;
+	background-image: -gtk-gradient(linear, 0 0.7, 0 1, from(rgb(0, 136, 255)), to(rgb(0, 136, 204)));
+	border-color: rgb(0, 136, 204);
+}
+
+.blue-highlight * { color: white; }
+
 .content_text { color: #FFF; }
 
 .form-field

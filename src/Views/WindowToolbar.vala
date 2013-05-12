@@ -90,6 +90,7 @@ namespace Draw
 	        titleContainer.add(titleLabel);
 
 	        var newButton = new Gtk.ToolButton.from_stock (Gtk.Stock.NEW);
+	        newButton.clicked.connect(handle_new);
 
 	        // Create the open button and assign it it's primary method
 	        var openButton = new Gtk.ToolButton.from_stock (Gtk.Stock.OPEN);
@@ -157,6 +158,11 @@ namespace Draw
 			}
 			
 			return false;
+		}
+		
+		private void handle_new(Gtk.ToolButton button)
+		{
+			Window.show_new();
 		}
 
 		private void handle_open(Gtk.ToolButton button)

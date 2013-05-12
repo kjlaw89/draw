@@ -48,6 +48,8 @@ namespace Draw
 		public Draw.Canvas Canvas { get; private set; }
 		public int Width { get { return width; } }
 		public int Height { get { return height; } }
+		public double Resolution { get; set; }
+		public string PrintType { get; set; }
 		public Gtk.Image Thumbnail { get { return Canvas.get_thumbnail(); } }
 		
 		public bool Modified 
@@ -73,6 +75,17 @@ namespace Draw
 		public Image.from_path(string path) throws ImageError
 		{
 			load_image(path);
+		}
+		
+		public Image.with_resolution(int width, int height, double resolution, string printType, bool transparent = false)
+		{
+			this.width = width;
+			this.height = height;
+			this.Resolution = resolution;
+			this.PrintType = printType;
+			
+			Canvas = new Draw.Canvas(width, height, transparent);
+			Canvas.show();
 		}
 		
 		/**
@@ -250,11 +263,6 @@ namespace Draw
 						return value * 2.54;
 					else
 						return value / 10;
-				case "mm":
-					if (to == "inches")
-						return value * 25.4;
-					else
-						return value * 10;
 			}
 			
 			return value;
