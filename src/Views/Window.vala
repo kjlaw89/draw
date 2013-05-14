@@ -54,7 +54,7 @@ namespace Draw
 	 */
 	public class Window : Gtk.Window
 	{
-		private ArrayList<Draw.Image> images = new ArrayList<Draw.Image>();
+		private Gee.List<Draw.Image> images = new ArrayList<Draw.Image>();
 		private Draw.Image activeImage;
 		private Gtk.Grid content;
 		private Gtk.Box container;
@@ -98,7 +98,7 @@ namespace Draw
 		}
 		
 		public int OpenCount {	get { return images.size; } }
-		public ArrayList<Draw.Image> Images { get { return images; } }
+		public Gee.List<Draw.Image> Images { get { return images; } }
 
  		/**
  		 * Initializes the main window for the application
@@ -189,6 +189,34 @@ namespace Draw
 
 			if (show)
 				ActiveImage = image;
+		}
+		
+		/**
+		 * Closes the given image. If all images either the welcome screen
+		 * is shown or the application defaults a standard 640x480 image.
+		 *
+		 */
+		public void close_image(Draw.Image image)
+		{
+			images.remove(image);
+			
+			if (images.size == 0)
+			{
+				show_welcome();
+				//add_image(new Image(640, 480), true);
+			}
+		}
+		
+		/**
+		 * Replaces the given image with the new image (usually for Save As... operations)
+		 * @param image Image to replace
+		 * @param newImage New Image
+		 * @param show Switch to new image
+		 */
+		public void replace_image(Draw.Image image, Draw.Image newImage, bool show = false)
+		{
+			images.remove(image);
+			add_image(newImage, show);
 		}
 		
 		/**

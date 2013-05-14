@@ -42,9 +42,8 @@ namespace Draw
 		private int height;
 		
 		public string Name { get; private set; }
-		public string Type { get; private set; }
 		public string FolderPath { get; private set; }
-		public string FullPath { get; private set; }
+		public string Type { get; private set; }
 		public int Quality { get; private set; }
 		public Draw.Canvas Canvas { get; private set; }
 		public int Width { get { return width; } }
@@ -102,15 +101,14 @@ namespace Draw
 				file = File.new_for_path(path);	
 			
 				// Parse out and load our file
-				FullPath = path.substring(7);								// drops 'File:///'
 				Name = file.get_basename();
-				FolderPath = FullPath.replace(Name, "");
+				FolderPath = path.replace(Name, "");
 			
 				// Load our pixel buffer and get some general stats
-				var buffer = new Gdk.Pixbuf.from_file(FullPath);
+				var buffer = new Gdk.Pixbuf.from_file(FolderPath + Name);
 				
 				// Image info
-				info = Gdk.Pixbuf.get_file_info(FullPath, out width, out height);
+				info = Gdk.Pixbuf.get_file_info(FolderPath + Name, out width, out height);
 				Type = info.get_name();
 			
 				// Generate and show our canvas
@@ -135,7 +133,7 @@ namespace Draw
 			try
 			{
 				var imageBuffer = Canvas.get_buffer();
-				imageBuffer.save(FullPath, Type);
+				imageBuffer.save(FolderPath, Type);
 			}
 			catch (Error error)
 			{
@@ -174,7 +172,7 @@ namespace Draw
 			// File type dropdown widget
 			var formatsCombo = new Gtk.ComboBoxText();
 			formatsCombo.append("bmp", "*.bmp");
-			formatsCombo.append("jpg", "*.jpg, *.jpeg, *.jpe, *.jiff");
+			formatsCombo.append("jpeg", "*.jpg, *.jpeg, *.jpe, *.jiff");
 			formatsCombo.append("png", "*.png");
 			formatsCombo.append("tiff", "*.tif, *.tiff");
 			formatsCombo.append("tga", "*.tga");
@@ -182,19 +180,77 @@ namespace Draw
 			formatsCombo.changed.connect(() =>
 			{
 				fileType = formatsCombo.active_id;
+				var fileName = imageChooser.get_file().get_basename();
+				string[] fileParts = fileName.split(".");
+				
+				// Reconstruct the file with the new filetype
+				fileName = "";
+				for (int i = 0; i < fileParts.length; i++)
+				{
+					if (i != fileParts.length - 1)
+						fileName += fileParts[i] + ".";
+					else
+						fileName += (fileType == "jpeg") ? "jpg" : fileType;
+				}
+				
+				imageChooser.set_current_name(fileName);
 			});
 			
 			imageChooser.extra_widget = formatsCombo;
 			
 			// If we have an active file already, load in the details
-			if (file != null)
-				imageChooser.set_file(file);
+			if (FolderPath != null && Name != null)
+				imageChooser.set_filename(FolderPath + Name);
 
 			// Handle saving the new image			
 			if (imageChooser.run() == Gtk.ResponseType.ACCEPT)
 			{
-				
-				
+				// Backup the old details encase anything happens
+				var oldFile = file;
+				var oldName = Name;
+				var oldPath = FolderPath;
+				var oldType = Type;
+					
+				try
+				{
+					file = imageChooser.get_file();
+					Name = file.get_basename();
+					FolderPath = imageChooser.get_filename().replace(Name, "");
+					Type = fileType;
+					
+					var imageBuffer = Canvas.get_buffer();
+					imageBuffer.save(FolderPath + Name, Type);
+					
+					// Image info
+					info = Gdk.Pixbuf.get_file_info(FolderPath + Name, out width, out height);
+					Type = info.get_name();
+					Window.Title = Name;
+					
+					// If the file types are the same, just reload 
+					// and replace this image (incase of quality change)
+					if (Type == oldType)
+					{
+						var newImage = new Image.from_path(FolderPath + Name);
+						Window.replace_image(this, newImage);
+					}
+					
+					// else open the new image as a separate file
+					else
+					{
+						var newImage = new Image.from_path(FolderPath + Name);
+						Window.add_image(newImage, true);
+					}
+				}
+				catch (Error error)
+				{
+					stdout.printf("Error saving file: " + error.message);
+					
+					// Restore backup details
+					file = oldFile;
+					Name = oldName;
+					FolderPath = oldPath;
+					Type = oldType;
+				}
 			}
 			
 			imageChooser.close();
@@ -269,12 +325,12 @@ namespace Draw
 			// Handle selections
 			if (imageChooser.run() == Gtk.ResponseType.ACCEPT)
 			{
-				SList<string> uris = imageChooser.get_uris();
-				foreach(unowned string uri in uris)
+				SList<string> images = imageChooser.get_filenames();
+				foreach(unowned string imagePath in images)
 				{
 					try
 					{
-						var image = new Draw.Image.from_path(uri);
+						var image = new Draw.Image.from_path(imagePath);
 
 						// Add the canvas to the container
 						Window.add_image(image, true);

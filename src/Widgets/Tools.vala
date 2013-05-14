@@ -50,13 +50,13 @@ namespace Draw
 	{
 		private int cellSpacing = 0;
 		private int buttonSize = 20;
-		private ArrayList<Gtk.Box> rows = new ArrayList<Gtk.Box>();
-		private ArrayList<Gtk.Widget> buttons = new ArrayList<Gtk.Widget>();
+		private Gee.List<Gtk.Box> rows = new ArrayList<Gtk.Box>();
+		private Gee.List<Gtk.Widget> buttons = new ArrayList<Gtk.Widget>();
 
 		/**
 		 * Buttons associated with Tools
 		 */
-		public ArrayList<Gtk.Widget> Buttons { get { return buttons; } }
+		public Gee.List<Gtk.Widget> Buttons { get { return buttons; } }
 
 		/**
 		 * Creates a new Tools

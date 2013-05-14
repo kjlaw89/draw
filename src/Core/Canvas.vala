@@ -121,6 +121,12 @@ namespace Draw
 			return buffer.load_to_pixbuf();
 		}
 
+		/**
+		 * Generates a thumbnail for use through the program (usually opened images or layers)
+		 * @param width? Width of thumbnail 
+		 * @param height? Height of thumbnail
+		 * @note Width and height required to have specific dimensions, otherwise 65x65 is used
+		 */
 		public unowned Gtk.Image get_thumbnail(int? width = null, int? height = null)
 		{
 			if (thumbnail == null || regenerate_thumbnail || (width != null && height != null))
@@ -142,6 +148,12 @@ namespace Draw
 			return thumbnail;
 		}
 
+		/**
+		 * Handles all drawing events
+		 * Note: This function will eventually be written to split out
+		 * the input from the drawing aspect of the canvas - this is
+		 * where the user input will be used to actually fill in the canvas
+		 */
 		private bool handle_events(Gdk.Event event)
 		{
 			Cairo.Context context = buffer.context;
