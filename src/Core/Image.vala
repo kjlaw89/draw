@@ -43,8 +43,9 @@ namespace Draw
 		
 		public string Name { get; private set; }
 		public string Type { get; private set; }
-		public string FilePath { get; private set; }
+		public string FolderPath { get; private set; }
 		public string FullPath { get; private set; }
+		public int Quality { get; private set; }
 		public Draw.Canvas Canvas { get; private set; }
 		public int Width { get { return width; } }
 		public int Height { get { return height; } }
@@ -67,14 +68,11 @@ namespace Draw
 		{
 			this.width = width;
 			this.height = height;
+			this.Resolution = 96;
+			this.PrintType = "inch";
 			
 			Canvas = new Draw.Canvas(width, height, transparent);
 			Canvas.show();
-		}
-		
-		public Image.from_path(string path) throws ImageError
-		{
-			load_image(path);
 		}
 		
 		public Image.with_resolution(int width, int height, double resolution, string printType, bool transparent = false)
@@ -86,6 +84,11 @@ namespace Draw
 			
 			Canvas = new Draw.Canvas(width, height, transparent);
 			Canvas.show();
+		}
+		
+		public Image.from_path(string path) throws ImageError
+		{
+			load_image(path);
 		}
 		
 		/**
@@ -100,8 +103,8 @@ namespace Draw
 			
 				// Parse out and load our file
 				FullPath = path.substring(7);								// drops 'File:///'
-				FilePath = file.get_path();
 				Name = file.get_basename();
+				FolderPath = FullPath.replace(Name, "");
 			
 				// Load our pixel buffer and get some general stats
 				var buffer = new Gdk.Pixbuf.from_file(FullPath);
@@ -124,6 +127,9 @@ namespace Draw
 			}
 		}
 		
+		/**
+		 * Saves the image with the original filename and type
+		 */
 		public bool save()
 		{
 			try
@@ -140,8 +146,59 @@ namespace Draw
 			return true;
 		}
 		
-		public bool save_as()
+		public bool save_as(Draw.Window Window)
 		{
+			var fileType = "png";
+			var imageChooser = new Gtk.FileChooserDialog("Save As...", Window,
+				Gtk.FileChooserAction.SAVE,
+				Gtk.Stock.CANCEL,
+				Gtk.ResponseType.CANCEL,
+				Gtk.Stock.SAVE,
+				Gtk.ResponseType.ACCEPT);
+				
+			// Check for overwrite
+			imageChooser.do_overwrite_confirmation = true;
+				
+			// Set the images we are allowed to save to here
+			var filter = new Gtk.FileFilter();
+			imageChooser.set_filter(filter);
+
+			// Add filters
+			filter.add_mime_type("image/bmp");
+			filter.add_mime_type("image/jpeg");
+			filter.add_mime_type("image/gif");
+			filter.add_mime_type("image/png");
+			filter.add_mime_type("image/tiff");
+			filter.add_mime_type("image/tga");
+			
+			// File type dropdown widget
+			var formatsCombo = new Gtk.ComboBoxText();
+			formatsCombo.append("bmp", "*.bmp");
+			formatsCombo.append("jpg", "*.jpg, *.jpeg, *.jpe, *.jiff");
+			formatsCombo.append("png", "*.png");
+			formatsCombo.append("tiff", "*.tif, *.tiff");
+			formatsCombo.append("tga", "*.tga");
+			formatsCombo.active_id = "png";
+			formatsCombo.changed.connect(() =>
+			{
+				fileType = formatsCombo.active_id;
+			});
+			
+			imageChooser.extra_widget = formatsCombo;
+			
+			// If we have an active file already, load in the details
+			if (file != null)
+				imageChooser.set_file(file);
+
+			// Handle saving the new image			
+			if (imageChooser.run() == Gtk.ResponseType.ACCEPT)
+			{
+				
+				
+			}
+			
+			imageChooser.close();
+				
 			return true;
 		}
 		

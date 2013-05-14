@@ -204,7 +204,7 @@ namespace Draw
 		 */
 		public bool save_image_as()
 		{
-			return false;
+			return ActiveImage.save_as(this);
 		}
 		
 		/**

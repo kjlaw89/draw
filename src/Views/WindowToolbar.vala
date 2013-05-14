@@ -98,6 +98,9 @@ namespace Draw
 	        
 	        var saveButton = new Gtk.ToolButton.from_stock (Gtk.Stock.SAVE);
 	        saveButton.clicked.connect(handle_save);
+	        
+	        var saveAsButton = new Gtk.ToolButton.from_stock (Gtk.Stock.SAVE_AS);
+	        saveAsButton.clicked.connect(handle_save_as);
 
 	        var imagesButton = new Gtk.ToolButton.from_stock(Gtk.Stock.ORIENTATION_LANDSCAPE);
 	        imagesButton.clicked.connect(handle_images);
@@ -108,7 +111,7 @@ namespace Draw
 			add_left(openButton);
 			add_left(saveButton);
 			add_left(create_separator(HEIGHT));
-			add_left(new Gtk.ToolButton.from_stock (Gtk.Stock.SAVE_AS));
+			add_left(saveAsButton);
 			add_left(create_separator(HEIGHT));
 			add_center(titleContainer);
 			add_right(create_separator(HEIGHT));
@@ -173,6 +176,11 @@ namespace Draw
 		private void handle_save(Gtk.ToolButton button)
 		{
 			Window.save_image();
+		}
+		
+		private void handle_save_as(Gtk.ToolButton button)
+		{
+			Window.save_image_as();
 		}
 
 		/**
