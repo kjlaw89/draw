@@ -57,6 +57,8 @@ namespace Draw
 		public CanvasContainer(Draw.Window window)
 		{
 			Window = window;
+			//set_capture_button_press(true);  // ToDO: Research more - related to touch events
+			//set_kinetic_scrolling(true);
 		
 			CanvasFrame = new Gtk.Frame(null);
 			CanvasFrame.get_style_context().add_class("canvas-frame");

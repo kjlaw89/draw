@@ -91,19 +91,24 @@ namespace Draw
 
 	        var newButton = new Gtk.ToolButton.from_stock (Gtk.Stock.NEW);
 	        newButton.clicked.connect(handle_new);
+	        newButton.add_accelerator("clicked", Window.AccelGroup, Gdk.Key.N, Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
 	        // Create the open button and assign it it's primary method
 	        var openButton = new Gtk.ToolButton.from_stock (Gtk.Stock.OPEN);
 	        openButton.clicked.connect(handle_open);
+	        openButton.add_accelerator("clicked", Window.AccelGroup, Gdk.Key.O, Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 	        
 	        var saveButton = new Gtk.ToolButton.from_stock (Gtk.Stock.SAVE);
 	        saveButton.clicked.connect(handle_save);
+	        saveButton.add_accelerator("clicked", Window.AccelGroup, Gdk.Key.S, Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 	        
 	        var saveAsButton = new Gtk.ToolButton.from_stock (Gtk.Stock.SAVE_AS);
 	        saveAsButton.clicked.connect(handle_save_as);
+	        saveAsButton.add_accelerator("clicked", Window.AccelGroup, Gdk.Key.A, Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
 	        var imagesButton = new Gtk.ToolButton.from_stock(Gtk.Stock.ORIENTATION_LANDSCAPE);
 	        imagesButton.clicked.connect(handle_images);
+	        imagesButton.add_accelerator("clicked", Window.AccelGroup, Gdk.Key.I, Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
 			add_left(close);
 			add_left(create_separator(HEIGHT));
@@ -136,12 +141,13 @@ namespace Draw
 		{
 			// App Menu (this gives access to the About dialog)
         	Gtk.Menu settings = new Gtk.Menu ();
-        	Gtk.MenuItem about_item = new Gtk.MenuItem.with_label("About");
-        	about_item.activate.connect(() => { Window.Application.show_about(Window); });
-
+        	Gtk.MenuItem aboutItem = new Gtk.MenuItem.with_label("About");
+        	aboutItem.activate.connect(() => { Window.Application.show_about(Window); });
+        	
         	// Add our settings items to our menu
-        	settings.add(about_item);
-        	return new Granite.Widgets.ToolButtonWithMenu (new Gtk.Image.from_icon_name ("application-menu", Gtk.IconSize.LARGE_TOOLBAR), "", settings);
+        	settings.add(aboutItem);
+        	var menuButton = new Granite.Widgets.ToolButtonWithMenu (new Gtk.Image.from_icon_name ("application-menu", Gtk.IconSize.LARGE_TOOLBAR), "", settings);       	
+        	return menuButton;
 		}
 		
 		private bool toolbar_clicked(Gtk.Widget widget, Gdk.Event event)

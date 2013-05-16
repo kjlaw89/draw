@@ -54,11 +54,14 @@ namespace Draw
 	 */
 	public class Window : Gtk.Window
 	{
+		[Signal (action = true)]
+		public signal void paste(); 
+		
 		private Gee.List<Draw.Image> images = new ArrayList<Draw.Image>();
 		private Draw.Image activeImage;
 		private Gtk.Grid content;
 		private Gtk.Box container;
-		
+		private Gtk.AccelGroup accelGroup = new Gtk.AccelGroup(); 
 
 		public Granite.Application Application { get; private set; }
 		public Draw.Welcome WelcomeView { get; private set; }
@@ -69,6 +72,7 @@ namespace Draw
 		public Draw.CanvasContainer CanvasContainer { get; private set; }
 		public bool Maximized { get; set; }
 		public Draw.Canvas Canvas { get; set; }
+		public Gtk.AccelGroup AccelGroup { get { return accelGroup; } }
 
         /**
          * Gets/Sets the title for the Window
@@ -107,6 +111,7 @@ namespace Draw
 		{
 			Application = application;
 			window_position = Gtk.WindowPosition.CENTER;
+			add_accel_group(accelGroup);
 			delete_event.connect (() => exit());
 
 		    // Try to load in and apply the CSS to the application
@@ -151,6 +156,11 @@ namespace Draw
 		    
 		    show_welcome();
 			base.add(container);
+			
+			// Clipboard Pasting
+			paste.connect(paste_image);
+			add_accelerator("paste", AccelGroup, Gdk.Key.P, Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
+			paste();
 		}
 
 		/**
@@ -175,6 +185,15 @@ namespace Draw
 		public void update_images_count(int imagesCount)
 		{
 			WindowToolbar.update_open_count(imagesCount);
+		}
+		
+		public void paste_image()
+		{
+			var clipboard = get_clipboard(Gdk.SELECTION_CLIPBOARD);
+			var pixbuf = clipboard.wait_for_image();
+			
+			if (ActiveImage != null)
+				ActiveImage.Canvas.handle_paste(pixbuf);
 		}
 
 		/**
@@ -224,7 +243,7 @@ namespace Draw
 		 */
 		public bool save_image()
 		{
-			return ActiveImage.save();
+			return ActiveImage.save(this);
 		}
 		
 		/**

@@ -128,12 +128,17 @@ namespace Draw
 		/**
 		 * Saves the image with the original filename and type
 		 */
-		public bool save()
+		public bool save(Draw.Window Window)
 		{
 			try
 			{
-				var imageBuffer = Canvas.get_buffer();
-				imageBuffer.save(FolderPath, Type);
+				if (Name != null && FolderPath != null && Type != null)
+				{
+					var imageBuffer = Canvas.get_buffer();
+					imageBuffer.save(FolderPath, Type);
+				}
+				else
+					save_as(Window);
 			}
 			catch (Error error)
 			{
@@ -190,7 +195,21 @@ namespace Draw
 					if (i != fileParts.length - 1)
 						fileName += fileParts[i] + ".";
 					else
-						fileName += (fileType == "jpeg") ? "jpg" : fileType;
+					{
+						switch (fileType)
+						{
+							case "jpeg":
+								fileName += "jpg";
+								break;
+							case "tiff":
+								fileName += "tif";
+								break;
+							default:
+								fileName += fileType;
+								break;
+						}
+					}
+						
 				}
 				
 				imageChooser.set_current_name(fileName);

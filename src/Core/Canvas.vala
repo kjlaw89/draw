@@ -93,7 +93,7 @@ namespace Draw
 				}
 								
 				context.paint();
-				return true;
+				return false;
 			});
 		}
 		
@@ -147,6 +147,15 @@ namespace Draw
 
 			return thumbnail;
 		}
+		
+		public void handle_paste(Gdk.Pixbuf pasteBuffer)
+		{
+			stdout.printf("Pasting image!\n");
+			var context = buffer.context;
+			Gdk.cairo_set_source_pixbuf(context, pasteBuffer, 0, 0);
+			context.paint();
+			base.queue_draw();
+		}
 
 		/**
 		 * Handles all drawing events
@@ -178,7 +187,6 @@ namespace Draw
 				}
 				context.fill();
 				hasFocus = true;
-				return true;
 			}
 
 			if (event.type == Gdk.EventType.BUTTON_RELEASE)
@@ -187,7 +195,6 @@ namespace Draw
 				lastY = null;
 				queue_draw();
 				hasFocus = false;
-				return true;
 			}
 
 			if (hasFocus && event.type == Gdk.EventType.MOTION_NOTIFY)
@@ -215,7 +222,7 @@ namespace Draw
 				queue_draw();
 			}
 
-			return true;
+			return false;
 		}
 
 		/**
