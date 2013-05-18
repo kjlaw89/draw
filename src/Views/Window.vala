@@ -159,7 +159,7 @@ namespace Draw
 			
 			// Clipboard Pasting
 			paste.connect(paste_image);
-			add_accelerator("paste", AccelGroup, Gdk.Key.P, Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
+			add_accelerator("paste", AccelGroup, Gdk.Key.V, Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 			paste();
 		}
 
@@ -192,8 +192,23 @@ namespace Draw
 			var clipboard = get_clipboard(Gdk.SELECTION_CLIPBOARD);
 			var pixbuf = clipboard.wait_for_image();
 			
+			if (pixbuf == null)
+				return;
+			
+			var width = pixbuf.width;
+			var height = pixbuf.height;
+			
 			if (ActiveImage != null)
+			{
+				var canvas = ActiveImage.Canvas;
+				if (canvas.Width < width)
+					canvas.Width = width;
+				
+				if (canvas.Height < height)
+					canvas.Height = height;
+					
 				ActiveImage.Canvas.handle_paste(pixbuf);
+			}
 		}
 
 		/**

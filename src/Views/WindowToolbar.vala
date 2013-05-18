@@ -41,7 +41,7 @@ namespace Draw
 	        }
 		}
 
-		const int HEIGHT = 48;
+		const int HEIGHT = 40;
 
 		/**
 		 * Intializes the main window's toolbar and

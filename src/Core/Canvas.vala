@@ -247,6 +247,7 @@ namespace Draw
 		 */
 		public void canvas_resize(int width, int height, ResizeDirection direction)
 		{
+			
 		}
 
 		public enum ResizeDirection
