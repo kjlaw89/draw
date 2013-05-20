@@ -69,6 +69,13 @@
 	border-radius: 3px;
 }
 
+.image-tools
+{
+	border: 0;
+	padding: 0px;
+	margin: 0px;
+}
+
 .effects-menu .button:first-child, .adjustments-menu .button:first-child
 {
 	border-width: 0;

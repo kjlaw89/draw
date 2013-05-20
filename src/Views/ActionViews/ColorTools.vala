@@ -94,8 +94,8 @@ namespace Draw
 			Palette = palettes[0];
 			
 			chosenContainer = new Fixed();
-			primaryColor = new ColorIcon(new Color(0, 0, 0, 1), 18, 18);
-			secondaryColor = new ColorIcon(new Color(1, 1, 1, 1), 18, 18);
+			primaryColor = new ColorIcon(new Color(0, 0, 0, 1), 17, 17);
+			secondaryColor = new ColorIcon(new Color(1, 1, 1, 1), 17, 17);
 			
 			var primaryFrame = new Gtk.Frame(null);
 			primaryFrame.get_style_context().add_class("primary-color");
@@ -105,18 +105,13 @@ namespace Draw
 			secondaryFrame.get_style_context().add_class("secondary-color");
 			secondaryFrame.add(secondaryColor);
 			
-			chosenContainer.width_request = 50;
-			chosenContainer.put(secondaryFrame, 18, 12);  // Secondary color first so primary overlaps it
-			chosenContainer.put(primaryFrame, 6, 2);
-			
-			var label = new Gtk.Label("Colors...");
-			chosenContainer.put(label, 2, 36);
-			
-			var button = new Gtk.ToolButton(chosenContainer, null);
+			chosenContainer.width_request = 26;
+			chosenContainer.put(primaryFrame, 1, 1);
+			chosenContainer.put(secondaryFrame, 1, 26);  // Secondary color first so primary overlaps it
 			
 			valign = Gtk.Align.CENTER;
+			add(chosenContainer);
 			add(paletteTools);
-			add(button);
 		}
 		
 		private bool color_clicked(Gtk.Widget widget, Gdk.Event event)

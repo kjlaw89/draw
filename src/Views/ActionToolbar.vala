@@ -40,8 +40,6 @@ namespace Draw
 			Window = window;
 			
 			// Build the effects menu
-			var effectsButton = new Gtk.MenuToolButton(null, "Effects");
-			effectsButton.get_style_context().add_class("effects-menu");
 			effectsMenu = new Gtk.Menu();
 			
 			// Blurs sub-menu
@@ -62,15 +60,17 @@ namespace Draw
 			
 			// Add all sub-menus to the effects menu
 			effectsMenu.add(blursItem);
-			effectsButton.set_menu(effectsMenu);
+			//effectsButton.set_menu(effectsMenu);
+			
+			var effectsImage = new Gtk.Image.from_file("images/effects.png");
+			var effectsButton = new Granite.Widgets.ToolButtonWithMenu(effectsImage, "", effectsMenu);
+			effectsButton.get_style_context().add_class("image-tools");
 			
 			var effectsContainer = new Gtk.Frame(null);
 			effectsContainer.get_style_context().add_class("button-menu");
 			effectsContainer.add(effectsButton);
 			
 			// Build the effects menu
-			var adjustmentsButton = new Gtk.MenuToolButton(null, "Adjustments");
-			adjustmentsButton.get_style_context().add_class("adjustments-menu");
 			adjustmentsMenu = new Gtk.Menu();
 			
 			// Blurs sub-menu
@@ -84,8 +84,14 @@ namespace Draw
 			adjustmentsMenu.add(curvesItem);
 			adjustmentsMenu.show_all();
 			
+			var adjustmentsImage = new Gtk.Image.from_file("images/adjustments.png");
+			adjustmentsImage.icon_size = Gtk.IconSize.LARGE_TOOLBAR;
+			
+			var adjustmentsButton = new Granite.Widgets.ToolButtonWithMenu(adjustmentsImage, "", adjustmentsMenu);
+			adjustmentsButton.get_style_context().add_class("image-tools");
+			
 			// Add all sub-menus to the effects menu
-			adjustmentsButton.set_menu(adjustmentsMenu);
+			//adjustmentsButton.set_menu(adjustmentsMenu);
 			
 			var adjustmentsContainer = new Gtk.Frame(null);
 			adjustmentsContainer.get_style_context().add_class("button-menu");
@@ -93,19 +99,30 @@ namespace Draw
 			
 			var colorTools = new Draw.ColorTools(Window);
 			var drawTools = new Draw.DrawTools();
-			drawTools.valign = Gtk.Align.CENTER;
+			var drawToolsOptions = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 2);
+			drawToolsOptions.expand = true;
+			drawToolsOptions.halign = Gtk.Align.CENTER;
+			drawToolsOptions.valign = Gtk.Align.CENTER;
+			drawToolsOptions.add(new Gtk.Label("No options for this tool."));
 			
 			adjustmentsContainer.width_request = 100;
 			effectsContainer.width_request = 100;
 			
-			var buttonsGrid = new Gtk.Grid();
-			buttonsGrid.attach(adjustmentsContainer, 0, 0, 1, 1);
-			buttonsGrid.attach(effectsContainer, 0, 1, 1, 1);
+			var buttonsBox = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 2);
+			buttonsBox.add(adjustmentsContainer);
+			buttonsBox.add(effectsContainer);
+			
+			var toolsBox = new Gtk.Box(Gtk.Orientation.VERTICAL, 0);
+			toolsBox.valign = Gtk.Align.CENTER;
+			toolsBox.halign = Gtk.Align.CENTER;
+			toolsBox.expand = true;
+			toolsBox.add(drawTools);
+			toolsBox.add(drawToolsOptions);
 			
 			// Add all items to the toolbar
-			add_left(buttonsGrid);
-			add_left(drawTools);
-			add_right(colorTools);
+			add_left(colorTools);
+			add_left(buttonsBox);
+			add_center(toolsBox);
 		}
 	}
 }
