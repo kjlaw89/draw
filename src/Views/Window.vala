@@ -69,7 +69,7 @@ namespace Draw
 		public Draw.WindowToolbar WindowToolbar { get; private set; }
 		public Draw.ActionToolbar ActionToolbar { get; private set; }
 		public Draw.StatusToolbar StatusToolbar { get; private set; }
-		public Draw.CanvasContainer CanvasContainer { get; private set; }
+		public Draw.Workspace Workspace { get; private set; }
 		public bool Maximized { get; set; }
 		public Draw.Canvas Canvas { get; set; }
 		public Gtk.AccelGroup AccelGroup { get { return accelGroup; } }
@@ -92,7 +92,7 @@ namespace Draw
 			set
 			{
 				activeImage = value;
-				CanvasContainer.Canvas = value.Canvas;
+				Workspace.Canvas = value.Canvas;
 				
 				if (value.Name != null)
 					Title = value.Name + ((value.Modified) ? "*" : "");
@@ -135,7 +135,7 @@ namespace Draw
 			ActionToolbar.height_request = 55;
 
 			// Create our Canvas Container
-			CanvasContainer = new Draw.CanvasContainer(this);
+			Workspace = new Draw.Workspace(this);
 
 			// Create Status toolbar
 			StatusToolbar = new Draw.StatusToolbar(this);
@@ -145,7 +145,7 @@ namespace Draw
 			content.expand = true;
 			content.orientation = Gtk.Orientation.VERTICAL;
 			content.add(ActionToolbar);
-			content.add(CanvasContainer);
+			content.add(Workspace);
 			content.add(StatusToolbar);
 			content.show_all();
 

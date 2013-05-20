@@ -31,7 +31,7 @@ namespace Draw
 	 * ToDO: Separate the Canvas from the Container so
 	 * switching out images does not require recreating a new container
 	 */
-	public class CanvasContainer : Gtk.ScrolledWindow
+	public class Workspace : Gtk.ScrolledWindow
 	{
 		protected Draw.Window Window { get; set; }
 		private Gtk.Frame CanvasFrame { get; set; }
@@ -54,11 +54,9 @@ namespace Draw
 			}
 		}	
 	
-		public CanvasContainer(Draw.Window window)
+		public Workspace(Draw.Window window)
 		{
 			Window = window;
-			//set_capture_button_press(true);  // ToDO: Research more - related to touch events
-			//set_kinetic_scrolling(true);
 		
 			CanvasFrame = new Gtk.Frame(null);
 			CanvasFrame.get_style_context().add_class("canvas-frame");

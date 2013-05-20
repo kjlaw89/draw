@@ -66,10 +66,6 @@ namespace Draw
 			var effectsButton = new Granite.Widgets.ToolButtonWithMenu(effectsImage, "", effectsMenu);
 			effectsButton.get_style_context().add_class("image-tools");
 			
-			var effectsContainer = new Gtk.Frame(null);
-			effectsContainer.get_style_context().add_class("button-menu");
-			effectsContainer.add(effectsButton);
-			
 			// Build the effects menu
 			adjustmentsMenu = new Gtk.Menu();
 			
@@ -93,10 +89,6 @@ namespace Draw
 			// Add all sub-menus to the effects menu
 			//adjustmentsButton.set_menu(adjustmentsMenu);
 			
-			var adjustmentsContainer = new Gtk.Frame(null);
-			adjustmentsContainer.get_style_context().add_class("button-menu");
-			adjustmentsContainer.add(adjustmentsButton);
-			
 			var colorTools = new Draw.ColorTools(Window);
 			var drawTools = new Draw.DrawTools();
 			var drawToolsOptions = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 2);
@@ -105,12 +97,9 @@ namespace Draw
 			drawToolsOptions.valign = Gtk.Align.CENTER;
 			drawToolsOptions.add(new Gtk.Label("No options for this tool."));
 			
-			adjustmentsContainer.width_request = 100;
-			effectsContainer.width_request = 100;
-			
 			var buttonsBox = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 2);
-			buttonsBox.add(adjustmentsContainer);
-			buttonsBox.add(effectsContainer);
+			buttonsBox.add(adjustmentsButton);
+			buttonsBox.add(effectsButton);
 			
 			var toolsBox = new Gtk.Box(Gtk.Orientation.VERTICAL, 0);
 			toolsBox.valign = Gtk.Align.CENTER;
