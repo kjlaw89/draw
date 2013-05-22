@@ -109,8 +109,8 @@ namespace Draw
 			toolsBox.add(drawToolsOptions);
 			
 			// Add all items to the toolbar
-			add_left(colorTools);
-			add_left(buttonsBox);
+			add_right(buttonsBox);
+			add_right(colorTools);
 			add_center(toolsBox);
 		}
 	}

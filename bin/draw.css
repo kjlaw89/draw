@@ -49,7 +49,7 @@
 
 .canvas-frame
 {
-	border-width: 1px;
+	border-width: 2px;
 	border-color: #C6C6C6;
 	border-style: solid;
 	-box-shadow: 0 0 5px 2px #000;

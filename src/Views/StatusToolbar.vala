@@ -24,8 +24,7 @@ namespace Draw
 	public class StatusToolbar : Draw.Toolbar
 	{
 		public Draw.Window Window { get; set; }
-		public Draw.Workspace Canvas { get; private set; }
-		private Gtk.Scale zoomWidget;
+		public Draw.Workspace Workspace { get; private set; }
 		
 		/**
 		 * Intializes the main window's toolbar and
@@ -38,9 +37,19 @@ namespace Draw
 			Window = window;
 			
 			// Get our canvas for use in the toolbar
-			Canvas = Window.Workspace;
+			Workspace = Window.Workspace;
 			
-			zoomWidget = new Gtk.Scale.with_range(Gtk.Orientation.HORIZONTAL, 25, 800, 25);
+			// Mouse position label
+			var positionLabel = new Gtk.Label(null);
+			Workspace.motion_occurred.connect((x, y) =>
+			{
+				if (x == -1 || y == -1)
+					positionLabel.label = "";
+				else
+					positionLabel.label = ((int)x).to_string() +", "+ ((int)y).to_string() +"px";
+			});
+			
+			var zoomWidget = new Gtk.Scale.with_range(Gtk.Orientation.HORIZONTAL, 25, 800, 25);
 		    zoomWidget.get_style_context().add_class("zoom-widget");
 		    zoomWidget.tooltip_text = "Zoom";
 		    zoomWidget.width_request = 150;
@@ -55,10 +64,11 @@ namespace Draw
 		    	zoomWidget.set_value(newValue);
 		    	
 		    	// Get the canvas's current size and adjust it for the new zoom
-		    	Canvas.canvas_zoom(newValue / 100.0);
+		    	Workspace.zoom(newValue / 100.0);
 		    });
 		    
 		    // Application Statusbar (used for image zooming, canvas size details, mouse position and general stats)
+			add_left(positionLabel);
 			add_right(zoomWidget);
 		}
 	}

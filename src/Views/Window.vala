@@ -134,7 +134,7 @@ namespace Draw
 			ActionToolbar = new Draw.ActionToolbar(this);
 			ActionToolbar.height_request = 55;
 
-			// Create our Canvas Container
+			// Create our Workspace
 			Workspace = new Draw.Workspace(this);
 
 			// Create Status toolbar

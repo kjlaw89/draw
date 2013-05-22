@@ -25,10 +25,11 @@ using Gee;
 namespace Draw
 {
 	public class DrawTools : Draw.Tools
-	{
+	{	
 		public DrawTools()
 		{
 			base("drawtools", 1, 19);
+			
 		
 			add_button(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/mouse.png"), "Pointer"), 0, true);
 			add_button(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/select.png"), "Select"), 0);
@@ -38,7 +39,7 @@ namespace Draw
 			add_button(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/clone_stamp.png"), "Clone Stamp"), 0);
 			add_button(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/bucket.png"), "Bucket"), 0);
 			add_button(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/pencil.png"), "Pencil"), 0);
-			add_button(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/brush.png"), "Brush"), 0);
+			add_button(new Draw.BrushTool(), 0);
 			add_button(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/shapes.png"), "Shapes"), 0);
 			add_button(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/lines.png"), "Lines"), 0);
 			add_button(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/text.png"), "Text"), 0);

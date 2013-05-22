@@ -110,8 +110,8 @@ namespace Draw
 			chosenContainer.put(secondaryFrame, 1, 26);  // Secondary color first so primary overlaps it
 			
 			valign = Gtk.Align.CENTER;
-			add(chosenContainer);
 			add(paletteTools);
+			add(chosenContainer);
 		}
 		
 		private bool color_clicked(Gtk.Widget widget, Gdk.Event event)

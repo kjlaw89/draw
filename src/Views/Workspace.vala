@@ -33,6 +33,12 @@ namespace Draw
 	 */
 	public class Workspace : Gtk.ScrolledWindow
 	{
+		// Public signals that any widget can use to gather details about the currently active image
+		public signal void motion_occurred(double x, double y);
+		public signal void button_pressed(Gdk.EventButton event);
+		public signal void button_released(Gdk.EventButton event);
+		public signal void selected_region_updated(double x, double y);
+	
 		protected Draw.Window Window { get; set; }
 		private Gtk.Frame CanvasFrame { get; set; }
 		
@@ -42,12 +48,22 @@ namespace Draw
 			get { return activeCanvas; }
 			set 
 			{
-				// Remove the old canvas if we had one
+				// Remove the old canvas and disconnect the events if we had one
 				if (activeCanvas != null)
+				{
 					CanvasFrame.remove(activeCanvas);
+					
+					// Disconnect events
+					activeCanvas.motion_notify_event.disconnect(motion_event);
+					activeCanvas.leave_notify_event.disconnect(leave_event);
+				}
 					
 				activeCanvas = value;
 				Window.Canvas = value;
+				
+				// Attach all of our events
+				activeCanvas.motion_notify_event.connect(motion_event);
+				activeCanvas.leave_notify_event.connect(leave_event);
 				
 				// Add the new canvas
 				CanvasFrame.add(activeCanvas);
@@ -62,6 +78,8 @@ namespace Draw
 			CanvasFrame.get_style_context().add_class("canvas-frame");
 			CanvasFrame.valign = Gtk.Align.CENTER;
 			CanvasFrame.halign = Gtk.Align.CENTER;
+			
+			// Research resizing the canvas area by grabbing at the border
 		
 			var viewport = new Gtk.Viewport(null, null);
 			viewport.get_style_context().add_class("canvas-container");
@@ -74,9 +92,26 @@ namespace Draw
 			expand = true;
 		}
 		
-		public void canvas_zoom(double zoomAmount)
+		/**
+		 * Handles mouse motion events on the canvas area
+		 * @param canvas Canvas
+		 * @param event Motion event that occurred
+		 */
+		public bool motion_event(Gtk.Widget canvas, Gdk.EventMotion event)
 		{
-			Canvas.canvas_zoom(zoomAmount);
+			motion_occurred(event.x, event.y);
+			return false;
+		}
+		
+		public bool leave_event(Gtk.Widget canvas, Gdk.EventCrossing event)
+		{
+			motion_occurred(-1, -1);
+			return false;
+		}
+		
+		public void zoom(double zoomAmount)
+		{
+			Canvas.zoom(zoomAmount);
 		}
 	}
 }

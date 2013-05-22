@@ -47,6 +47,8 @@ vala_precompile(VALA_C
     Views/Workspace.vala
     Views/ActionViews/DrawTools.vala
     Views/ActionViews/ColorTools.vala
+    Views/Tools/Tool.vala
+    Views/Tools/Brush.vala
     Widgets/Tools.vala
     Widgets/Toolbar.vala
     Widgets/ColorIcon.vala

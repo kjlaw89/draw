@@ -77,7 +77,10 @@ namespace Draw
 			SecondaryColor = new Granite.Drawing.Color(1, 1, 1, 1);
 
 			// Handle canvas events
-			set_events(Gdk.EventMask.ALL_EVENTS_MASK);
+			add_events(Gdk.EventMask.POINTER_MOTION_MASK | Gdk.EventMask.BUTTON_PRESS_MASK | 
+					   Gdk.EventMask.BUTTON_RELEASE_MASK | Gdk.EventMask.ENTER_NOTIFY_MASK | 
+					   Gdk.EventMask.LEAVE_NOTIFY_MASK | Gdk.EventMask.SCROLL_MASK | 
+					   Gdk.EventMask.TOUCH_MASK);
 			event.connect(handle_events);
 
 			// Draw what is in our buffer
@@ -229,7 +232,7 @@ namespace Draw
 		 * Zooms the camera in (using the appropriate image resizing function to do so)
 		 * @param zoomAmount Amount to zoom in by (% based)
 		 */
-		public void canvas_zoom(double zoomAmount)
+		public void zoom(double zoomAmount)
 		{
 			this.zoomAmount = zoomAmount;
 			Width = (int)(DefaultWidth * zoomAmount);
