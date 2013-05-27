@@ -124,3 +124,15 @@ DrawColorTools GtkLabel:hover
 {
 	background-image: -gtk-gradient(radial, center center, 0, center center, 1, from(white), to(gray));
 }
+
+DrawToolsPane 
+{
+	background-color: white;
+}
+
+DrawToolsPane GtkLabel
+{
+	color: #909090;
+	font-size: 24;
+	font-weight: bold;
+}

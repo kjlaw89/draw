@@ -90,7 +90,7 @@ namespace Draw
 			//adjustmentsButton.set_menu(adjustmentsMenu);
 			
 			var colorTools = new Draw.ColorTools(Window);
-			var drawTools = new Draw.DrawTools();
+			var drawTools = new Draw.DrawTools(Window);
 			var drawToolsOptions = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 2);
 			drawToolsOptions.expand = true;
 			drawToolsOptions.halign = Gtk.Align.CENTER;

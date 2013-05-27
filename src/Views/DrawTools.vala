@@ -26,12 +26,28 @@ namespace Draw
 {
 	public class DrawTools : Draw.Tools
 	{	
-		public DrawTools()
+		public Draw.Window Window { get; private set; }
+	
+		public DrawTools(Draw.Window window)
 		{
 			base("drawtools", 1, 19);
+			Window = window;
 			
+			var pointerTool = new Gtk.ToolButton (new Gtk.Image.from_file ("./images/mouse.png"), "Pointer");
+			pointerTool.clicked.connect(() =>
+			{
+				var contents = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 0);
+				contents.expand = true;
+			
+				var thicknessSpinner = new Gtk.SpinButton.with_range(1, 100, 1);
+				contents.add(new Gtk.Label("Thickness: "));
+				contents.add(thicknessSpinner);
+				contents.show_all();
+				
+				Window.Workspace.set_content(contents);
+			});
 		
-			add_button(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/mouse.png"), "Pointer"), 0, true);
+			add_button(pointerTool, 0, true);
 			add_button(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/select.png"), "Select"), 0);
 			add_button(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/magic_select.png"), "Magic Select"), 0);
 			add_button(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/dropper.png"), "Dropper"), 0);

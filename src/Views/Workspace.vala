@@ -43,8 +43,9 @@ namespace Draw
 		private Gtk.Frame CanvasFrame { get; set; }
 		
 		private Draw.Canvas activeCanvas;
+		private Draw.ToolsPane toolsPane;
 		public Draw.Canvas Canvas 
-		{ 
+		{
 			get { return activeCanvas; }
 			set 
 			{
@@ -68,11 +69,12 @@ namespace Draw
 				// Add the new canvas
 				CanvasFrame.add(activeCanvas);
 			}
-		}	
+		}
 	
 		public Workspace(Draw.Window window)
 		{
 			Window = window;
+			toolsPane = new Draw.ToolsPane(this);
 		
 			CanvasFrame = new Gtk.Frame(null);
 			CanvasFrame.get_style_context().add_class("canvas-frame");
@@ -86,10 +88,9 @@ namespace Draw
 			viewport.hexpand = true;
 			viewport.vexpand = true;
 			viewport.add(CanvasFrame);
-		
-			// Add all of the elements
+			
+			// Add viewport to the window
 			add(viewport);
-			expand = true;
 		}
 		
 		/**
@@ -112,6 +113,23 @@ namespace Draw
 		public void zoom(double zoomAmount)
 		{
 			Canvas.zoom(zoomAmount);
+		}
+		
+		public void show_pane()
+		{
+			toolsPane.show_all();
+		}
+		
+		public void set_content(Gtk.Container content)
+		{
+			/*var container = toolsPane.get_content_area() as Gtk.Container;
+			container.foreach((widget) =>
+			{
+				container.remove(widget);
+			});
+			
+			container.add(content);*/
+			show_pane();
 		}
 	}
 }
