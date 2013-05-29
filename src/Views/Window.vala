@@ -132,7 +132,7 @@ namespace Draw
 
 			// Create Action toolbar
 			ActionToolbar = new Draw.ActionToolbar(this);
-			ActionToolbar.height_request = 55;
+			ActionToolbar.height_request = 44;
 
 			// Create our Workspace
 			Workspace = new Draw.Workspace(this);

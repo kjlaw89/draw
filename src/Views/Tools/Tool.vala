@@ -23,37 +23,23 @@ using Gtk;
 
 namespace Draw
 {
-	public abstract class Tool : Gtk.EventBox
+	public class Tool : Gtk.EventBox
 	{
 		protected Gtk.ToolButton button;
 		protected Gtk.Container contents;
 		
-		/** Tracks whether this tool is selected **/
-		public bool Active { get; set; }
+		public Gdk.Pixbuf Pixbuf { get; private set; }
+		public string Label { get; set; }
 		
-		public Tool(string image_path, string label)
-		{		
-			// Create our button and associate it with our event handler
-			button = new Gtk.ToolButton(new Gtk.Image.from_file(image_path), label);
-			button.clicked.connect(click);
-			add(button);
-			
-			// Associate the hover event with our button
-			add_events(Gdk.EventMask.ENTER_NOTIFY_MASK | Gdk.EventMask.LEAVE_NOTIFY_MASK);
-			enter_notify_event.connect((event) =>
-			{
-				if (!Active)
-					return false;
-					
-				click(button);
-				return true;
-			});
+		public Tool(string imagePath, string label)
+		{
+			Pixbuf = new Gdk.Pixbuf.from_file(imagePath);
+			Label = label;
 			
 			// Build our interface
-			build_ui();
+			//build_ui();
 		}
 		
-		protected abstract void build_ui();
-		protected abstract void click(Gtk.ToolButton button);
+		//protected abstract void build_ui();
 	}
 }

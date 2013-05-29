@@ -116,14 +116,10 @@ namespace Draw
 			add_left(openButton);
 			add_left(saveButton);
 			add_left(create_separator(HEIGHT));
-			add_left(saveAsButton);
-			add_left(create_separator(HEIGHT));
 			add_center(titleContainer);
 			add_right(create_separator(HEIGHT));
+			add_right(saveAsButton);
 			add_right(imagesButton);
-			add_right(create_separator(HEIGHT));
-			add_right(new Gtk.ToolButton (new Gtk.Image.from_icon_name ("document-export", Gtk.IconSize.LARGE_TOOLBAR), ""));
-			add_right(new Gtk.ToolButton.from_stock (Gtk.Stock.PRINT));
 			add_right(create_appmenu());
 			add_right(create_separator(HEIGHT));
 			add_right(maximize);
@@ -141,10 +137,14 @@ namespace Draw
 		{
 			// App Menu (this gives access to the About dialog)
         	Gtk.Menu settings = new Gtk.Menu ();
+        	Gtk.MenuItem contractorItem = new Gtk.MenuItem.with_label("Send To...");
+        	Gtk.MenuItem printItem = new Gtk.MenuItem.with_label("Print...");
         	Gtk.MenuItem aboutItem = new Gtk.MenuItem.with_label("About");
         	aboutItem.activate.connect(() => { Window.Application.show_about(Window); });
         	
         	// Add our settings items to our menu
+        	settings.add(contractorItem);
+        	settings.add(printItem);
         	settings.add(aboutItem);
         	var menuButton = new Granite.Widgets.ToolButtonWithMenu (new Gtk.Image.from_icon_name ("application-menu", Gtk.IconSize.LARGE_TOOLBAR), "", settings);       	
         	return menuButton;

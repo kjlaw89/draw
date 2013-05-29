@@ -30,7 +30,7 @@ namespace Draw
 			base("./images/brush.png", "Brush");
 		}
 		
-		public override void build_ui()
+		/*public override void build_ui()
 		{
 			// Bucket tools
 			contents = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 0);
@@ -43,7 +43,7 @@ namespace Draw
 		
 		public override void click(Gtk.ToolButton button)
 		{
-			/*Active = true;
+			Active = true;
 		
 			var popover = new Granite.Widgets.PopOver();			
 			var popcontent = popover.get_content_area() as Gtk.Container;
@@ -53,7 +53,7 @@ namespace Draw
 			popover.present();
 			popover.run();
 			popcontent.remove(contents);
-			popover.destroy();*/
-		}
+			popover.destroy();
+		}*/
 	}
 }

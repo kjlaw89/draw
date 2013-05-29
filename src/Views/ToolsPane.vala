@@ -42,7 +42,7 @@ namespace Draw
 		public ToolsPane(Gtk.Widget widget)
 		{
 			Widget = widget;
-			modal = true;
+			//modal = true;
 			set_role("popover");
 			
 			
@@ -50,7 +50,9 @@ namespace Draw
 			content.orientation = Gtk.Orientation.VERTICAL;
 			content.valign = Gtk.Align.START;
 			content.halign = Gtk.Align.START;
-			content.expand = true;
+			content.hexpand = true;
+			content.vexpand = true;
+			content.width_request = 225;
 			
 			var toolsLabel = new Gtk.Label("Tools");
 			toolsLabel.halign = Gtk.Align.START;
@@ -77,9 +79,6 @@ namespace Draw
 			
 			var brushesBox = new Gtk.Box(Gtk.Orientation.VERTICAL, 0);
 			content.add(brushesBox);
-			
-			// Set width/height
-			width_request = 225;
 		}
 		
 		public override bool map_event(Gdk.EventAny event)
@@ -140,7 +139,8 @@ namespace Draw
 			Widget.translate_coordinates(Widget.get_toplevel(), 0, 0, out widX, out widY);
         	screen.get_monitor_geometry(screen.get_monitor_at_point (winX, winY), out geo);
         	
-        	height_request = Widget.get_allocated_height() + 28; 	// +28 covers the statusbar too
+        	var content = get_content_area() as Gtk.Box;
+        	content.height_request = Widget.get_allocated_height() + 28; 	// +28 covers the statusbar too
 			move(geo.x + winX, geo.y + winY + widY);
 			
 			base.show();

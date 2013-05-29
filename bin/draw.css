@@ -49,7 +49,7 @@
 
 .canvas-frame
 {
-	border-width: 2px;
+	border-width: 1px;
 	border-color: #C6C6C6;
 	border-style: solid;
 	-box-shadow: 0 0 5px 2px #000;
@@ -89,21 +89,6 @@
 	-unico-inner-stroke-style: none;
 	-unico-outer-stroke-width: 0;
 	-unico-outer-stroke-style: none;
-}
-
-DrawDrawTools GtkButton
-{
-	padding: 0;
-}
-
-.drawtools GtkToolButton.tool-selected GtkImage
-{
-	padding: 0px;
-	border-width: 1px;
-	border-style: solid;
-	border-radius: 2px;
-	border-color: #CCC;
-	background-image: -gtk-gradient(linear, 0 0, 0 1, from(#EBEBEB), to(#DDD));
 }
 
 DrawColorTools GtkToolButton { margin: 0px; margin-right: 2px; padding: 2px; }

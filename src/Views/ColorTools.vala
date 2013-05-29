@@ -46,18 +46,15 @@ namespace Draw
 				paletteTools.clear();
 				
 				// Load our colors from the palette in
-				for (var i = 0; i < 3; i++)
+				for (var i = 0; i < 16; i++)
 				{
-					for (var ii = 0; ii < 16; ii++)
-					{
-						var color = activePalette.Colors[(i * 16) + ii];
-						var button = new Gtk.Button();
-						button.set_image(new ColorIcon(color, 12, 12));
-						button.set_events(Gdk.EventMask.ALL_EVENTS_MASK);
-						button.event.connect(color_clicked);
-						
-						paletteTools.add_button(button, i, true);
-					}
+					var color = activePalette.Colors[i];
+					var button = new Gtk.Button();
+					button.set_image(new ColorIcon(color, 20, 20));
+					button.set_events(Gdk.EventMask.ALL_EVENTS_MASK);
+					button.event.connect(color_clicked);
+					
+					paletteTools.add_button(button, 0, true);
 				}
 			}
 		}
@@ -94,8 +91,8 @@ namespace Draw
 			Palette = palettes[0];
 			
 			chosenContainer = new Fixed();
-			primaryColor = new ColorIcon(new Color(0, 0, 0, 1), 17, 17);
-			secondaryColor = new ColorIcon(new Color(1, 1, 1, 1), 17, 17);
+			primaryColor = new ColorIcon(new Color(0, 0, 0, 1), 12, 12);
+			secondaryColor = new ColorIcon(new Color(1, 1, 1, 1), 12, 12);
 			
 			var primaryFrame = new Gtk.Frame(null);
 			primaryFrame.get_style_context().add_class("primary-color");
@@ -105,9 +102,9 @@ namespace Draw
 			secondaryFrame.get_style_context().add_class("secondary-color");
 			secondaryFrame.add(secondaryColor);
 			
-			chosenContainer.width_request = 26;
-			chosenContainer.put(primaryFrame, 1, 1);
-			chosenContainer.put(secondaryFrame, 1, 26);  // Secondary color first so primary overlaps it
+			chosenContainer.width_request = 36;
+			chosenContainer.put(primaryFrame, 8, 0);
+			chosenContainer.put(secondaryFrame, 16, 7);  // Secondary color first so primary overlaps it
 			
 			valign = Gtk.Align.CENTER;
 			add(paletteTools);

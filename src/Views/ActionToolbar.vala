@@ -39,6 +39,52 @@ namespace Draw
 			base("action-toolbar");
 			Window = window;
 			
+			var colorTools = new Draw.ColorTools(Window);
+			
+			var toolsContainer = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 0);
+			toolsContainer.halign = Gtk.Align.CENTER;
+			toolsContainer.expand = true;
+			
+			//var drawTools = new Draw.DrawTools(Window);
+			//toolsContainer.add(drawTools);
+			
+			// Create all our draw tools
+			var mouseTool = new Draw.Tool("./images/mouse.png", "Move/Resize");
+			var selectTool = new Draw.Tool("./images/select.png", "Select");
+			var magicTool = new Draw.Tool("./images/magic_select.png", "Magic Select");
+			var dropperTool = new Draw.Tool("./images/dropper.png", "Dropper");
+			var eraserTool = new Draw.Tool("./images/eraser.png", "Eraser");
+			var cloneTool = new Draw.Tool("./images/clone_stamp.png", "Clone Stamp");
+			var bucketTool = new Draw.Tool("./images/bucket.png", "Bucket");
+			var pencilTool = new Draw.Tool("./images/pencil.png", "Pencil");
+			var brushTool = new Draw.Tool("./images/brush.png", "Brush");
+			var shapesTool = new Draw.Tool("./images/shapes.png", "Shapes");
+			var linesTool = new Draw.Tool("./images/lines.png", "Lines");
+			var textTool = new Draw.Tool("./images/text.png", "Text");
+			
+			// Create mode button
+			var toolsModeButton = new Granite.Widgets.ModeButton();
+			toolsModeButton.append_pixbuf(mouseTool.Pixbuf);
+			toolsModeButton.append_pixbuf(selectTool.Pixbuf);
+			toolsModeButton.append_pixbuf(magicTool.Pixbuf);
+			toolsModeButton.append_pixbuf(dropperTool.Pixbuf);
+			toolsModeButton.append_pixbuf(eraserTool.Pixbuf);
+			toolsModeButton.append_pixbuf(cloneTool.Pixbuf);
+			toolsModeButton.append_pixbuf(bucketTool.Pixbuf);
+			toolsModeButton.append_pixbuf(pencilTool.Pixbuf);
+			toolsModeButton.append_pixbuf(brushTool.Pixbuf);
+			toolsModeButton.append_pixbuf(shapesTool.Pixbuf);
+			toolsModeButton.append_pixbuf(linesTool.Pixbuf);
+			toolsModeButton.append_pixbuf(textTool.Pixbuf);
+			toolsContainer.add(toolsModeButton);
+			
+			// Add all items to the toolbar
+			add_center(toolsContainer);
+			add_right(colorTools);
+		}
+	
+		/*private not_in_use()
+		{
 			// Build the effects menu
 			effectsMenu = new Gtk.Menu();
 			
@@ -88,30 +134,10 @@ namespace Draw
 			
 			// Add all sub-menus to the effects menu
 			//adjustmentsButton.set_menu(adjustmentsMenu);
-			
-			var colorTools = new Draw.ColorTools(Window);
-			var drawTools = new Draw.DrawTools(Window);
-			var drawToolsOptions = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 2);
-			drawToolsOptions.expand = true;
-			drawToolsOptions.halign = Gtk.Align.CENTER;
-			drawToolsOptions.valign = Gtk.Align.CENTER;
-			drawToolsOptions.add(new Gtk.Label("No options for this tool."));
-			
 			var buttonsBox = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 2);
 			buttonsBox.add(adjustmentsButton);
 			buttonsBox.add(effectsButton);
-			
-			var toolsBox = new Gtk.Box(Gtk.Orientation.VERTICAL, 0);
-			toolsBox.valign = Gtk.Align.CENTER;
-			toolsBox.halign = Gtk.Align.CENTER;
-			toolsBox.expand = true;
-			toolsBox.add(drawTools);
-			toolsBox.add(drawToolsOptions);
-			
-			// Add all items to the toolbar
-			add_right(buttonsBox);
-			add_right(colorTools);
-			add_center(toolsBox);
-		}
+			//add_right(buttonsBox);
+		}*/
 	}
 }
