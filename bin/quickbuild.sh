@@ -13,5 +13,13 @@ make
 
 #Next we copy the executable to our root project file.
 cp ./src/Draw ../bin/Draw
-cd ../bin
-./Draw
+mkdir ~/.draw/
+cp -rf ../bin/images ~/.draw/
+cp -rf ../bin/palettes ~/.draw/
+cp ../bin/draw.css ~/.draw/draw.css
+rm -rf /opt/Draw
+mkdir /opt/Draw
+cp -r ../bin/* /opt/Draw
+rm -f /usr/bin/Draw
+ln -s /opt/Draw/Draw /usr/bin/Draw
+rm /opt/Draw/quickbuild.sh

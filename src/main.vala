@@ -26,7 +26,8 @@ using Granite.Widgets;
 using GLib;
 
 // Next we define our own namespace to hold our application.
-namespace Draw {
+namespace Draw 
+{
     
     // Here we create our main application class. We derive from Granite.Application because it includes
     // many helper functions for us. It also includes a Granite window which is based off of the 
@@ -113,7 +114,8 @@ namespace Draw {
     }
 }
 
-public static int main(string[] args){
+public static int main(string[] args)
+{
     Gtk.init(ref args);
     var draw_app = new Draw.Application();
     return draw_app.run(args);

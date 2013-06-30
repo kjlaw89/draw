@@ -39,7 +39,6 @@ namespace Draw
 	public class Palette
 	{
 		public ArrayList<Color> Colors = new ArrayList<Color>();
-		
 		public string Name { get; set; }
 
 		/**
@@ -48,7 +47,7 @@ namespace Draw
 		 */
 		public Palette.from_file(string filename)
 		{
-			Colors = Palette.load_colors_from_file("./palettes/" + filename);
+			Colors = Palette.load_colors_from_file(filename);
 			Name = filename.substring(0, filename.length - 4);
 		}
 		
@@ -61,21 +60,22 @@ namespace Draw
 		}
 		
 		/**
-		 * Loads all palettes from the palette directory
+		 * Loads all palettes from the default palette directory
 		 * @return Loaded palettes
 		 */
 		public static ArrayList<Palette> load_palettes()
 		{
 			var palettes = new ArrayList<Palette>();
-			var directory = File.new_for_path("./palettes");
+			var PaletteDirectory = GLib.Environment.get_current_dir() + "/.draw/palettes";
 			
 			try
 			{
+				var directory = File.new_for_path(PaletteDirectory);
 				var enumerator = directory.enumerate_children(FileAttribute.STANDARD_NAME, 0);
 			
 				FileInfo info;
 				while ((info = enumerator.next_file()) != null)
-					palettes.add(new Palette.from_file(info.get_name()));
+					palettes.add(new Palette.from_file(PaletteDirectory +"/"+ info.get_name()));
 			}
 			catch (Error error)
 			{

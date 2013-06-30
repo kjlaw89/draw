@@ -49,18 +49,18 @@ namespace Draw
 			//toolsContainer.add(drawTools);
 			
 			// Create all our draw tools
-			var mouseTool = new Draw.Tool("./images/mouse.png", "Move/Resize");
-			var selectTool = new Draw.Tool("./images/select.png", "Select");
-			var magicTool = new Draw.Tool("./images/magic_select.png", "Magic Select");
-			var dropperTool = new Draw.Tool("./images/dropper.png", "Dropper");
-			var eraserTool = new Draw.Tool("./images/eraser.png", "Eraser");
-			var cloneTool = new Draw.Tool("./images/clone_stamp.png", "Clone Stamp");
-			var bucketTool = new Draw.Tool("./images/bucket.png", "Bucket");
-			var pencilTool = new Draw.Tool("./images/pencil.png", "Pencil");
-			var brushTool = new Draw.Tool("./images/brush.png", "Brush");
-			var shapesTool = new Draw.Tool("./images/shapes.png", "Shapes");
-			var linesTool = new Draw.Tool("./images/lines.png", "Lines");
-			var textTool = new Draw.Tool("./images/text.png", "Text");
+			var mouseTool = new Draw.Tool(GLib.Environment.get_current_dir() + "/.draw/images/mouse.png", "Move/Resize");
+			var selectTool = new Draw.Tool(GLib.Environment.get_current_dir() + "/.draw/images/select.png", "Select");
+			var magicTool = new Draw.Tool(GLib.Environment.get_current_dir() + "/.draw/images/magic_select.png", "Magic Select");
+			var dropperTool = new Draw.Tool(GLib.Environment.get_current_dir() + "/.draw/images/dropper.png", "Dropper");
+			var eraserTool = new Draw.Tool(GLib.Environment.get_current_dir() + "/.draw/images/eraser.png", "Eraser");
+			var cloneTool = new Draw.Tool(GLib.Environment.get_current_dir() + "/.draw/images/clone_stamp.png", "Clone Stamp");
+			var bucketTool = new Draw.Tool(GLib.Environment.get_current_dir() + "/.draw/images/bucket.png", "Bucket");
+			var pencilTool = new Draw.Tool(GLib.Environment.get_current_dir() + "/.draw/images/pencil.png", "Pencil");
+			var brushTool = new Draw.Tool(GLib.Environment.get_current_dir() + "/.draw/images/brush.png", "Brush");
+			var shapesTool = new Draw.Tool(GLib.Environment.get_current_dir() + "/.draw/images/shapes.png", "Shapes");
+			var linesTool = new Draw.Tool(GLib.Environment.get_current_dir() + "/.draw/images/lines.png", "Lines");
+			var textTool = new Draw.Tool(GLib.Environment.get_current_dir() + "/.draw/images/text.png", "Text");
 			
 			// Create mode button
 			var toolsModeButton = new Granite.Widgets.ModeButton();

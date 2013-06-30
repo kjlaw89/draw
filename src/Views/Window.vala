@@ -118,7 +118,7 @@ namespace Draw
 		    try
 			{
 				var css = new Gtk.CssProvider();
-				css.load_from_file(File.new_for_path("./draw.css"));
+				css.load_from_file(File.new_for_path(GLib.Environment.get_current_dir() + "/.draw/draw.css"));
 				Gtk.StyleContext.add_provider_for_screen(screen, css, Gtk.STYLE_PROVIDER_PRIORITY_THEME);
 			}
 			catch (Error ex) { /* throw alert eventually */ }
