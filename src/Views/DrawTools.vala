@@ -33,7 +33,8 @@ namespace Draw
 			base("drawtools", 1, 19);
 			Window = window;
 			
-			var pointerTool = new Gtk.ToolButton (new Gtk.Image.from_file ("./images/mouse.png"), "Pointer");
+			var pointerBuf = new Pixbuf.from_stream(Draw.Window.Resources.open_stream("/draw/images/mouse.png", GLib.ResourceLookupFlags.NONE));
+			var pointerTool = new Gtk.ToolButton (new Gtk.Image.from_pixbuf(pointerBuf), "Pointer");
 			pointerTool.clicked.connect(() =>
 			{
 				var contents = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 0);
@@ -48,17 +49,38 @@ namespace Draw
 			});
 		
 			add_button(pointerTool, 0, true);
-			add_button(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/select.png"), "Select"), 0);
-			add_button(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/magic_select.png"), "Magic Select"), 0);
-			add_button(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/dropper.png"), "Dropper"), 0);
-			add_button(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/eraser.png"), "Eraser"), 0);
-			add_button(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/clone_stamp.png"), "Clone Stamp"), 0);
-			add_button(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/bucket.png"), "Bucket"), 0);
-			add_button(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/pencil.png"), "Pencil"), 0);
+			
+			var selectBuf = new Pixbuf.from_stream(Draw.Window.Resources.open_stream("/draw/images/select.png", GLib.ResourceLookupFlags.NONE));
+			add_button(new Gtk.ToolButton (new Gtk.Image.from_pixbuf(selectBuf), "Select"), 0);
+			
+			var magicBuf = new Pixbuf.from_stream(Draw.Window.Resources.open_stream("/draw/images/magic_select.png", GLib.ResourceLookupFlags.NONE));
+			add_button(new Gtk.ToolButton (new Gtk.Image.from_pixbuf(magicBuf), "Magic Select"), 0);
+			
+			var dropperBuf = new Pixbuf.from_stream(Draw.Window.Resources.open_stream("/draw/images/dropper.png", GLib.ResourceLookupFlags.NONE));
+			add_button(new Gtk.ToolButton (new Gtk.Image.from_pixbuf(dropperBuf), "Dropper"), 0);
+			
+			var eraserBuf = new Pixbuf.from_stream(Draw.Window.Resources.open_stream("/draw/images/eraser.png", GLib.ResourceLookupFlags.NONE));
+			add_button(new Gtk.ToolButton (new Gtk.Image.from_pixbuf(eraserBuf), "Eraser"), 0);
+			
+			var cloneBuf = new Pixbuf.from_stream(Draw.Window.Resources.open_stream("/draw/images/clone_stamp.png", GLib.ResourceLookupFlags.NONE));
+			add_button(new Gtk.ToolButton (new Gtk.Image.from_pixbuf(cloneBuf), "Clone Stamp"), 0);
+			
+			var bucketBuf = new Pixbuf.from_stream(Draw.Window.Resources.open_stream("/draw/images/bucket.png", GLib.ResourceLookupFlags.NONE));
+			add_button(new Gtk.ToolButton (new Gtk.Image.from_pixbuf(bucketBuf), "Bucket"), 0);
+			
+			var pencilBuf = new Pixbuf.from_stream(Draw.Window.Resources.open_stream("/draw/images/pencil.png", GLib.ResourceLookupFlags.NONE));
+			add_button(new Gtk.ToolButton (new Gtk.Image.from_pixbuf(pencilBuf), "Pencil"), 0);
+			
 			add_button(new Draw.BrushTool(), 0);
-			add_button(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/shapes.png"), "Shapes"), 0);
-			add_button(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/lines.png"), "Lines"), 0);
-			add_button(new Gtk.ToolButton (new Gtk.Image.from_file ("./images/text.png"), "Text"), 0);
+			
+			var shapesBuf = new Pixbuf.from_stream(Draw.Window.Resources.open_stream("/draw/images/shapes.png", GLib.ResourceLookupFlags.NONE));
+			add_button(new Gtk.ToolButton (new Gtk.Image.from_pixbuf(shapesBuf), "Shapes"), 0);
+			
+			var linesBuf = new Pixbuf.from_stream(Draw.Window.Resources.open_stream("/draw/images/lines.png", GLib.ResourceLookupFlags.NONE));
+			add_button(new Gtk.ToolButton (new Gtk.Image.from_pixbuf(linesBuf), "Lines"), 0);
+			
+			var textBuf = new Pixbuf.from_stream(Draw.Window.Resources.open_stream("/draw/images/text.png", GLib.ResourceLookupFlags.NONE));
+			add_button(new Gtk.ToolButton (new Gtk.Image.from_pixbuf(textBuf), "Text"), 0);
 		}
 	}
 }

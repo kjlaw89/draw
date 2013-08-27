@@ -27,7 +27,7 @@ namespace Draw
 	{
 		public BrushTool()
 		{
-			base("./images/brush.png", "Brush");
+			base("/write/images/brush.png", "Brush");
 		}
 		
 		/*public override void build_ui()

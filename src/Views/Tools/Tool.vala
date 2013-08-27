@@ -33,7 +33,7 @@ namespace Draw
 		
 		public Tool(string imagePath, string label)
 		{
-			Pixbuf = new Gdk.Pixbuf.from_file(imagePath);
+			Pixbuf = new Gdk.Pixbuf.from_stream(Draw.Window.Resources.open_stream(imagePath, GLib.ResourceLookupFlags.NONE));
 			Label = label;
 			
 			// Build our interface

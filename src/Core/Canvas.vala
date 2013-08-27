@@ -84,7 +84,8 @@ namespace Draw
 			event.connect(handle_events);
 
 			// Draw what is in our buffer
-			draw.connect ((context) => {			
+			draw.connect ((context) => 
+			{			
 				context.scale(zoomAmount, zoomAmount);
 				context.set_source_surface(buffer.surface, 0, 0);
 				

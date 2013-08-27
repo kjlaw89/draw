@@ -81,7 +81,7 @@ namespace Draw
 		{
 			get { return WindowToolbar.Title; }
 			set { WindowToolbar.Title = value; }
-		}		
+		}
 		
 		/**
 		 * Gets/Sets the working image
@@ -103,6 +103,34 @@ namespace Draw
 		
 		public int OpenCount {	get { return images.size; } }
 		public Gee.List<Draw.Image> Images { get { return images; } }
+		
+		private static GLib.Resource resources;
+		public static GLib.Resource Resources
+		{
+			get
+			{
+				if (resources == null)
+				{
+					try { resources = GLib.Resource.load("appresources"); }
+					catch (Error error) { stdout.printf("Unable to load application resources. Closing... " + error.message); }
+				}
+					
+				return resources;
+			}
+		}
+		
+		public static string GetResourceAsString(string resource)
+		{
+		
+			string data = "";
+			var stream = new GLib.DataInputStream(Draw.Window.Resources.open_stream(resource, GLib.ResourceLookupFlags.NONE));
+			
+			string? line = null;
+			while ((line = stream.read_line(null, null)) != null)
+				data += line + "\n";
+				
+			return data;
+		}
 
  		/**
  		 * Initializes the main window for the application
@@ -118,7 +146,7 @@ namespace Draw
 		    try
 			{
 				var css = new Gtk.CssProvider();
-				css.load_from_file(File.new_for_path(GLib.Environment.get_current_dir() + "/.draw/draw.css"));
+				css.load_from_data(Draw.Window.GetResourceAsString("/draw/app.css"), -1);
 				Gtk.StyleContext.add_provider_for_screen(screen, css, Gtk.STYLE_PROVIDER_PRIORITY_THEME);
 			}
 			catch (Error ex) { /* throw alert eventually */ }

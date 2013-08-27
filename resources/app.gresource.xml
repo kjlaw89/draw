@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/draw/">
+  	<file>app.css</file>
+  	<file>default_palette</file>
+  	<file>images/adjustments.png</file>
+  	<file>images/brush.png</file>
+  	<file>images/bucket.png</file>
+  	<file>images/clone_stamp.png</file>
+  	<file>images/dropper.png</file>
+  	<file>images/effects.png</file>
+  	<file>images/eraser.png</file>
+  	<file>images/lines.png</file>
+  	<file>images/magic_select.png</file>
+  	<file>images/mouse.png</file>
+  	<file>images/pencil.png</file>
+  	<file>images/select.png</file>
+  	<file>images/shapes.png</file>
+  	<file>images/text.png</file>
+  </gresource>
+</gresources>

@@ -123,3 +123,6 @@
 /src/Views/ToolsPane.vala~
 /src/Views/ColorTools.vala~
 /bin/quickbuild.sh~
+/quickbuild.sh~
+/resources/app.gresource.xml~
+/src/Views/DrawTools.vala~
