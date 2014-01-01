@@ -36,7 +36,7 @@ namespace Draw
 			base("status-toolbar");
 			Window = window;
 			
-			// Get our canvas for use in the toolbar
+			/*// Get our canvas for use in the toolbar
 			Workspace = Window.Workspace;
 			
 			// Mouse position label
@@ -69,7 +69,7 @@ namespace Draw
 		    
 		    // Application Statusbar (used for image zooming, canvas size details, mouse position and general stats)
 			add_left(positionLabel);
-			add_right(zoomWidget);
+			add_right(zoomWidget);*/
 		}
 	}
 }

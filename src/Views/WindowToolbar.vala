@@ -21,27 +21,21 @@
 
 namespace Draw
 {
-	public class WindowToolbar : Draw.Toolbar
+	public class WindowToolbar : Gtk.HeaderBar
 	{
 		public Draw.Window Window { get; set; }
 
-		Gtk.Label titleLabel;
 		public new string Title
 		{
-			get { return titleLabel.label; }
-	        set
-	        {
-	        	// ToDO: Limit the value to a certain amount of characters
-	        	// Preferrably truncating from the beginning (so the loaded
-	        	// file is viewable in the title)
-	        	if (value != null && value != "Draw")
-	        		titleLabel.label = "Draw - " + value;
-	        	else
-	        		titleLabel.label = "Draw";
-	        }
+			get { return "Draw"; }
+			set 
+			{
+				if (value == "Draw" || value == null)
+					subtitle = "";
+				else
+					subtitle = value; 
+			}
 		}
-
-		const int HEIGHT = 40;
 
 		/**
 		 * Intializes the main window's toolbar and
@@ -50,79 +44,38 @@ namespace Draw
 		 */
 		public WindowToolbar(Draw.Window window)
 		{
-			base("app-toolbar", false, Gtk.IconSize.LARGE_TOOLBAR, 3);
 			Window = window;
+			title = "Draw";
+			show_close_button = true;
+			spacing = 10;
+
+			var newButton = new Gtk.ToolButton.from_stock (Gtk.Stock.NEW);
+			newButton.clicked.connect(handle_new);
+			newButton.add_accelerator("clicked", Window.AccelGroup, Gdk.Key.N, Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
+
+			// Create the open button and assign it it's primary method
+			var openButton = new Gtk.ToolButton.from_stock (Gtk.Stock.OPEN);
+			openButton.clicked.connect(handle_open);
+			openButton.add_accelerator("clicked", Window.AccelGroup, Gdk.Key.O, Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 			
-			set_events(Gdk.EventMask.ALL_EVENTS_MASK);
-			event.connect(toolbar_clicked);
+			var saveButton = new Gtk.ToolButton.from_stock (Gtk.Stock.SAVE);
+			saveButton.clicked.connect(handle_save);
+			saveButton.add_accelerator("clicked", Window.AccelGroup, Gdk.Key.S, Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
+			
+			var saveAsButton = new Gtk.ToolButton.from_stock (Gtk.Stock.SAVE_AS);
+			saveAsButton.clicked.connect(handle_save_as);
+			saveAsButton.add_accelerator("clicked", Window.AccelGroup, Gdk.Key.A, Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
-	        var close = new Gtk.ToolButton (new Gtk.Image.from_file ("/usr/share/themes/elementary/metacity-1/close.svg"), "Close");
-	        close.height_request = HEIGHT;
-	        close.width_request = HEIGHT;
-	        close.clicked.connect (() => Window.destroy());
+			var imagesButton = new Gtk.ToolButton.from_stock(Gtk.Stock.ORIENTATION_LANDSCAPE);
+			imagesButton.clicked.connect(handle_images);
+			imagesButton.add_accelerator("clicked", Window.AccelGroup, Gdk.Key.I, Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
 
-	        var maximize = new Gtk.ToolButton (new Gtk.Image.from_file ("/usr/share/themes/elementary/metacity-1/maximize.svg"), "Close");
-	        maximize.height_request = HEIGHT;
-	        maximize.width_request = HEIGHT;
-	        maximize.clicked.connect (() =>
-	        {
-	        	if (!Window.Maximized)
-	        	{
-	        		Window.maximize();
-	        		Window.Maximized = true;
-	        	}
-	        	else
-	    		{
-	    			Window.unmaximize();
-	    			Window.Maximized = false;
-	    		}
-	        });
-
-	        // Build up the title label
-	        titleLabel = new Gtk.Label ("");
-	        titleLabel.get_style_context().add_class("app-title");
-	        titleLabel.override_font(Pango.FontDescription.from_string ("bold"));
-
-	        var titleContainer = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 0);
-	        titleContainer.hexpand = true;
-	        titleContainer.vexpand = true;
-	        titleContainer.halign = Gtk.Align.CENTER;
-	        titleContainer.add(titleLabel);
-
-	        var newButton = new Gtk.ToolButton.from_stock (Gtk.Stock.NEW);
-	        newButton.clicked.connect(handle_new);
-	        newButton.add_accelerator("clicked", Window.AccelGroup, Gdk.Key.N, Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
-
-	        // Create the open button and assign it it's primary method
-	        var openButton = new Gtk.ToolButton.from_stock (Gtk.Stock.OPEN);
-	        openButton.clicked.connect(handle_open);
-	        openButton.add_accelerator("clicked", Window.AccelGroup, Gdk.Key.O, Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
-	        
-	        var saveButton = new Gtk.ToolButton.from_stock (Gtk.Stock.SAVE);
-	        saveButton.clicked.connect(handle_save);
-	        saveButton.add_accelerator("clicked", Window.AccelGroup, Gdk.Key.S, Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
-	        
-	        var saveAsButton = new Gtk.ToolButton.from_stock (Gtk.Stock.SAVE_AS);
-	        saveAsButton.clicked.connect(handle_save_as);
-	        saveAsButton.add_accelerator("clicked", Window.AccelGroup, Gdk.Key.A, Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
-
-	        var imagesButton = new Gtk.ToolButton.from_stock(Gtk.Stock.ORIENTATION_LANDSCAPE);
-	        imagesButton.clicked.connect(handle_images);
-	        imagesButton.add_accelerator("clicked", Window.AccelGroup, Gdk.Key.I, Gdk.ModifierType.CONTROL_MASK, Gtk.AccelFlags.VISIBLE);
-
-			add_left(close);
-			add_left(create_separator(HEIGHT));
-			add_left(newButton);
-			add_left(openButton);
-			add_left(saveButton);
-			add_left(create_separator(HEIGHT));
-			add_center(titleContainer);
-			add_right(create_separator(HEIGHT));
-			add_right(saveAsButton);
-			add_right(imagesButton);
-			add_right(create_appmenu());
-			add_right(create_separator(HEIGHT));
-			add_right(maximize);
+			pack_start(newButton);
+			pack_start(openButton);
+			pack_start(saveButton);
+			pack_end(saveAsButton);
+			pack_end(imagesButton);
+			pack_end(create_appmenu());
 		}
 
 		/**
@@ -136,18 +89,18 @@ namespace Draw
 		private Gtk.ToolItem create_appmenu()
 		{
 			// App Menu (this gives access to the About dialog)
-        	Gtk.Menu settings = new Gtk.Menu ();
-        	Gtk.MenuItem contractorItem = new Gtk.MenuItem.with_label("Send To...");
-        	Gtk.MenuItem printItem = new Gtk.MenuItem.with_label("Print...");
-        	Gtk.MenuItem aboutItem = new Gtk.MenuItem.with_label("About");
-        	aboutItem.activate.connect(() => { Window.Application.show_about(Window); });
-        	
-        	// Add our settings items to our menu
-        	settings.add(contractorItem);
-        	settings.add(printItem);
-        	settings.add(aboutItem);
-        	var menuButton = new Granite.Widgets.ToolButtonWithMenu (new Gtk.Image.from_icon_name ("application-menu", Gtk.IconSize.LARGE_TOOLBAR), "", settings);       	
-        	return menuButton;
+			Gtk.Menu settings = new Gtk.Menu ();
+			Gtk.MenuItem contractorItem = new Gtk.MenuItem.with_label("Send To...");
+			Gtk.MenuItem printItem = new Gtk.MenuItem.with_label("Print...");
+			Gtk.MenuItem aboutItem = new Gtk.MenuItem.with_label("About");
+			aboutItem.activate.connect(() => { Window.Application.show_about(Window); });
+			
+			// Add our settings items to our menu
+			settings.add(contractorItem);
+			settings.add(printItem);
+			settings.add(aboutItem);
+			var menuButton = new Granite.Widgets.ToolButtonWithMenu (new Gtk.Image.from_icon_name ("application-menu", Gtk.IconSize.LARGE_TOOLBAR), "", settings);       	
+			return menuButton;
 		}
 		
 		private bool toolbar_clicked(Gtk.Widget widget, Gdk.Event event)
@@ -155,15 +108,15 @@ namespace Draw
 			if (event.type == Gdk.EventType.2BUTTON_PRESS && event.button.button == 1)
 			{
 				if (!Window.Maximized)
-	        	{
-	        		Window.maximize();
-	        		Window.Maximized = true;
-	        	}
-	        	else
-	    		{
-	    			Window.unmaximize();
-	    			Window.Maximized = false;
-	    		}
+				{
+					Window.maximize();
+					Window.Maximized = true;
+				}
+				else
+		    		{
+		    			Window.unmaximize();
+		    			Window.Maximized = false;
+		    		}
 			}
 			
 			return false;

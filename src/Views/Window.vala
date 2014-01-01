@@ -74,9 +74,9 @@ namespace Draw
 		public Draw.Canvas Canvas { get; set; }
 		public Gtk.AccelGroup AccelGroup { get { return accelGroup; } }
 
-        /**
-         * Gets/Sets the title for the Window
-         */
+		/**
+		 * Gets/Sets the title for the Window
+		 */
 		public new string Title
 		{
 			get { return WindowToolbar.Title; }
@@ -142,8 +142,8 @@ namespace Draw
 			add_accel_group(accelGroup);
 			delete_event.connect (() => exit());
 
-		    // Try to load in and apply the CSS to the application
-		    try
+			// Try to load in and apply the CSS to the application
+			try
 			{
 				var css = new Gtk.CssProvider();
 				css.load_from_data(Draw.Window.GetResourceAsString("/draw/app.css"), -1);
@@ -157,6 +157,7 @@ namespace Draw
 
 			// Create Window toolbar
 			WindowToolbar = new Draw.WindowToolbar(this);
+			set_titlebar(WindowToolbar);
 
 			// Create Action toolbar
 			ActionToolbar = new Draw.ActionToolbar(this);
@@ -179,10 +180,9 @@ namespace Draw
 
 			// Container for the Window contents
 			container = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
-		    container.expand = true;
-		    container.pack_start(WindowToolbar, false);
-		    
-		    show_welcome();
+			container.expand = true;
+
+			show_welcome();
 			base.add(container);
 			
 			// Clipboard Pasting

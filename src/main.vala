@@ -105,11 +105,11 @@ namespace Draw
         // Splash Screen? Initial Plugin Loading? Initial Window building? All of that goes here.
         public override void activate ()
         {
-            Window w = new Window(this);
-            w.Title = "Draw";
-            w.set_application(this);
-			w.set_default_size(980, 720);
-            w.show_all();
+		Window w = new Window(this);
+		w.Title = "Draw";
+		w.set_application(this);
+		w.set_default_size(980, 720);
+		w.show_all();
         }
     }
 }
